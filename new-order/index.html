@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="New order and order review layout preview. No requests can be submitted yet.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>New Order | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/new-order.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to load shared navigation. This is a static application preview.</p></noscript>
+      <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/catalog/">Catalog</a></li><li class="breadcrumb-item active" aria-current="page">New order</li></ol></nav>
+      <div class="page-heading"><span class="section-label">Dealer workspace</span><h1>New order</h1><p class="text-secondary">Review your selection before submitting an order request.</p></div>
+      <div class="notice mb-4"><strong>Order placeholder.</strong> Product selection, quantities, totals, and submission are not implemented yet. Nothing is saved or submitted.</div>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <section class="card mb-4" aria-labelledby="order-items-title">
+            <div class="card-header"><h2 id="order-items-title" class="mb-0">Order items</h2></div>
+            <div class="empty-state"><div class="empty-symbol" aria-hidden="true">+</div><h3>Your selection will appear here</h3><p>Products and quantities from the catalog will be reviewed here once draft orders are available.</p><a class="btn btn-outline-primary" href="/catalog/">Browse catalog preview</a></div>
+          </section>
+          <section class="card" aria-labelledby="order-note-title"><div class="card-body"><h2 id="order-note-title">Order note</h2><label class="form-label mt-2" for="order-note">Additional information <span class="fw-normal">(optional)</span></label><textarea id="order-note" class="form-control" rows="3" placeholder="Notes will be available when ordering is implemented." disabled aria-describedby="note-help"></textarea><p id="note-help" class="form-note mt-2 mb-0">Placeholder only. Notes cannot be entered or saved yet.</p></div></section>
+        </div>
+        <div class="col-lg-4">
+          <section class="card" aria-labelledby="summary-title"><div class="card-body"><h2 id="summary-title">Order summary</h2><dl class="mb-3"><div class="summary-row"><dt>Items</dt><dd>Not available</dd></div><div class="summary-row"><dt>Total</dt><dd>Not calculated</dd></div></dl><button class="btn btn-primary w-100" type="button" disabled>Submit order · Coming later</button><p class="form-note mt-3 mb-0">This preview does not create order requests.</p></div></section>
+        </div>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

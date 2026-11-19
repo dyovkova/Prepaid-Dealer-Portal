@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dealer order history layout preview. Order data is not connected yet.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>My Orders | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/my-orders.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to load shared navigation. This is a static application preview.</p></noscript>
+      <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3"><div><span class="section-label">Dealer workspace</span><h1>My orders</h1><p class="text-secondary">Keep track of your submitted order requests in one place.</p></div><a class="btn btn-primary" href="/new-order/">Preview new order</a></div>
+      <div class="notice mb-4"><strong>Order history placeholder.</strong> No account or order data is connected. This screen does not represent an actual dealer's history.</div>
+      <section class="card" aria-labelledby="history-title">
+        <div class="card-header"><h2 id="history-title" class="mb-0">Order history</h2></div>
+        <div class="table-responsive"><table class="table"><caption class="visually-hidden">Order history preview. No connected order data.</caption><thead><tr><th scope="col">Order reference</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col">Total</th></tr></thead><tbody><tr><td colspan="4"><div class="empty-state"><div class="empty-symbol" aria-hidden="true">≡</div><h3>Your orders will appear here</h3><p>Order references, dates, saved totals, and progress will be available once order history is implemented.</p><a class="btn btn-outline-primary" href="/order-details/">Preview order details</a></div></td></tr></tbody></table></div>
+      </section>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

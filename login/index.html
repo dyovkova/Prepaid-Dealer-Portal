@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login screen preview for Prepaid Dealer Portal. Authentication is not connected yet.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Login | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/login.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to load shared navigation. This is a static application preview.</p></noscript>
+      <div class="auth-layout row align-items-center g-5">
+        <div class="col-lg-6 auth-aside">
+          <span class="section-label">Dealer access</span>
+          <h1>Welcome back to your workspace.</h1>
+          <p class="text-secondary mt-3">Your future starting point for products, order requests, and documents.</p>
+          <div class="notice mt-4" id="login-notice"><strong>Login placeholder.</strong> Authentication is not implemented. The form is disabled and no credentials are collected.</div>
+          <a class="d-inline-block mt-4" href="/catalog/">Explore the catalog preview</a>
+        </div>
+        <div class="col-lg-6">
+          <section class="card auth-card" aria-labelledby="login-form-title">
+            <div class="card-body p-sm-4">
+              <span class="placeholder-badge mb-3">Form preview</span>
+              <h2 id="login-form-title">Log in</h2>
+              <p class="text-secondary">Access your dealer account.</p>
+              <form aria-describedby="login-notice">
+                <fieldset disabled>
+                  <legend class="visually-hidden">Login preview, unavailable</legend>
+                  <div class="mb-3"><label class="form-label" for="email">Email address</label><input class="form-control" id="email" type="email" autocomplete="username" placeholder="dealer@example.com"></div>
+                  <div class="mb-4"><label class="form-label" for="password">Password</label><input class="form-control" id="password" type="password" autocomplete="current-password" placeholder="Your password"></div>
+                  <button class="btn btn-primary w-100" type="button" disabled>Log in · Coming later</button>
+                </fieldset>
+              </form>
+              <p class="form-note mt-4 mb-0">New to the portal? <a href="/register/">Preview registration</a></p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

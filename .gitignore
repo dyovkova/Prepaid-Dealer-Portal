@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.vite/
+coverage/
+
+# Local configuration and secrets; only the placeholder example is tracked.
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+
+# Logs and local editor / OS files.
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local verification artifacts.
+.verification/

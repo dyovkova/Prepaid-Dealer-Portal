@@ -88,4 +88,4 @@ All five application tables require RLS. Dealers must not read another dealer's 
 - Admin file upload and authorized dealer file download.
 - Public GitHub repository, working Netlify URL, and documented local setup, Supabase configuration, migration/seed steps, trusted admin setup, deployment, and demo walkthrough.
 
-This milestone supplies planning documents only. The proposed screens, tables, and workflows are not implemented yet.
+Milestones 1 and 2 supply the project guidance and an eight-page UI skeleton, including Home and a single Admin Dashboard. The additional admin management screens belong to their respective later milestones. Database tables, authentication, and business workflows are not implemented yet.
