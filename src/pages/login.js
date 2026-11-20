@@ -1,3 +1,3 @@
-import { initPage } from '../utils/init-page.js';
+import { initAuthForm } from '../auth/form.js';
 
-initPage('login');
+initAuthForm('login');

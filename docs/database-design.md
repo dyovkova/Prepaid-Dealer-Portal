@@ -2,7 +2,8 @@
 
 Status: **MVP baseline accepted on 2026-11-20; core schema and 4A identity backend complete for the approved demo configuration**.
 
-The application remains an eight-page Vite/Bootstrap skeleton without a Supabase client.
+The application remains an eight-page Vite/Bootstrap app, now with the 4B Supabase
+authentication UI; product/order/Storage screens remain placeholders.
 The approved initial migration is applied; see [Supabase verification notes](../supabase/README.md)
 for the verified target, actual checks, and outstanding tests. Milestone 2's pending browser
 visual acceptance remains tracked in the [implementation plan](implementation-plan.md).
@@ -147,11 +148,12 @@ Milestone 3A finalized the accepted documentation. Milestone 3B applied only the
 schema migration to the verified project after explicit user approval. Catalog inspection,
 23 invalid-data checks, 48 client privilege denials, and 48 independent RLS checks passed.
 All test fixtures and temporary grants were rolled back. Full Auth-backed relationship,
-restrictive-delete, and snapshot acceptance tests remain pending. The frontend remains
-unchanged. The user accepted 3B as complete; those historical test limits are not
+restrictive-delete, and snapshot acceptance tests remain pending. The frontend was
+unchanged during 3B. The user accepted 3B as complete; those historical test limits are not
 represented as new passes. Milestone 4A's [identity backend](../supabase/identity-access.md)
 is applied, with deployed-object/history and private API exclusion checks passed.
 Supabase Auth registration/login, isolated dealer records, cross-account/field
 protection and inactive restrictions passed with actual JWTs. Confirm Email is
 temporarily disabled for the demo; confirmation-enabled delivery was not tested. Frontend
-authentication and later protected operations are not implemented.
+authentication is implemented and verified in [milestone 4B](authentication-ui.md).
+Product/order/Storage operations remain deferred and default-deny.

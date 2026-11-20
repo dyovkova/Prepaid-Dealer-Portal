@@ -11,12 +11,15 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
-    "check:preview": "node scripts/check-preview.mjs"
+    "check:preview": "node scripts/check-preview.mjs",
+    "test:auth-ui": "playwright test"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
     "bootstrap": "^5.3.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "supabase": "^3.2.0",
     "vite": "^8.0.0"
   }

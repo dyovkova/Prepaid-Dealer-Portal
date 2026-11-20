@@ -9,9 +9,10 @@ Milestone 2 provides a genuine multi-page skeleton: eight independent HTML entri
 shared responsive navigation and footer, and clearly labelled placeholder screens.
 Links perform normal document navigation; there is no SPA router or history fallback.
 
-Frontend authentication, the Supabase client, order logic, and admin operations are
-not implemented. Forms and business-action buttons are disabled. All example product
-content is synthetic, and the frontend saves no accounts, requests, or files.
+Milestone 4B provides working registration, login, logout, persistent Supabase
+sessions, role-based navigation guards and inactive-account feedback. Account
+roles/status come from database rows protected by the deployed 4A RLS policies.
+Product, order, document and admin-management actions remain disabled placeholders.
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -22,12 +23,15 @@ migration is [applied and validated for the demo](supabase/identity-access.md).
 Public signup/login, isolated dealer provisioning, registered-user RLS, protected
 fields and inactive-session restrictions passed. Confirm Email is temporarily
 disabled by the user for this SoftUni demo; email confirmation delivery was not
-tested. The frontend still needs no Supabase configuration; 4B has not started.
+tested. See [working authentication UI and verification](docs/authentication-ui.md)
+for the completed 4B scope and its actual browser/database checks.
 
 ## Local setup
 
-Use Node.js **22.12+ (22.x) or 24+** and the bundled npm. No environment variables
-or external services are required for this milestone.
+Use Node.js **22.12+ (22.x) or 24+** and the bundled npm. Create an ignored
+`.env.local` using `.env.example`, then fill in the Supabase URL and public
+publishable key for the deployed identity backend. Never use secret/service-role
+keys in browser configuration. Restart Vite after editing the file.
 
 ```sh
 npm install
@@ -38,10 +42,10 @@ Open the Local URL printed by Vite (normally `http://127.0.0.1:5173/`).
 On Windows PowerShell, if execution policy blocks `npm.ps1`, use `npm.cmd` in
 place of `npm`, for example `npm.cmd install` and `npm.cmd run dev`.
 
-The tracked `.env.example` contains only commented placeholders for future public
-configuration. Do not put credentials in it. Local `.env` variants, dependencies,
-and generated build output are ignored by Git. Client-visible configuration is not
-an authorization boundary; future database and Storage access must enforce policies.
+The tracked `.env.example` contains placeholders only. Local `.env` variants,
+dependencies and build output are ignored by Git. Vite includes the public URL/key
+in its browser bundle; RLS enforces access. Hosted builds need the same public
+build variables. No privileged keys, test passwords or sessions are committed.
 
 ## Routes
 
@@ -56,9 +60,10 @@ an authorization boundary; future database and Storage access must enforce polic
 | `/order-details/` | `order-details/index.html` | `src/pages/order-details.js` |
 | `/admin/` | `admin/index.html` | `src/pages/admin.js` |
 
-All routes are publicly viewable layout previews. The admin link does not provide
-admin privileges or implement authorization. Separate admin management pages remain
-in their later milestones.
+Home is public. Login/Register route active authenticated users to their workspace.
+Catalog, New Order and My Orders require an active dealer; Admin requires an active
+admin. The Order Details placeholder allows both roles. Protected content stays
+hidden while account access is checked. No order lookup or management is implemented.
 
 ## Production build and preview
 
@@ -83,16 +88,20 @@ types, tests an order-details query URL, and confirms unknown routes return 404.
 An alternate preview origin can be passed as `npm run check:preview -- http://127.0.0.1:4174`.
 
 For a repeatable lockfile-based dependency installation, use `npm ci`.
-For browser verification, visit every route directly, use the navigation and cross-page
-links, and check the collapsed menu at a phone width. Confirm forms and business actions
-remain disabled, keyboard focus is visible, and the pages have no horizontal overflow.
+Browser authentication verification is documented in [the 4B checks](docs/authentication-ui.md).
+The opt-in `npm run test:auth-ui` suite uses real Supabase signup/login and isolated
+Chrome contexts; it requires approved controlled fixture addresses/local state and
+restores any temporary fixture role/status changes. Authentication forms are active;
+business actions remain disabled. Trace/video capture is disabled to protect credentials.
 
 ## Source organization
 
 - `src/pages/`: one initialization module per HTML entry.
 - `src/components/`: shared header and footer.
 - `src/utils/`: shared page initialization and navigation helpers.
-- `src/services/`: reserved for future data access; no service is connected yet.
+- `src/services/`: the reusable Supabase client and Auth/identity data access.
+- `src/auth/`: guards, feedback, form submission and validation.
+- `tests/`: opt-in real-browser authentication/security checks.
 - `src/styles/`: shared Bootstrap overrides and responsive application styles.
 - `public/`: static favicon, copied into the build.
 - `scripts/`: production preview verification.
@@ -100,4 +109,4 @@ remain disabled, keyboard focus is visible, and the pages have no horizontal ove
 
 See [the project brief](docs/project-brief.md) for full MVP scope and
 [the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Deployment and backend implementation belong to later milestones.
+recorded acceptance checks. Business-data features and deployment remain later milestones.

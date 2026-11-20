@@ -85,13 +85,19 @@ Final live validation (2026-11-20): both public Auth signups returned real users
 
 All applicable 4A checks pass for this demo configuration. Email confirmation is temporarily disabled by the user; email delivery and the confirmation-enabled flow are untested and must be verified if that setting is enabled later. Two active synthetic fixtures are retained for the demo; generated passwords stay only in ignored local verification state and tokens are not logged. Existing data and uncommitted MCP/configuration edits are preserved. The requested 4A commit/push follows final diff/security review. No frontend authentication or 4B work. See [final demo evidence](../supabase/identity-access.md#final-demo-validation-2026-11-20).
 
-### 4B. Frontend authentication: not started
+### 4B. Frontend authentication: complete for the approved demo configuration
 
 Depends on: accepted 4A.
 
-Scope: Supabase frontend configuration, register/login/logout UI, session handling and shared page guards. Handle confirmation, invalid credentials and inactive-account feedback using 4A's identity access. No new business operations.
+Scope: Supabase frontend configuration, register/login/logout UI, session handling and shared page guards. Handle confirmation, invalid credentials and inactive-account feedback using 4A's identity access. No new business operations or database migrations.
 
-Acceptance: a synthetic dealer can register, confirm, log in, refresh and log out through the multi-page frontend; guards and clear feedback reflect session/account status. Browser code contains only public configuration. This milestone is deferred and not authorized by the current request.
+Acceptance: a synthetic dealer can register, log in, refresh and log out through the multi-page frontend; guards and clear feedback reflect database role/account status. Browser code contains only public configuration. The current demo has confirmation disabled by the user; confirmation-enabled delivery remains a separate untested configuration.
+
+Implementation/verification (2026-11-20): installed Supabase JS `2.119.2` and development Playwright `1.65.1`; npm reported zero vulnerabilities. One reusable client reads the ignored `.env.local` URL/publishable key, persists/refreshes SDK sessions and rejects privileged keys. Auth forms validate bounded names, email, password and confirmation, prevent duplicate submissions, and give loading/success/error feedback. Guards validate the Auth user and read profile/role/active organization through RLS; editable metadata never grants access. Protected HTML starts hidden. Guests go to Login; active dealers/admins go to Catalog/Admin respectively. Inactive/incomplete accounts receive feedback/recheck; network failures remain closed with retry. Logout and cross-tab events clear navigation access; focus/restored pages recheck account status.
+
+Real production-build Chrome tests passed new UI registration and automatic isolated organization/profile/dealer-role creation, password login/logout, invalid credentials/required fields/password mismatch, all protected direct URLs, refresh persistence, ordinary-dealer admin denial, authoritative server denial (`42501`), forged-metadata dealer routing, inactive profile/organization feedback and recovery, admin routing using a temporary trusted role change limited to the new fixture, shared Order Details access, network failure/retry, and cross-tab logout. Fixture role/activation were restored. No application product/order/Storage request was made. Desktop and mobile-width form screenshots were visually inspected, no horizontal overflow was found, and keyboard form order/mobile navigation passed. `npm.cmd run build` and relevant preview/diff/security checks are recorded in [4B results](authentication-ui.md).
+
+One plus-tagged controlled synthetic fixture was added through the real Register form; earlier fixtures/data and both SQL migrations remain unchanged. No permanent admin or Auth Admin API was used. Local credentials/browser artifacts remain ignored and are not committed. No milestone 5 work. Confirmation-enabled email flow and non-Chrome browser engines remain untested; broader milestone 2 visual acceptance is not claimed.
 
 ## 5. Dealer catalog and draft order
 

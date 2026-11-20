@@ -1,6 +1,8 @@
 import { navigationItems, navigationLink } from '../utils/navigation.js';
 
-export function renderHeader(currentPage) {
+export function renderHeader(currentPage, account) {
+  const allowedItems = navigationItems.filter(item => item.id === 'home' ||
+    (account?.status === 'active' && (account.role === 'admin' ? item.id === 'admin' : item.id !== 'admin')));
   return `
     <nav class="navbar navbar-expand-lg bg-white" aria-label="Main navigation">
       <div class="container portal-container">
@@ -15,20 +17,24 @@ export function renderHeader(currentPage) {
         </button>
         <div class="collapse navbar-collapse" id="main-navigation">
           <ul class="navbar-nav mx-lg-auto gap-lg-1">
-            ${navigationItems.map((item) => `<li class="nav-item">${navigationLink(item, currentPage)}</li>`).join('')}
+            ${allowedItems.map((item) => `<li class="nav-item">${navigationLink(item, currentPage)}</li>`).join('')}
           </ul>
           <div class="navbar-nav auth-navigation gap-2">
-            ${navigationLink({ id: 'login', href: '/login/', label: 'Log in' }, currentPage)}
+            ${account === undefined ? '<span class="navbar-text">Checking session…</span>' : account
+    ? `<span class="navbar-text account-name" data-account-name></span>
+       <span class="badge text-bg-light">${account.role === 'admin' ? 'Administrator' : account.role === 'dealer' ? 'Dealer' : 'Account'}</span>
+       <button class="btn btn-outline-primary btn-sm" type="button" data-logout>Log out</button>`
+    : `${navigationLink({ id: 'login', href: '/login/', label: 'Log in' }, currentPage)}
             <a class="btn btn-primary btn-sm${currentPage === 'register' ? ' active' : ''}"
-              href="/register/"${currentPage === 'register' ? ' aria-current="page"' : ''}>Register</a>
+              href="/register/"${currentPage === 'register' ? ' aria-current="page"' : ''}>Register</a>`}
           </div>
         </div>
       </div>
     </nav>
     <div class="preview-banner">
       <div class="container portal-container d-flex flex-wrap align-items-center gap-2">
-        <span class="preview-label">Skeleton preview</span>
-        <span>Explore the screens. Accounts, ordering, and admin actions are not connected yet.</span>
+        <span class="preview-label">Capstone demo</span>
+        <span>Sign in to your workspace. Products, ordering, and documents are coming later.</span>
       </div>
     </div>`;
 }
