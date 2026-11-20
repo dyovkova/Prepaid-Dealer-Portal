@@ -40,4 +40,4 @@ Prepaid Dealer Portal is a SoftUni "Software Technologies with AI" capstone. Use
 
 ## Current boundary
 
-Milestone 2 is the multi-page application skeleton and local tooling only. Its eight routes are Home, Login, Register, Product Catalog, New Order, My Orders, Order Details, and Admin Dashboard. Keep forms and business actions clearly labelled as placeholders. Do not implement Supabase, authentication, ordering logic, database resources, admin management features, or deployment until the relevant milestone is requested.
+Milestone 3A finalizes the accepted six-table schema and access documentation only; see `docs/database-design.md`. Preserve organization-scoped order visibility, isolated dealer signup, RLS, and protected database-side order submission. The application remains a placeholder skeleton. Do not create SQL migrations or database resources, configure Storage, or implement application features until the relevant milestone is separately requested.

@@ -11,4 +11,4 @@ Read [AGENTS.md](../AGENTS.md), the [project brief](../docs/project-brief.md), a
 - Keep changes small and independently testable. Run applicable checks and review the diff before each commit. Report what actually ran; never invent tests, commits, or results.
 - Update documentation when behavior or setup changes. Do not add dependencies or features outside the agreed milestone without a concrete need.
 
-The current milestone is the eight-page application skeleton, shared UI, and npm/Vite tooling. Business actions remain clearly labelled placeholders. Supabase, authentication, ordering logic, database resources, admin management features, and deployment belong to later milestones.
+The current milestone is 3A: finalize the accepted six-table schema/access documentation in `docs/database-design.md`, the project brief, and the implementation plan. Preserve organization ownership, isolated dealer signup, RLS, and protected order submission. No SQL migrations, database resources, Storage configuration, or application features are authorized in 3A; business actions remain placeholders.

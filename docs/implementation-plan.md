@@ -30,17 +30,29 @@ Verification record (2026-11-19):
 
 Depends on: 2.
 
-Scope: create migrations for `profiles`, `products`, `orders`, `order_items`, and `order_documents`, with relationships and integrity constraints. Enable RLS with default-deny access until policies are introduced. Document local Supabase setup and use a reproducible synthetic catalog seed. Store monetary values with an exact database numeric type.
+### 3A. Schema and access design: complete
+
+Scope: finalize the accepted [database design](database-design.md) and reconcile it with [the project brief](project-brief.md) and this plan. The six core tables are `dealers`, `profiles`, `user_roles`, `products`, `orders`, and `order_items`. Organization membership determines order visibility; each signup provisions an isolated organization and fixed dealer role. `order_documents` and Supabase Storage belong to milestone 11.
+
+Acceptance: the three documents agree on the accepted schema, relationships, RLS/permissions, protected atomic order submission, staged migrations, security risks, and unchanged exclusions; documentation validation and diff/security review pass. This milestone creates no SQL files, database resources, dependencies, or application features. Milestone 2's pending visual acceptance remains open.
+
+Verification (2026-11-20): the user accepted the six-table baseline; the brief, design, plan, and repository milestone boundaries are reconciled. Core table sets, local links/anchors, whitespace, unchanged exclusions, stale wording, credential patterns, and documentation-only change scope were checked; diff/security review passed. No migrations, database tests, or application builds were run for this documentation milestone. Database implementation remains unstarted.
+
+### 3B. Schema implementation: not started
+
+Depends on: 2 acceptance and 3A. Begin only when separately requested.
+
+Scope: create migrations for the six accepted core tables (`dealers`, `profiles`, `user_roles`, `products`, `orders`, `order_items`) with relationships and integrity constraints. Enable RLS and revoke client access in the same migration; introduce policies/operations only in their relevant later milestones. Document local Supabase setup and use reproducible synthetic catalog/organization seeds; provision test Auth identities through supported local tooling. Store monetary values with an exact database numeric type. Do not create `order_documents` or configure Storage here.
 
 Acceptance: migrations and seeds apply to a fresh database; foreign keys and invalid quantity/price constraints are exercised; anonymous API reads/writes are denied. No public remote setup or privileged credentials are required in source.
 
 ## 4. Registration, authentication, and profile authorization
 
-Depends on: 3.
+Depends on: 3B.
 
-Scope: add Supabase client configuration, register/login/logout, session handling, profile creation with a fixed dealer role, shared page guards, profile access policies, and trusted admin provisioning instructions. Account for email confirmation configuration and inactive accounts. Keep unimplemented business tables default-deny.
+Scope: add Supabase client configuration, register/login/logout, session handling, and atomic signup provisioning of an isolated `dealers` organization, linked `profiles` row, and fixed dealer `user_roles` row. Add shared page guards, own profile/role and organization read policies, limited display-name updates, and trusted admin provisioning instructions. Account for email confirmation and inactive profiles/organizations. Keep unimplemented business operations default-deny.
 
-Acceptance: register a synthetic dealer, log in, refresh, and log out successfully; invalid credentials/confirmation requirements have clear feedback. Anonymous access, dealer self-promotion, and unauthorized profile edits fail at the database boundary. An inactive profile cannot access portal business data. Admin setup is reproducible without browser-side privileged keys.
+Acceptance: register a synthetic dealer into a fresh organization, log in, refresh, and log out; invalid credentials/confirmation requirements have clear feedback. Signup metadata cannot grant admin or existing-organization membership. Anonymous business access, client role/membership/activation writes, and unauthorized profile reads/edits fail at the database boundary. Inactive profiles/organizations cannot access dealer business data with an existing session. Admin setup is reproducible without browser-side privileged keys.
 
 ## 5. Dealer catalog and draft order
 
@@ -54,17 +66,17 @@ Acceptance: synthetic catalog data displays correctly; inactive products are exc
 
 Depends on: 5.
 
-Scope: add database-side order creation, applicable policies, and review/submit behavior. Validate the authenticated active dealer, active products, quantities, and current database prices; save order/items and price snapshots in one transaction. Define clear behavior if prices or availability changed since the draft was loaded. Prevent duplicate orders from repeated submission of the same request.
+Scope: add protected database-side order creation and review/submit behavior. Validate the authenticated dealer role and active profile/organization; derive creator, organization, and submitted status on the database side. Validate active products, quantities, and current database prices; save order/items and price/SKU/name snapshots atomically. Keep direct client order/item writes denied. Define behavior for concurrent price/availability/activation changes and prevent duplicate orders from repeated submission of the same request.
 
-Acceptance: a multi-item request saves as `submitted`; invalid/inactive products or invalid quantities leave no partial order; a forged owner/price/total is ineffective. Repeated submission of the same request creates one order. Success clears the draft and opens the saved order.
+Acceptance: a multi-item request saves as `submitted` for the caller's organization; invalid/inactive products, invalid quantities, and inactive callers leave no partial order. Forged creator/organization/status/price/total and direct client writes are ineffective. Repeated submission creates one order; reuse of a request ID with different contents fails. Success clears the draft; saved-order navigation/read access is completed in milestone 7.
 
 ## 7. Dealer order history and details
 
 Depends on: 6.
 
-Scope: add ownership-based read policies, dealer order list, and order details with saved prices, quantities, totals, and status. Documents remain a placeholder until milestone 11.
+Scope: add organization-based order/item read policies, dealer organization order history, and order details with saved snapshots, quantities, derived totals, and status. Documents remain a placeholder until milestone 11.
 
-Acceptance: each of two synthetic dealers sees only their own orders and items, including through direct API calls and changed URL IDs. Price changes do not alter historical totals; empty/error states work; dealers cannot change submitted orders or status.
+Acceptance: two synthetic users in organization A can read each other's organization orders/items; a user in organization B cannot, including through direct API calls, joins, and changed URL IDs. Profiles remain individually private except to admins. Product changes do not alter historical snapshots/totals; empty/error states work; dealers cannot change submitted orders or status.
 
 ## 8. Admin product management
 
@@ -78,9 +90,9 @@ Acceptance: an admin manages a synthetic product; a dealer cannot perform the sa
 
 Depends on: 8.
 
-Scope: list dealer profiles and activate/deactivate dealer access through narrowly authorized operations. Keep role changes and Supabase Auth account administration outside this UI.
+Scope: manage dealer organization names/activation and inspect profiles; activate/deactivate individual profiles through narrowly authorized operations. Keep role changes, membership reassignment, and Supabase Auth account administration outside this UI.
 
-Acceptance: an admin can deactivate/reactivate a synthetic dealer; the dealer cannot change their role or active status. Deactivation denies business-data access and submission even with an existing session; reactivation restores permitted access. Existing orders remain intact.
+Acceptance: an admin can create/edit a synthetic organization and deactivate/reactivate organizations and profiles; dealer users cannot change roles, membership, or activation. Profile deactivation blocks that user; organization deactivation blocks all its dealer users, including existing sessions. Reactivation restores otherwise permitted access. Existing orders remain intact.
 
 ## 10. Admin order processing
 
@@ -94,9 +106,9 @@ Acceptance: an admin can process orders across dealers; permitted transitions su
 
 Depends on: 10.
 
-Scope: configure a private Supabase Storage bucket, version Storage configuration/policies, and implement admin PDF upload, metadata persistence, document listing, and authorized download. Choose/document file size limits, validate permitted types, use unique object paths, and handle partial upload/metadata failures without exposing orphaned files.
+Scope: add `order_documents` in a versioned migration with order/uploading-admin references, private object path, and file metadata. Enable RLS; configure a private Supabase Storage bucket and version its policies. Implement admin PDF upload, metadata persistence, document listing, and downloads authorized against the order's organization. Choose/document file size limits, validate types, use unique object paths, and handle partial upload/metadata failures without exposing orphaned files.
 
-Acceptance: an admin uploads a synthetic PDF and its owning active dealer downloads it. Anonymous users, inactive dealers, and a different dealer cannot access the file or metadata or obtain a download link; dealers cannot upload. Invalid files are rejected; simulated failure cleanup works. Document the short-lived link expiry behavior.
+Acceptance: an admin uploads a synthetic PDF; active users in the order's active organization can download it. Anonymous users, inactive profiles/organizations, and users from another organization cannot access the file/metadata or obtain a download link; dealers cannot upload. Invalid files are rejected; simulated failure cleanup works. Document short-lived link expiry behavior.
 
 ## 12. Responsive and accessibility review
 
