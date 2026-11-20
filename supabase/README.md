@@ -11,7 +11,15 @@ verification limits remain recorded below.
 temporarily disabled by the user; confirmation-enabled delivery was not tested. See the
 [identity backend review](identity-access.md) for the new migration, security
 contract, successful public signup/login and registered-user security tests, and trusted first
-demo-admin procedure. Frontend authentication (4B) remains deferred.
+demo-admin procedure. Frontend authentication (4B) and the permanent demo admin
+(4C) are complete; see [administrator setup](demo-admin-setup.md).
+
+**Milestone 5A is deployed and verified after explicit approval.** Active dealers
+can read the ten active demo products; two inactive products remain hidden.
+Anonymous/inactive/admin catalog access and all client product writes remain
+blocked. See [catalog migration, seed and hosted test results](catalog-access.md).
+The three applied migrations and existing identities are preserved. Frontend
+catalog, cart, orders and other milestones remain deferred.
 
 ## Applied migration and actual verification (2026-11-20)
 

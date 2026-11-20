@@ -115,9 +115,23 @@ Approved execution/validation (2026-11-20): reconfirmed the healthy named target
 
 Depends on: 4.
 
-Scope: add active-product read policies and catalog rendering; select positive whole-number quantities and retain a local draft for the order-review page. Scope/clear draft state across users and logout. Include validation and loading/empty/error states.
+### 5A. Product catalog database access and demo data: deployed and verified
 
-Acceptance: synthetic catalog data displays correctly; inactive products are excluded for dealers; draft quantities and preview totals behave correctly; anonymous/inactive access is denied. A draft has no database order or reserved stock.
+Scope: one versioned migration allowing active authenticated dealers to read only active products, using the existing database-derived actor helper. Separate idempotent seed of twelve fictional telecom products priced in EUR, including two inactive products. Keep anonymous/inactive/admin catalog access, all product writes, orders and Storage blocked. Preserve accounts, roles and both deployed migrations. No frontend changes, seed import or migration application without explicit approval.
+
+Acceptance: verify the exact remote project/schema/history and migration dry-run; test allowed reads, archived-product exclusion, anonymous and inactive profile/organization denial, prohibited writes, seed idempotency and preservation. Run the build. Stop for explicit approval before remote migration/seed execution, then verify hosted policy/grants, real sessions and preserved data before marking complete.
+
+Preparation (2026-11-20): read-only CLI verified healthy PrepaidDealerPortal (`niabpabsvdgxackjjcsb`), unchanged 4C identity/schema/history baseline (one admin, three dealers), empty products with RLS enabled/no policies or client CRUD grants, and no demo SKU collisions. [Catalog migration](../supabase/migrations/20261120000300_catalog_access.sql) adds only one authenticated SELECT policy and grant. [Separate seed](../supabase/seeds/demo_products.sql) contains ten active and two inactive synthetic products; conflict handling preserves existing rows. Disposable PostgreSQL 18.7/PGlite tests passed allowed/denied reads, unchanged-claims inactive checks, 22 forbidden statements, fixture rollback, seed idempotency and edited/unrelated-row preservation. Build passed. At preparation, remote dry-run listed only `20261120000300_catalog_access.sql`, with no seeds/roles, and the migration was still local-only. No remote migration/seed or frontend changes were executed before approval; see [5A review and actual results](../supabase/catalog-access.md).
+
+Approved deployment/validation (2026-11-20): reconfirmed the exact healthy target, both approved file hashes, unchanged baseline, sole pending migration and zero seed conflicts. Applied only the catalog migration, then imported only the approved seed. Verified stored migration statements, exact SELECT policy/grants, RLS, twelve rows (ten active/two inactive), and an exact no-op hosted seed rerun. Hosted PostgreSQL 17.12 rollback tests passed all security checks including 22 forbidden statements. Actual public Auth sessions for all three dealers read exactly the ten active products and could not read archived products or perform INSERT/UPDATE/reactivation/DELETE. Admin catalog reads returned no rows; anonymous reads were denied. The same dealer JWT lost catalog access for profile and organization deactivation separately; both were restored and access recovered. Final identity, membership, role and product snapshots match; old migrations/functions/non-product grants/policies remain unchanged, with zero orders/items. Local SQL regression and build passed. Final history matches all three migrations and dry-run reports up to date. No Auth settings, frontend, cart, orders or other features changed. All applicable 5A checks pass; commit/push is authorized for the verified 5A files only. See [actual hosted results](../supabase/catalog-access.md#actual-hosted-deployment-and-validation-2026-11-20).
+
+### 5B. Catalog frontend and draft selection: deferred
+
+Depends on: completed 5A and a separate user request.
+
+Scope: render active products; select positive whole-number quantities and retain a local draft for the order-review page. Scope/clear draft state across users and logout. Include validation and loading/empty/error states.
+
+Acceptance: seeded catalog data displays correctly; inactive products are excluded for dealers; draft quantities and preview totals behave correctly; anonymous/inactive access is denied. A draft has no database order or reserved stock.
 
 ## 6. Atomic order submission
 

@@ -115,7 +115,7 @@ Trigger/provisioning routines are not client-executable. See Supabase's
 | --- | --- |
 | [`20261120000100_core_schema.sql`](../supabase/migrations/20261120000100_core_schema.sql) | Initial six tables, FKs, checks, unique constraints, indexes; enable RLS and revoke client access in the same migration. Applied for milestone 3B on 2026-11-20 after explicit user approval. |
 | [`20261120000200_identity_and_access.sql`](../supabase/migrations/20261120000200_identity_and_access.sql) | Private actor helpers, fixed-dealer signup trigger, own profile/role and active-own-organization reads, limited display-name updates and grants; milestone 4A. Applied on 2026-11-20; real public signup/login, isolation and inactive-session checks passed with demo email confirmation disabled by the user. |
-| `003_catalog_access.sql` | Active-dealer catalog reads and grants; catalog milestone. |
+| [`20261120000300_catalog_access.sql`](../supabase/migrations/20261120000300_catalog_access.sql) | Active-dealer catalog SELECT policy and grant; milestone 5A applied and verified on 2026-11-20 after explicit approval. Separate twelve-product synthetic seed imported (ten active/two inactive); hosted idempotency and real-session authorization tests passed. |
 | `004_atomic_order_requests.sql` | Guarded submission, immutable order/item rules, idempotency, execution grants; atomic submission milestone. |
 | `005_order_read_access.sql` | Organization-scoped order/item SELECT policies and grants; dealer history milestone. |
 | `006_admin_catalog_and_dealers.sql` | Admin-wide reads, admin-only product/dealer insert/update policies, column grants, profile activation operation; admin milestones. |
@@ -156,4 +156,8 @@ Supabase Auth registration/login, isolated dealer records, cross-account/field
 protection and inactive restrictions passed with actual JWTs. Confirm Email is
 temporarily disabled for the demo; confirmation-enabled delivery was not tested. Frontend
 authentication is implemented and verified in [milestone 4B](authentication-ui.md).
-Product/order/Storage operations remain deferred and default-deny.
+Milestone 5A's [catalog access and demo seed](../supabase/catalog-access.md) are
+deployed and verified after explicit approval: active dealers read only active
+products; anonymous/inactive/admin catalog reads and client product writes remain
+blocked. Admin catalog operations, orders and Storage remain default-deny. No
+catalog frontend, cart or ordering changes have started.
