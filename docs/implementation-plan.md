@@ -139,9 +139,23 @@ Implementation/verification (2026-11-20): catalog cards use the existing authent
 
 Depends on: 5.
 
-Scope: add protected database-side order creation and review/submit behavior. Validate the authenticated dealer role and active profile/organization; derive creator, organization, and submitted status on the database side. Validate active products, quantities, and current database prices; save order/items and price/SKU/name snapshots atomically. Keep direct client order/item writes denied. Define behavior for concurrent price/availability/activation changes and prevent duplicate orders from repeated submission of the same request.
+### 6A. Secure atomic backend: deployed and verified for the current demo
 
-Acceptance: a multi-item request saves as `submitted` for the caller's organization; invalid/inactive products, invalid quantities, and inactive callers leave no partial order. Forged creator/organization/status/price/total and direct client writes are ineffective. Repeated submission creates one order; reuse of a request ID with different contents fails. Success clears the draft; saved-order navigation/read access is completed in milestone 7.
+Scope: [versioned RPC migration](../supabase/migrations/20261120000400_atomic_order_requests.sql) with separate private validation, caller authorization/locking, product snapshot locking and transactional orchestration, behind a narrow authenticated invoker wrapper. Derive all ownership/status/prices on the server. Keep direct table access default-deny; no frontend, history, admin operations or Storage.
+
+Acceptance: test success, invalid/unauthorized inputs, full rollback, current price/snapshot integrity, caller-scoped idempotency/conflicts and actual concurrent changes. Verify the exact project and pending migration, run remote dry-run/build, and stop for explicit approval before deployment. Hosted RPC integration remains pending until approved application.
+
+Preparation (2026-11-20): healthy PrepaidDealerPortal (`niabpabsvdgxackjjcsb`) retains one admin, three dealers, twelve products, three deployed migrations and zero orders/items. Native PostgreSQL 17.12 tests passed 24 invalid cases, late rollback, success/snapshots/idempotency and 21 authorization/helper/table denials. Genuine independent sessions observed lock waits for duplicates and price/archive/activation/role/membership races in both directions, with correct snapshots/rejections. Catalog regression, four draft tests and eight-entry build passed. Migration adds functions/grants only; no table redesign/data/seed changes. Remote dry-run lists only `20261120000400_atomic_order_requests.sql`, still local-only, with no seeds/roles/Vault changes. See [API contract and actual checks](../supabase/order-submission.md). Nothing applied or committed for 6A.
+
+Approved deployment/validation (2026-11-20): reconfirmed target/hash/sole pending migration and unchanged baseline, then applied only the reviewed migration. Deployed bodies/security and history SQL match source; original functions, table grants/RLS/policies, accounts, roles, products and prior history remain unchanged. Hosted rollback tests passed success, 24 invalid cases, late rollback, snapshot integrity/idempotency and 21 denials. Actual public Auth/RPC calls by all three dealers created three retained synthetic orders/four snapshot items; server ownership/status/current prices were verified. Simultaneous/reordered retries returned the same UUID, conflicts failed, and cross-account keys stayed isolated. Anonymous/admin/inactive calls and direct table CRUD were denied; private RPC helpers remain API-excluded. Temporary activation tests restored original values. Native concurrency/catalog regression, draft tests and build passed again. Final history matches all four versions and dry-run reports up to date. The user authorized a focused commit/push of verified 6A files. No 6B/history/admin/Storage work. See [actual hosted results and remaining limits](../supabase/order-submission.md#actual-hosted-deployment-and-verification-2026-11-20).
+
+### 6B. Frontend submission: deferred
+
+Depends on: deployed/verified 6A and a separate user request.
+
+Scope: connect the existing draft/review UI to the deployed 6A RPC without duplicating server logic. Retain a request UUID with its canonical payload for retries; handle loading, success and actionable errors. Treat client validation/totals only as convenience/estimates. No direct table writes or history queries.
+
+Acceptance: a valid draft submits once through 6A, with server-derived ownership/status/snapshots. Invalid/inactive selections and unauthorized callers receive clear feedback without partial writes; repeated clicks/network retries keep one order and conflicting reuse fails. Confirmed success clears the draft and displays the acknowledged UUID. Saved-order history/read navigation is deferred to milestone 7.
 
 ## 7. Dealer order history and details
 

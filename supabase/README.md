@@ -18,8 +18,15 @@ demo-admin procedure. Frontend authentication (4B) and the permanent demo admin
 can read the ten active demo products; two inactive products remain hidden.
 Anonymous/inactive/admin catalog access and all client product writes remain
 blocked. See [catalog migration, seed and hosted test results](catalog-access.md).
-The three applied migrations and existing identities are preserved. Frontend
-catalog, cart, orders and other milestones remain deferred.
+The three applied migrations and existing identities are preserved. The catalog
+and local draft UI are complete in [5B](../docs/catalog-and-draft.md).
+
+**Milestone 6A is deployed and verified after explicit approval.** The
+[atomic order backend results](order-submission.md) record its RPC contract,
+approved hash, hosted Auth/RPC/security checks and native concurrency regression.
+All four migrations match remote history. Three synthetic validation orders/four
+items are retained; original identities/products/security are preserved. Frontend
+submission, history, admin operations and Storage remain deferred.
 
 ## Applied migration and actual verification (2026-11-20)
 
