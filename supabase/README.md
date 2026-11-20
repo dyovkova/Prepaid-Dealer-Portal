@@ -3,8 +3,15 @@
 **Applied on 2026-11-20 after explicit user approval.** Verified project:
 **PrepaidDealerPortal**, reference `niabpabsvdgxackjjcsb`,
 URL `https://niabpabsvdgxackjjcsb.supabase.co`.
-Only `20261120000100_core_schema.sql` was applied. Catalog and default-deny
-checks passed; full Auth-backed fixture acceptance remains pending.
+The initial `20261120000100_core_schema.sql` was applied for 3B. Catalog and default-deny
+checks passed. The user accepted milestone 3B as complete; historical fixture
+verification limits remain recorded below.
+
+**Milestone 4A is applied and validated for the SoftUni demo.** Confirm Email is
+temporarily disabled by the user; confirmation-enabled delivery was not tested. See the
+[identity backend review](identity-access.md) for the new migration, security
+contract, successful public signup/login and registered-user security tests, and trusted first
+demo-admin procedure. Frontend authentication (4B) remains deferred.
 
 ## Applied migration and actual verification (2026-11-20)
 
@@ -42,8 +49,11 @@ Outstanding acceptance tests: a valid Auth-backed profile/role/order/item chain,
 creator/request and composite-line uniqueness, historical-reference restrictive
 delete/update behavior, and snapshot preservation after catalog edits. These
 require supported synthetic Auth fixtures; no direct `auth.users` inserts or
-account provisioning were performed. Milestone 3B remains short of full fixture
-acceptance; milestone 2 visual review also remains open. Milestone 4 is deferred.
+account provisioning were performed during 3B. The user subsequently accepted
+3B as complete; this records acceptance without claiming those tests ran.
+Milestone 2 visual review remains open. The 4A backend was subsequently approved
+and applied; public signup/login and registered-user security checks passed under
+the documented demo configuration. Frontend 4B remains deferred.
 
 To rerun database tests after explicit authorization, use the CLI home below:
 

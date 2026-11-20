@@ -9,15 +9,20 @@ Milestone 2 provides a genuine multi-page skeleton: eight independent HTML entri
 shared responsive navigation and footer, and clearly labelled placeholder screens.
 Links perform normal document navigation; there is no SPA router or history fallback.
 
-Authentication, the frontend Supabase client, order logic, and admin operations are
+Frontend authentication, the Supabase client, order logic, and admin operations are
 not implemented. Forms and business-action buttons are disabled. All example product
 content is synthetic, and the frontend saves no accounts, requests, or files.
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
-is applied to `niabpabsvdgxackjjcsb`, with default-deny client access. Catalog,
+is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
 constraint-rejection, and authorization checks passed; Auth-backed fixture acceptance
 tests remain outstanding. See [Supabase setup and verification](supabase/README.md).
-The frontend still needs no Supabase configuration; milestone 4 has not started.
+The user accepted milestone 3B as complete. Milestone 4A's database-only identity
+migration is [applied and validated for the demo](supabase/identity-access.md).
+Public signup/login, isolated dealer provisioning, registered-user RLS, protected
+fields and inactive-session restrictions passed. Confirm Email is temporarily
+disabled by the user for this SoftUni demo; email confirmation delivery was not
+tested. The frontend still needs no Supabase configuration; 4B has not started.
 
 ## Local setup
 

@@ -1,6 +1,6 @@
 # Milestone 3A: accepted database schema and access model
 
-Status: **MVP baseline accepted on 2026-11-20; initial schema applied with catalog and default-deny checks passed; full Auth-backed fixture acceptance pending**.
+Status: **MVP baseline accepted on 2026-11-20; core schema and 4A identity backend complete for the approved demo configuration**.
 
 The application remains an eight-page Vite/Bootstrap skeleton without a Supabase client.
 The approved initial migration is applied; see [Supabase verification notes](../supabase/README.md)
@@ -108,12 +108,12 @@ from `PUBLIC`/`anon`, and grant only required helpers/operations to `authenticat
 Trigger/provisioning routines are not client-executable. See Supabase's
 [function security guidance](https://supabase.com/docs/guides/database/functions).
 
-## SQL migration sequence (initial file applied; remaining files planned)
+## SQL migration sequence (core and identity applied; business migrations planned)
 
 | Planned file | Contents and intended stage |
 | --- | --- |
 | [`20261120000100_core_schema.sql`](../supabase/migrations/20261120000100_core_schema.sql) | Initial six tables, FKs, checks, unique constraints, indexes; enable RLS and revoke client access in the same migration. Applied for milestone 3B on 2026-11-20 after explicit user approval. |
-| `002_identity_and_access.sql` | Private actor helpers, fixed-dealer signup trigger, own profile/role and organization reads, limited profile updates and grants; authentication milestone. |
+| [`20261120000200_identity_and_access.sql`](../supabase/migrations/20261120000200_identity_and_access.sql) | Private actor helpers, fixed-dealer signup trigger, own profile/role and active-own-organization reads, limited display-name updates and grants; milestone 4A. Applied on 2026-11-20; real public signup/login, isolation and inactive-session checks passed with demo email confirmation disabled by the user. |
 | `003_catalog_access.sql` | Active-dealer catalog reads and grants; catalog milestone. |
 | `004_atomic_order_requests.sql` | Guarded submission, immutable order/item rules, idempotency, execution grants; atomic submission milestone. |
 | `005_order_read_access.sql` | Organization-scoped order/item SELECT policies and grants; dealer history milestone. |
@@ -148,4 +148,10 @@ schema migration to the verified project after explicit user approval. Catalog i
 23 invalid-data checks, 48 client privilege denials, and 48 independent RLS checks passed.
 All test fixtures and temporary grants were rolled back. Full Auth-backed relationship,
 restrictive-delete, and snapshot acceptance tests remain pending. The frontend remains
-unchanged; authentication and later protected operations are not implemented.
+unchanged. The user accepted 3B as complete; those historical test limits are not
+represented as new passes. Milestone 4A's [identity backend](../supabase/identity-access.md)
+is applied, with deployed-object/history and private API exclusion checks passed.
+Supabase Auth registration/login, isolated dealer records, cross-account/field
+protection and inactive restrictions passed with actual JWTs. Confirm Email is
+temporarily disabled for the demo; confirmation-enabled delivery was not tested. Frontend
+authentication and later protected operations are not implemented.
