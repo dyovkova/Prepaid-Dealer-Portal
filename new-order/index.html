@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="New order and order review layout preview. No requests can be submitted yet.">
+    <meta name="description" content="Edit your local product draft and review estimated EUR totals. No order is submitted.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <title>New Order | Prepaid Dealer Portal</title>
     <script type="module" src="/src/pages/new-order.js"></script>
@@ -14,21 +14,32 @@
     <main id="main-content" class="container portal-container" tabindex="-1">
       <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
       <div id="protected-content" hidden>
-      <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/catalog/">Catalog</a></li><li class="breadcrumb-item active" aria-current="page">New order</li></ol></nav>
-      <div class="page-heading"><span class="section-label">Dealer workspace</span><h1>New order</h1><p class="text-secondary">Review your selection before submitting an order request.</p></div>
-      <div class="notice mb-4"><strong>Order placeholder.</strong> Product selection, quantities, totals, and submission are not implemented yet. Nothing is saved or submitted.</div>
-      <div class="row g-4">
-        <div class="col-lg-8">
-          <section class="card mb-4" aria-labelledby="order-items-title">
-            <div class="card-header"><h2 id="order-items-title" class="mb-0">Order items</h2></div>
-            <div class="empty-state"><div class="empty-symbol" aria-hidden="true">+</div><h3>Your selection will appear here</h3><p>Products and quantities from the catalog will be reviewed here once draft orders are available.</p><a class="btn btn-outline-primary" href="/catalog/">Browse catalog preview</a></div>
-          </section>
-          <section class="card" aria-labelledby="order-note-title"><div class="card-body"><h2 id="order-note-title">Order note</h2><label class="form-label mt-2" for="order-note">Additional information <span class="fw-normal">(optional)</span></label><textarea id="order-note" class="form-control" rows="3" placeholder="Notes will be available when ordering is implemented." disabled aria-describedby="note-help"></textarea><p id="note-help" class="form-note mt-2 mb-0">Placeholder only. Notes cannot be entered or saved yet.</p></div></section>
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/catalog/">Catalog</a></li><li class="breadcrumb-item active" aria-current="page">New order</li></ol></nav>
+        <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div><span class="section-label">Dealer workspace</span><h1>New order</h1><p class="text-secondary">Edit your local draft and review current product prices.</p></div>
+          <a class="btn btn-outline-primary" href="/catalog/">Continue browsing</a>
         </div>
-        <div class="col-lg-4">
-          <section class="card" aria-labelledby="summary-title"><div class="card-body"><h2 id="summary-title">Order summary</h2><dl class="mb-3"><div class="summary-row"><dt>Items</dt><dd>Not available</dd></div><div class="summary-row"><dt>Total</dt><dd>Not calculated</dd></div></dl><button class="btn btn-primary w-100" type="button" disabled>Submit order · Coming later</button><p class="form-note mt-3 mb-0">This preview does not create order requests.</p></div></section>
+        <div class="notice mb-4"><strong>Draft only — not submitted.</strong> This draft is saved in this browser for your account and cleared on logout. Estimated totals use current EUR prices; final prices must be checked when order submission is available.</div>
+        <div id="draft-feedback" role="status" aria-live="polite" hidden></div>
+        <div id="draft-state" class="alert alert-info" role="status" aria-live="polite">Checking your draft…</div>
+        <button id="retry-draft" class="btn btn-outline-primary mb-3" type="button" hidden>Retry product check</button>
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <section aria-labelledby="order-items-title">
+              <div class="section-heading"><h2 id="order-items-title" class="mb-0">Draft items</h2><button id="clear-draft" class="btn btn-outline-danger btn-sm" type="button" disabled>Clear draft</button></div>
+              <div id="draft-items" aria-busy="true"></div>
+              <div id="empty-draft" class="card empty-state" hidden><h3>Your draft is empty</h3><p>Add products from the catalog to begin a local draft. No order has been created.</p><a class="btn btn-outline-primary" href="/catalog/">Browse catalog</a></div>
+            </section>
+          </div>
+          <div class="col-lg-4">
+            <section class="card" aria-labelledby="summary-title"><div class="card-body">
+              <h2 id="summary-title">Draft estimate</h2>
+              <dl class="mb-3"><div class="summary-row"><dt>Products</dt><dd id="draft-product-count">0</dd></div><div class="summary-row"><dt>Units</dt><dd id="draft-unit-count">0</dd></div><div class="summary-row"><dt>Estimated total</dt><dd id="draft-total" aria-live="polite">Checking…</dd></div></dl>
+              <p id="estimate-note" class="form-note">Estimates include only products verified as active on this page load.</p>
+              <p class="form-note mb-0"><strong>No order is submitted.</strong> Order submission will be added in Milestone 6. This draft does not reserve products or fix prices.</p>
+            </div></section>
+          </div>
         </div>
-      </div>
       </div>
     </main>
     <footer id="site-footer"></footer>

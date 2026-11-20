@@ -159,5 +159,7 @@ authentication is implemented and verified in [milestone 4B](authentication-ui.m
 Milestone 5A's [catalog access and demo seed](../supabase/catalog-access.md) are
 deployed and verified after explicit approval: active dealers read only active
 products; anonymous/inactive/admin catalog reads and client product writes remain
-blocked. Admin catalog operations, orders and Storage remain default-deny. No
-catalog frontend, cart or ordering changes have started.
+blocked. Admin catalog operations, orders and Storage remain default-deny.
+[Milestone 5B](catalog-and-draft.md) implements the catalog frontend and local
+drafts without database changes. No order submission exists; Milestone 6 must
+validate product IDs, quantities and current prices independently on the server.

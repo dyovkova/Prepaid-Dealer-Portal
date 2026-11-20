@@ -10,5 +10,6 @@ export function navigationLink({ id, href, label }, currentPage) {
   const isCurrent = id === currentPage;
   const isParent = id === 'my-orders' && currentPage === 'order-details';
 
-  return `<a class="nav-link${isCurrent || isParent ? ' active' : ''}" href="${href}"${isCurrent ? ' aria-current="page"' : ''}>${label}</a>`;
+  const badge = id === 'new-order' ? ' <span class="badge text-bg-light" data-draft-count aria-label="0 draft products">0</span>' : '';
+  return `<a class="nav-link${isCurrent || isParent ? ' active' : ''}" href="${href}"${isCurrent ? ' aria-current="page"' : ''}>${label}${badge}</a>`;
 }

@@ -8,5 +8,10 @@ refresh, registration, login and logout; there is no separate credential system.
 organization through existing RLS. Admins require an active profile, not dealer
 organization access. Editable Auth metadata never grants permissions.
 
-UI guards/feedback and form validation live in `src/auth/`. No product, order,
-Storage or admin-management service is implemented in milestone 4B.
+`products.js` performs SELECT-only active-product queries through the same
+authenticated client/RLS, validates results and converts current EUR prices to
+integer cents. An optional ID filter revalidates draft selections.
+
+UI guards and form validation live in `src/auth/`. Local draft validation,
+storage and UI helpers live in `src/draft/`; browser state never authorizes
+orders. No submission, Storage or admin-management service is implemented.

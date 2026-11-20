@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Prepaid product catalog layout preview with synthetic example products.">
+    <meta name="description" content="Browse active prepaid demo products and prepare a local order draft.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <title>Product Catalog | Prepaid Dealer Portal</title>
     <script type="module" src="/src/pages/catalog.js"></script>
@@ -14,19 +14,22 @@
     <main id="main-content" class="container portal-container" tabindex="-1">
       <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
       <div id="protected-content" hidden>
-      <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
-        <div><span class="section-label">Dealer workspace</span><h1>Product catalog</h1><p class="text-secondary">A dedicated place to browse prepaid products and prepare your next request.</p></div>
-        <a class="btn btn-outline-primary" href="/new-order/">Preview new order</a>
-      </div>
-      <div class="notice mb-4"><strong>Catalog placeholder.</strong> These are synthetic layout examples. Live products, prices, and quantity selection will be added in a later milestone.</div>
-      <section aria-labelledby="products-title">
-        <div class="section-heading"><h2 id="products-title" class="mb-0">Product preview</h2><span class="placeholder-badge">3 synthetic examples</span></div>
-        <div class="row g-4">
-          <div class="col-md-6 col-lg-4"><article class="card h-100"><div class="card-body d-flex flex-column"><span class="product-type mb-3">Starter</span><h3>Demo prepaid starter</h3><p class="form-note mb-2">SKU: DEMO-STARTER</p><p class="text-secondary flex-grow-1">An example starter product card. Product details will appear here when the catalog is connected.</p><div class="product-footer"><p class="form-note">Price not connected</p><button class="btn btn-primary w-100" type="button" disabled>Add to order · Coming later</button></div></div></article></div>
-          <div class="col-md-6 col-lg-4"><article class="card h-100"><div class="card-body d-flex flex-column"><span class="product-type mb-3">Top-up</span><h3>Demo prepaid top-up</h3><p class="form-note mb-2">SKU: DEMO-TOPUP</p><p class="text-secondary flex-grow-1">An example top-up product card. No prepaid credit is sold or activated in this preview.</p><div class="product-footer"><p class="form-note">Price not connected</p><button class="btn btn-primary w-100" type="button" disabled>Add to order · Coming later</button></div></div></article></div>
-          <div class="col-md-6 col-lg-4"><article class="card h-100"><div class="card-body d-flex flex-column"><span class="product-type mb-3">Bundle</span><h3>Demo prepaid bundle</h3><p class="form-note mb-2">SKU: DEMO-BUNDLE</p><p class="text-secondary flex-grow-1">An example bundle product card. Availability and ordering will be implemented in later milestones.</p><div class="product-footer"><p class="form-note">Price not connected</p><button class="btn btn-primary w-100" type="button" disabled>Add to order · Coming later</button></div></div></article></div>
+        <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div><span class="section-label">Dealer workspace</span><h1>Product catalog</h1><p class="text-secondary">Browse prepaid demo products and choose quantities for your draft.</p></div>
+          <a class="btn btn-outline-primary" href="/new-order/">View draft <span class="badge text-bg-light ms-1" data-draft-count aria-label="0 draft products">0</span></a>
         </div>
-      </section>
+        <div class="notice mb-4"><strong>Draft only.</strong> Prices are in EUR. Your selection is saved in this browser for your account. Estimates are not final order prices; nothing is submitted.</div>
+        <div id="catalog-feedback" role="status" aria-live="polite" hidden></div>
+        <button id="reset-draft" class="btn btn-outline-danger mb-4" type="button" hidden>Clear unreadable draft</button>
+        <section aria-labelledby="products-title">
+          <div class="section-heading align-items-end">
+            <div><h2 id="products-title">Available products</h2><p id="product-count" role="status" aria-live="polite"></p></div>
+            <div class="catalog-search"><label class="form-label" for="product-search">Search products</label><input id="product-search" class="form-control" type="search" placeholder="Name, SKU or description" disabled></div>
+          </div>
+          <div id="catalog-state" class="alert alert-info" role="status" aria-live="polite">Loading products…</div>
+          <button id="retry-products" class="btn btn-outline-primary mb-3" type="button" hidden>Retry products</button>
+          <div id="product-grid" class="row g-4" aria-busy="true"></div>
+        </section>
       </div>
     </main>
     <footer id="site-footer"></footer>

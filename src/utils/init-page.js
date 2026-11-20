@@ -5,8 +5,8 @@ import { renderHeader } from '../components/header.js';
 import { renderFooter } from '../components/footer.js';
 import { startPageAuth } from '../auth/page-auth.js';
 
-export function initPage(currentPage) {
+export function initPage(currentPage, onAccount) {
   document.querySelector('#site-header').innerHTML = renderHeader(currentPage);
   document.querySelector('#site-footer').innerHTML = renderFooter();
-  return startPageAuth(currentPage);
+  return startPageAuth(currentPage, onAccount);
 }

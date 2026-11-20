@@ -85,6 +85,10 @@ p { line-height: 1.65; }
 .table td { padding: 1rem 1.5rem; }
 .product-type { color: #204db8; font-size: .8125rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .product-footer { border-top: 1px solid var(--portal-border); padding-top: 1.25rem; margin-top: 1.5rem; }
+.catalog-search { width: min(100%, 22rem); }
+.quantity-input { width: 6.5rem; flex: 0 0 6.5rem; }
+.product-sku, .product-description, .draft-product { overflow-wrap: anywhere; }
+.draft-item-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .admin-card { border-top: 3px solid #a5b8e5; }
 .checklist { padding-left: 1.2rem; color: var(--portal-muted); }
 .checklist li { margin-bottom: .8rem; padding-left: .25rem; }
@@ -101,6 +105,8 @@ p { line-height: 1.65; }
   .auth-aside { padding: 0; }
 }
 @media (max-width: 575.98px) {
+  .draft-item-values { grid-template-columns: 1fr 1fr; }
+  .draft-item-values > :first-child { grid-column: 1 / -1; }
   main { padding-block: 1.75rem 2.5rem; }
   .card-body { padding: 1.25rem; }
   .card-header { padding: 1rem 1.25rem; }

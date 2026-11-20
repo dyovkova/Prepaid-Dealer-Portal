@@ -12,7 +12,9 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "check:preview": "node scripts/check-preview.mjs",
-    "test:auth-ui": "playwright test"
+    "test:auth-ui": "playwright test",
+    "test:draft": "node --test tests/draft.test.js",
+    "test:catalog-ui": "playwright test --config playwright.catalog.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

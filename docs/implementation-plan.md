@@ -125,13 +125,15 @@ Preparation (2026-11-20): read-only CLI verified healthy PrepaidDealerPortal (`n
 
 Approved deployment/validation (2026-11-20): reconfirmed the exact healthy target, both approved file hashes, unchanged baseline, sole pending migration and zero seed conflicts. Applied only the catalog migration, then imported only the approved seed. Verified stored migration statements, exact SELECT policy/grants, RLS, twelve rows (ten active/two inactive), and an exact no-op hosted seed rerun. Hosted PostgreSQL 17.12 rollback tests passed all security checks including 22 forbidden statements. Actual public Auth sessions for all three dealers read exactly the ten active products and could not read archived products or perform INSERT/UPDATE/reactivation/DELETE. Admin catalog reads returned no rows; anonymous reads were denied. The same dealer JWT lost catalog access for profile and organization deactivation separately; both were restored and access recovered. Final identity, membership, role and product snapshots match; old migrations/functions/non-product grants/policies remain unchanged, with zero orders/items. Local SQL regression and build passed. Final history matches all three migrations and dry-run reports up to date. No Auth settings, frontend, cart, orders or other features changed. All applicable 5A checks pass; commit/push is authorized for the verified 5A files only. See [actual hosted results](../supabase/catalog-access.md#actual-hosted-deployment-and-validation-2026-11-20).
 
-### 5B. Catalog frontend and draft selection: deferred
+### 5B. Catalog frontend and draft selection: complete for the current demo
 
-Depends on: completed 5A and a separate user request.
+Depends on: completed 5A. The user requested frontend-only implementation, validation and a focused commit/push.
 
 Scope: render active products; select positive whole-number quantities and retain a local draft for the order-review page. Scope/clear draft state across users and logout. Include validation and loading/empty/error states.
 
 Acceptance: seeded catalog data displays correctly; inactive products are excluded for dealers; draft quantities and preview totals behave correctly; anonymous/inactive access is denied. A draft has no database order or reserved stock.
+
+Implementation/verification (2026-11-20): catalog cards use the existing authenticated client/RLS, with name/SKU/description/EUR price, search, loading/empty/error/retry and validated additions. Per-user/project local drafts persist IDs/quantities only; draft loads fetch current active products/prices, exclude unavailable lines and support edits/remove/clear with integer-cent estimates. Shared counters and cross-tab updates respect identity; logout clears only that user's draft. Four model/storage tests, the build, eight-page/20-link preview checks and three real-session Chrome tests passed. Checks covered ten active/two hidden inactive products, direct inactive-ID RLS denial, estimates, invalid input, persistence, two-account isolation, logout, cross-tab changes, failures/retries, local price tampering, storage errors and dealer/admin guards. Price/status/failure scenarios used browser mocks without database writes. Mobile screenshots were inspected; 390/320-pixel overflow checks passed. Read-only snapshots confirmed all remote data/schema/RLS/history unchanged. No submission or later milestones were implemented. See [5B functionality, actual results and limits](catalog-and-draft.md).
 
 ## 6. Atomic order submission
 

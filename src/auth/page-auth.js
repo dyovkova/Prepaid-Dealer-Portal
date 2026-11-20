@@ -2,12 +2,14 @@ import { loadAccount, signOut } from '../services/auth.js';
 import { getSupabase } from '../services/supabase.js';
 import { renderHeader } from '../components/header.js';
 import { accountMessages, authError } from './messages.js';
+import { updateDraftCounter } from '../draft/counter.js';
+import { discardDraft } from '../draft/storage.js';
 
 const allowedRoles = { catalog: ['dealer'], 'new-order': ['dealer'], 'my-orders': ['dealer'],
   'order-details': ['dealer', 'admin'], admin: ['admin'] };
 const destination = role => role === 'admin' ? '/admin/' : '/catalog/';
 
-export async function startPageAuth(page) {
+export async function startPageAuth(page, onAccount = () => {}) {
   const content = document.querySelector('#protected-content');
   const form = document.querySelector('[data-auth-form]');
   const status = document.createElement('section');
@@ -19,6 +21,12 @@ export async function startPageAuth(page) {
   let generation = 0;
   let checking = false;
   let loggingOut = false;
+  let lastDealerId = null;
+
+  function suspend() {
+    onAccount(null);
+    updateDraftCounter(null);
+  }
 
   function message(text, type = 'info', retry = false) {
     status.replaceChildren();
@@ -41,10 +49,13 @@ export async function startPageAuth(page) {
     const current = ++generation;
     checking = true;
     if (content) content.hidden = true;
+    suspend();
     message('Checking your session and account…');
     try {
       const account = await loadAccount();
       if (current !== generation) return;
+      if (lastDealerId && lastDealerId !== account?.userId) discardDraft(lastDealerId);
+      lastDealerId = account?.role === 'dealer' ? account.userId : null;
       document.querySelector('#site-header').innerHTML = renderHeader(page, account);
       const name = document.querySelector('[data-account-name]');
       if (name) name.textContent = account.profile?.display_name ?? 'Account';
@@ -62,6 +73,8 @@ export async function startPageAuth(page) {
         location.replace(destination(account.role) + reason); return;
       }
       if (content) content.hidden = false;
+      updateDraftCounter(account);
+      onAccount(account);
       if (form) { form.hidden = false; form.querySelector('fieldset').disabled = false; }
       const notice = new URLSearchParams(location.search).get('notice');
       if (account && content) message(notice === 'role-restricted'
@@ -84,9 +97,10 @@ export async function startPageAuth(page) {
     loggingOut = true;
     generation += 1;
     if (content) content.hidden = true;
+    suspend();
     button.disabled = true;
     message('Logging out…');
-    try { await signOut(); location.replace('/login/?notice=signed-out'); }
+    try { await signOut(); discardDraft(lastDealerId); location.replace('/login/?notice=signed-out'); }
     catch (error) {
       loggingOut = false;
       message(authError(error), 'danger', true); button.disabled = false;
@@ -95,6 +109,7 @@ export async function startPageAuth(page) {
   try {
     getSupabase().auth.onAuthStateChange(event => {
       if (event !== 'INITIAL_SESSION') setTimeout(() => {
+        if (event === 'SIGNED_OUT') { discardDraft(lastDealerId); suspend(); }
         // Local forms explicitly refresh after completion; cross-tab events still recheck.
         if (!loggingOut && !form?.matches('[aria-busy="true"]')) void refresh();
       }, 0);

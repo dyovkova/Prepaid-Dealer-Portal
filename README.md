@@ -12,7 +12,12 @@ Links perform normal document navigation; there is no SPA router or history fall
 Milestone 4B provides working registration, login, logout, persistent Supabase
 sessions, role-based navigation guards and inactive-account feedback. Account
 roles/status come from database rows protected by the deployed 4A RLS policies.
-Product, order, document and admin-management actions remain disabled placeholders.
+Milestone 5B provides a live dealer catalog and editable local order draft.
+Search active products, choose quantities and review current EUR estimates.
+Drafts are scoped to the verified user, persist across refresh and clear on
+logout. Prices are rechecked on draft load; no orders are submitted. Order
+history, documents and admin-management actions remain placeholders. See
+[5B results and limits](docs/catalog-and-draft.md).
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -92,7 +97,11 @@ Browser authentication verification is documented in [the 4B checks](docs/authen
 The opt-in `npm run test:auth-ui` suite uses real Supabase signup/login and isolated
 Chrome contexts; it requires approved controlled fixture addresses/local state and
 restores any temporary fixture role/status changes. Authentication forms are active;
-business actions remain disabled. Trace/video capture is disabled to protect credentials.
+order submission remains disabled. Trace/video capture is disabled to protect credentials.
+
+For frontend-only catalog/draft validation, use `npm run test:draft` and the
+separate opt-in `npm run test:catalog-ui` suite documented in the 5B results.
+The historical 4B suite changes trusted fixture roles/status and is not a 5B check.
 
 ## Source organization
 
