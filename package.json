@@ -14,7 +14,9 @@
     "check:preview": "node scripts/check-preview.mjs",
     "test:auth-ui": "playwright test",
     "test:draft": "node --test tests/draft.test.js",
-    "test:catalog-ui": "playwright test --config playwright.catalog.config.js"
+    "test:catalog-ui": "playwright test --config playwright.catalog.config.js",
+    "test:submission": "node --test tests/submission.test.js",
+    "test:submission-ui": "playwright test --config playwright.submission.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

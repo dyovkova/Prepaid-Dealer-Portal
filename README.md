@@ -14,10 +14,13 @@ sessions, role-based navigation guards and inactive-account feedback. Account
 roles/status come from database rows protected by the deployed 4A RLS policies.
 Milestone 5B provides a live dealer catalog and editable local order draft.
 Search active products, choose quantities and review current EUR estimates.
-Drafts are scoped to the verified user, persist across refresh and clear on
-logout. Prices are rechecked on draft load; no orders are submitted. Order
-history, documents and admin-management actions remain placeholders. See
-[5B results and limits](docs/catalog-and-draft.md).
+Drafts are scoped to the verified user and persist across refresh. Prices are
+rechecked on draft load. Milestone 6B connects New Order to the verified atomic
+`submit_order` RPC, with an optional note, duplicate-click protection, confirmed
+order UUID and exact durable retries after uncertain outcomes. Pending requests
+and their drafts survive logout; normal drafts clear on logout. Order history,
+documents and admin-management actions remain placeholders. See
+[5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -96,19 +99,25 @@ For a repeatable lockfile-based dependency installation, use `npm ci`.
 Browser authentication verification is documented in [the 4B checks](docs/authentication-ui.md).
 The opt-in `npm run test:auth-ui` suite uses real Supabase signup/login and isolated
 Chrome contexts; it requires approved controlled fixture addresses/local state and
-restores any temporary fixture role/status changes. Authentication forms are active;
-order submission remains disabled. Trace/video capture is disabled to protect credentials.
+restores any temporary fixture role/status changes. Trace/video capture is disabled
+to protect credentials.
 
 For frontend-only catalog/draft validation, use `npm run test:draft` and the
 separate opt-in `npm run test:catalog-ui` suite documented in the 5B results.
-The historical 4B suite changes trusted fixture roles/status and is not a 5B check.
+For submission, use `npm run test:submission` and the separate opt-in
+`npm run test:submission-ui`; [6B instructions](docs/order-submission-ui.md)
+describe the two retained synthetic orders and request manifest needed for reruns.
+The historical 4B suite changes trusted fixture roles/status and is not required
+for frontend-only regressions.
 
 ## Source organization
 
 - `src/pages/`: one initialization module per HTML entry.
 - `src/components/`: shared header and footer.
 - `src/utils/`: shared page initialization and navigation helpers.
-- `src/services/`: the reusable Supabase client and Auth/identity data access.
+- `src/services/`: the reusable Supabase client, Auth/identity, products and order RPC access.
+- `src/draft/`: per-user local selections, estimates and shared draft UI.
+- `src/orders/`: durable submission requests, retry coordination and feedback.
 - `src/auth/`: guards, feedback, form submission and validation.
 - `tests/`: opt-in real-browser authentication/security checks.
 - `src/styles/`: shared Bootstrap overrides and responsive application styles.
@@ -118,4 +127,5 @@ The historical 4B suite changes trusted fixture roles/status and is not a 5B che
 
 See [the project brief](docs/project-brief.md) for full MVP scope and
 [the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Business-data features and deployment remain later milestones.
+recorded acceptance checks. Order history, admin management, documents and deployment
+remain later milestones.

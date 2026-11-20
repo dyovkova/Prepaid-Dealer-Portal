@@ -12,6 +12,12 @@ organization access. Editable Auth metadata never grants permissions.
 authenticated client/RLS, validates results and converts current EUR prices to
 integer cents. An optional ID filter revalidates draft selections.
 
+`orders.js` verifies the current Auth owner and calls only the existing
+`submit_order` RPC, binding the attempt to that owner's JWT. It sends IDs,
+quantities, note and request UUID, with no client prices/totals/ownership/status.
+
 UI guards and form validation live in `src/auth/`. Local draft validation,
-storage and UI helpers live in `src/draft/`; browser state never authorizes
-orders. No submission, Storage or admin-management service is implemented.
+storage and UI helpers live in `src/draft/`. `src/orders/` owns durable requests,
+cross-tab submission coordination, exact retries and confirmed cleanup; browser
+state never authorizes orders. See [6B behavior and checks](../../docs/order-submission-ui.md).
+No order-history, Storage or admin-management service is implemented.

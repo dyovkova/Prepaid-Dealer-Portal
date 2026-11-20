@@ -30,6 +30,7 @@ p { line-height: 1.65; }
 .auth-navigation { align-items: center; }
 .account-name { max-width: 12rem; overflow-wrap: anywhere; }
 #account-status { scroll-margin-top: 1rem; }
+#order-feedback { overflow-wrap: anywhere; margin-top: 1rem; }
 [hidden] { display: none !important; }
 .preview-banner { background: #eaf0ff; border-bottom: 1px solid #d9e2fa; padding-block: .8rem; color: #304970; font-size: .875rem; }
 .preview-label { background: white; border: 1px solid #c6d4f0; border-radius: .3rem; padding: .15rem .45rem; font-size: .75rem; font-weight: 700; white-space: nowrap; }

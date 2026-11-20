@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Edit your local product draft and review estimated EUR totals. No order is submitted.">
+    <meta name="description" content="Review your product draft and submit a secure prepaid dealer order request.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <title>New Order | Prepaid Dealer Portal</title>
     <script type="module" src="/src/pages/new-order.js"></script>
@@ -19,7 +19,7 @@
           <div><span class="section-label">Dealer workspace</span><h1>New order</h1><p class="text-secondary">Edit your local draft and review current product prices.</p></div>
           <a class="btn btn-outline-primary" href="/catalog/">Continue browsing</a>
         </div>
-        <div class="notice mb-4"><strong>Draft only — not submitted.</strong> This draft is saved in this browser for your account and cleared on logout. Estimated totals use current EUR prices; final prices must be checked when order submission is available.</div>
+        <div class="notice mb-4"><strong>Review before submitting.</strong> Totals below are estimates. The server checks your account, products and current prices when creating an order. Unconfirmed requests are kept in this browser for safe retries, including after logout.</div>
         <div id="draft-feedback" role="status" aria-live="polite" hidden></div>
         <div id="draft-state" class="alert alert-info" role="status" aria-live="polite">Checking your draft…</div>
         <button id="retry-draft" class="btn btn-outline-primary mb-3" type="button" hidden>Retry product check</button>
@@ -28,7 +28,7 @@
             <section aria-labelledby="order-items-title">
               <div class="section-heading"><h2 id="order-items-title" class="mb-0">Draft items</h2><button id="clear-draft" class="btn btn-outline-danger btn-sm" type="button" disabled>Clear draft</button></div>
               <div id="draft-items" aria-busy="true"></div>
-              <div id="empty-draft" class="card empty-state" hidden><h3>Your draft is empty</h3><p>Add products from the catalog to begin a local draft. No order has been created.</p><a class="btn btn-outline-primary" href="/catalog/">Browse catalog</a></div>
+              <div id="empty-draft" class="card empty-state" hidden><h3>Your draft is empty</h3><p>Browse the catalog to prepare another selection. Confirmed order details are shown separately below.</p><a class="btn btn-outline-primary" href="/catalog/">Browse catalog</a></div>
             </section>
           </div>
           <div class="col-lg-4">
@@ -36,7 +36,15 @@
               <h2 id="summary-title">Draft estimate</h2>
               <dl class="mb-3"><div class="summary-row"><dt>Products</dt><dd id="draft-product-count">0</dd></div><div class="summary-row"><dt>Units</dt><dd id="draft-unit-count">0</dd></div><div class="summary-row"><dt>Estimated total</dt><dd id="draft-total" aria-live="polite">Checking…</dd></div></dl>
               <p id="estimate-note" class="form-note">Estimates include only products verified as active on this page load.</p>
-              <p class="form-note mb-0"><strong>No order is submitted.</strong> Order submission will be added in Milestone 6. This draft does not reserve products or fix prices.</p>
+              <form id="order-submit-form" novalidate>
+                <label class="form-label" for="order-note">Order note <span class="fw-normal">(optional)</span></label>
+                <textarea id="order-note" class="form-control mb-2" rows="3" maxlength="2000" aria-describedby="order-note-help" disabled></textarea>
+                <p id="order-note-help" class="form-note">Up to 2000 characters. Your note is retained with the request once you submit.</p>
+                <button id="submit-order" class="btn btn-primary w-100" type="submit" disabled>Submit order</button>
+              </form>
+              <div id="order-feedback" class="mt-3" role="status" aria-live="polite" tabindex="-1" hidden></div>
+              <p id="request-reference" class="form-note text-break mt-2"></p>
+              <p class="form-note mb-0">Submission creates an order request, not a payment, stock reservation or delivery promise. Keep this browser's saved request until its outcome is confirmed.</p>
             </div></section>
           </div>
         </div>

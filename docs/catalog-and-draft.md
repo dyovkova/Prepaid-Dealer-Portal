@@ -2,7 +2,9 @@
 
 Status (2026-11-20): **implemented and verified** against PrepaidDealerPortal
 (`niabpabsvdgxackjjcsb`). No schema, RLS, product, role, membership, activation
-or Auth configuration change was made. No order can be submitted.
+or Auth configuration change was made in 5B. The record below describes that
+milestone; [6B now adds submission](order-submission-ui.md), including preservation
+of unresolved drafts/requests across logout instead of clearing them.
 
 ## Behavior and boundaries
 

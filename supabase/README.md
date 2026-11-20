@@ -25,8 +25,10 @@ and local draft UI are complete in [5B](../docs/catalog-and-draft.md).
 [atomic order backend results](order-submission.md) record its RPC contract,
 approved hash, hosted Auth/RPC/security checks and native concurrency regression.
 All four migrations match remote history. Three synthetic validation orders/four
-items are retained; original identities/products/security are preserved. Frontend
-submission, history, admin operations and Storage remain deferred.
+items were retained by 6A; original identities/products/security are preserved.
+[Milestone 6B frontend submission](../docs/order-submission-ui.md) is now verified,
+adding two synthetic orders/four items through the existing RPC. Five orders/eight
+items remain in total. History, admin operations and Storage remain deferred.
 
 ## Applied migration and actual verification (2026-11-20)
 

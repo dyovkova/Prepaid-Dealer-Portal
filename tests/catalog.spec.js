@@ -94,7 +94,7 @@ test('real dealer catalog, search, quantities, estimates, editing, persistence a
   await expect(page.locator('#draft-total')).toHaveText('€20.00'); await expect(counter(page)).toHaveText('1');
   await page.getByRole('button', { name: 'Clear draft', exact: true }).click();
   await expect(page.locator('#empty-draft')).toBeVisible(); await expect(page.locator('#draft-total')).toHaveText('€0.00');
-  await expect(page.getByRole('button', { name: /Submit/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Submit order', exact: true })).toBeDisabled();
 });
 
 test('API loading/failure/empty/retry, price revalidation, unavailable items and storage failures', async ({ page }) => {

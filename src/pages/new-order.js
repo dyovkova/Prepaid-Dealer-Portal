@@ -3,19 +3,22 @@ import { loadProducts } from '../services/products.js';
 import { euros, estimate, quantity } from '../draft/model.js';
 import { readDraft, writeDraft, clearDraft, draftKey } from '../draft/storage.js';
 import { draftItem, feedback, validateQuantity } from '../draft/ui.js';
+import { initOrderSubmission } from '../orders/ui.js';
+import { requestKey } from '../orders/request.js';
 
 const list = document.querySelector('#draft-items');
 const state = document.querySelector('#draft-state');
 const notice = document.querySelector('#draft-feedback');
 const retry = document.querySelector('#retry-draft');
 const clear = document.querySelector('#clear-draft');
-let account, request, items = [], products = null, saveError = false;
+let account, request, submission, items = [], products = null, saveError = false, draftError = false;
 
 function summary() {
   document.querySelector('#draft-product-count').textContent = items.length;
   document.querySelector('#draft-unit-count').textContent = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = document.querySelector('#draft-total');
   const invalid = Boolean(list.querySelector('[aria-invalid="true"]'));
+  submission?.refresh();
   if (saveError || invalid || (items.length && !products)) { total.textContent = 'Unavailable'; return; }
   try {
     const result = estimate(items, products ?? new Map());
@@ -32,7 +35,7 @@ function render(loading = false) {
   summary();
 }
 async function activate(next) {
-  request?.abort(); account = next; items = []; products = null; saveError = false;
+  request?.abort(); account = next; items = []; products = null; saveError = false; draftError = false;
   list.replaceChildren(); list.setAttribute('aria-busy', 'true');
   retry.hidden = true; clear.disabled = true; document.querySelector('#empty-draft').hidden = true;
   feedback(notice, ''); feedback(state, 'Checking your draft…'); summary();
@@ -40,9 +43,10 @@ async function activate(next) {
   const current = request = new AbortController();
   try { items = readDraft(account.userId); render(true); }
   catch (error) {
+    draftError = true;
     feedback(state, error.message, 'warning'); clear.disabled = false;
     document.querySelector('#draft-total').textContent = 'Unavailable';
-    list.setAttribute('aria-busy', 'false'); return;
+    list.setAttribute('aria-busy', 'false'); submission.refresh(); return;
   }
   if (!items.length) { products = new Map(); render(); feedback(state, ''); list.setAttribute('aria-busy', 'false'); return; }
   try {
@@ -87,12 +91,14 @@ clear.addEventListener('click', () => {
   if (!account) return;
   try {
     clearDraft(account.userId); request?.abort(); list.setAttribute('aria-busy', 'false'); retry.hidden = true;
-    items = []; products = new Map(); saveError = false;
-    render(); feedback(state, ''); feedback(notice, 'Draft cleared. No order was submitted.', 'success');
+    items = []; products = new Map(); saveError = false; draftError = false;
+    render(); feedback(state, ''); feedback(notice, 'Draft cleared.', 'success');
   } catch (error) { feedback(notice, error.message, 'danger'); }
 });
 retry.addEventListener('click', () => { void activate(account); });
 window.addEventListener('storage', event => {
-  if (account && (event.key === null || event.key === draftKey(account.userId))) void activate(account);
+  if (account && (event.key === null || [draftKey(account.userId), requestKey(account.userId)].includes(event.key))) void activate(account);
 });
+submission = initOrderSubmission(() => ({ account, items, products, canClear: Boolean(items.length || draftError),
+  invalid: saveError || draftError || Boolean(list.querySelector('[aria-invalid="true"]')) }), () => activate(account));
 void initPage('new-order', next => { void activate(next); });

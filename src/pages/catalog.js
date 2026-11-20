@@ -3,6 +3,7 @@ import { loadProducts } from '../services/products.js';
 import { quantity, MAX_QUANTITY, MAX_DRAFT_ITEMS } from '../draft/model.js';
 import { readDraft, writeDraft, clearDraft, draftKey } from '../draft/storage.js';
 import { feedback, productCard, validateQuantity } from '../draft/ui.js';
+import { assertDraftEditable, requestKey } from '../orders/request.js';
 
 const grid = document.querySelector('#product-grid');
 const search = document.querySelector('#product-search');
@@ -10,14 +11,19 @@ const state = document.querySelector('#catalog-state');
 const notice = document.querySelector('#catalog-feedback');
 const retry = document.querySelector('#retry-products');
 const reset = document.querySelector('#reset-draft');
-let account, request, ownerId, products = [];
+let account, request, ownerId, storageNotice = false, products = [];
 
 function checkStorage() {
   let error = '';
-  try { readDraft(account.userId); } catch (cause) { error = cause.message; }
-  reset.hidden = !error;
+  let resettable = false;
+  try {
+    assertDraftEditable(account.userId);
+    try { readDraft(account.userId); } catch (cause) { resettable = true; throw cause; }
+  } catch (cause) { error = cause.message; }
+  reset.hidden = !resettable;
   grid.querySelectorAll('button').forEach(button => { button.disabled = Boolean(error); });
-  if (error) feedback(notice, error, 'warning');
+  if (error) { feedback(notice, error, 'warning'); storageNotice = true; }
+  else if (storageNotice) { feedback(notice, ''); storageNotice = false; }
 }
 function filter() {
   const term = search.value.trim().toLowerCase();
@@ -74,10 +80,11 @@ search.addEventListener('input', filter);
 retry.addEventListener('click', () => { void activate(account); });
 reset.addEventListener('click', () => {
   if (!account) return;
-  try { clearDraft(account.userId); feedback(notice, 'Unreadable draft cleared.', 'success'); checkStorage(); }
+  try { clearDraft(account.userId); checkStorage(); feedback(notice, 'Unreadable draft cleared.', 'success'); }
   catch (error) { feedback(notice, error.message, 'danger'); }
 });
 window.addEventListener('storage', event => {
-  if (account && (event.key === null || event.key === draftKey(account.userId))) checkStorage();
+  if (account && (event.key === null || [draftKey(account.userId), requestKey(account.userId)].includes(event.key))) checkStorage();
 });
+window.addEventListener('pdp:order-request-updated', () => { if (account) checkStorage(); });
 void initPage('catalog', next => { void activate(next); });

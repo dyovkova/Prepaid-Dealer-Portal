@@ -164,4 +164,6 @@ blocked. Admin catalog operations, orders and Storage remain default-deny.
 drafts without database changes. [Milestone 6A](../supabase/order-submission.md)
 deploys the independently validated atomic server operation. Hosted RPC/security
 and native concurrency tests passed; three synthetic validation orders/four items
-are retained. No frontend submission or order-history access is implemented.
+are retained from 6A. [Milestone 6B](order-submission-ui.md) connects the frontend
+to that RPC with durable request IDs and confirmed cleanup, adding two retained
+synthetic orders/four items. Order-history access remains deferred.
