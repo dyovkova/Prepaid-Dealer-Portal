@@ -40,4 +40,4 @@ Prepaid Dealer Portal is a SoftUni "Software Technologies with AI" capstone. Use
 
 ## Current boundary
 
-Milestone 3A finalizes the accepted six-table schema and access documentation only; see `docs/database-design.md`. Preserve organization-scoped order visibility, isolated dealer signup, RLS, and protected database-side order submission. The application remains a placeholder skeleton. Do not create SQL migrations or database resources, configure Storage, or implement application features until the relevant milestone is separately requested.
+Milestone 3B's approved six-table migration is applied to PrepaidDealerPortal (`niabpabsvdgxackjjcsb`). Catalog, invalid-data, and default-deny authorization checks passed; full Auth-backed fixture acceptance remains pending in the implementation plan. Further database changes require explicit scope and approval. Authentication/provisioning, ordering logic, admin operations, Storage, and application features remain deferred. Do not start milestone 4 or commit/push unless requested.

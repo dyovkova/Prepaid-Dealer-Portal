@@ -9,9 +9,15 @@ Milestone 2 provides a genuine multi-page skeleton: eight independent HTML entri
 shared responsive navigation and footer, and clearly labelled placeholder screens.
 Links perform normal document navigation; there is no SPA router or history fallback.
 
-Authentication, Supabase, database resources, order logic, and admin operations are
+Authentication, the frontend Supabase client, order logic, and admin operations are
 not implemented. Forms and business-action buttons are disabled. All example product
-content is synthetic, and no accounts, requests, or files are saved.
+content is synthetic, and the frontend saves no accounts, requests, or files.
+
+Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
+is applied to `niabpabsvdgxackjjcsb`, with default-deny client access. Catalog,
+constraint-rejection, and authorization checks passed; Auth-backed fixture acceptance
+tests remain outstanding. See [Supabase setup and verification](supabase/README.md).
+The frontend still needs no Supabase configuration; milestone 4 has not started.
 
 ## Local setup
 

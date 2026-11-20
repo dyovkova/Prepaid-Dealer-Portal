@@ -20,3 +20,7 @@ Thumbs.db
 
 # Local verification artifacts.
 .verification/
+
+# Supabase CLI connection/cache and branch state.
+supabase/.temp/
+supabase/.branches/

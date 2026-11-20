@@ -93,4 +93,4 @@ All six core tables require RLS. Dealers may read only their own profile/role an
 - Admin file upload and authorized dealer file download.
 - Public GitHub repository, working Netlify URL, and documented local setup, Supabase configuration, migration/seed steps, trusted admin setup, deployment, and demo walkthrough.
 
-Milestones 1 and 2 supply the project guidance and eight-page UI skeleton; milestone 2's visual acceptance remains pending. Milestone 3A completes the accepted schema/access documentation only. Database tables, authentication, business workflows, and Storage are not implemented; later work follows the implementation plan.
+Milestones 1 and 2 supply the project guidance and eight-page UI skeleton; milestone 2's visual acceptance remains pending. Milestone 3A completed the accepted schema/access documentation. Milestone 3B's approved six-table migration is applied with default-deny access; catalog, invalid-data, and authorization checks passed, while full Auth-backed fixture acceptance remains pending. Authentication, business workflows, and Storage are not implemented; later work follows the implementation plan.

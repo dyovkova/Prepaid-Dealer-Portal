@@ -1,10 +1,11 @@
 # Milestone 3A: accepted database schema and access model
 
-Status: **MVP baseline accepted on 2026-11-20; not implemented or database-tested**.
+Status: **MVP baseline accepted on 2026-11-20; initial schema applied with catalog and default-deny checks passed; full Auth-backed fixture acceptance pending**.
 
-The application remains an eight-page Vite/Bootstrap skeleton without a Supabase client
-or SQL migrations. Milestone 2's pending browser visual acceptance is tracked in the
-[implementation plan](implementation-plan.md).
+The application remains an eight-page Vite/Bootstrap skeleton without a Supabase client.
+The approved initial migration is applied; see [Supabase verification notes](../supabase/README.md)
+for the verified target, actual checks, and outstanding tests. Milestone 2's pending browser
+visual acceptance remains tracked in the [implementation plan](implementation-plan.md).
 
 ## Accepted scope
 
@@ -107,11 +108,11 @@ from `PUBLIC`/`anon`, and grant only required helpers/operations to `authenticat
 Trigger/provisioning routines are not client-executable. See Supabase's
 [function security guidance](https://supabase.com/docs/guides/database/functions).
 
-## Planned SQL migration sequence (names only; no SQL files created)
+## SQL migration sequence (initial file applied; remaining files planned)
 
 | Planned file | Contents and intended stage |
 | --- | --- |
-| `001_core_schema.sql` | Six tables, FKs, checks, unique constraints, indexes; enable RLS and revoke client access in the same migration; milestone 3B, when requested. |
+| [`20261120000100_core_schema.sql`](../supabase/migrations/20261120000100_core_schema.sql) | Initial six tables, FKs, checks, unique constraints, indexes; enable RLS and revoke client access in the same migration. Applied for milestone 3B on 2026-11-20 after explicit user approval. |
 | `002_identity_and_access.sql` | Private actor helpers, fixed-dealer signup trigger, own profile/role and organization reads, limited profile updates and grants; authentication milestone. |
 | `003_catalog_access.sql` | Active-dealer catalog reads and grants; catalog milestone. |
 | `004_atomic_order_requests.sql` | Guarded submission, immutable order/item rules, idempotency, execution grants; atomic submission milestone. |
@@ -142,6 +143,9 @@ real accounts, privileged keys, or direct password inserts into `auth.users`.
   invalid/terminal status transitions through direct database/API tests. Service/secret
   keys bypass RLS and must never appear in browser code or committed configuration.
 
-Milestone 3A finalizes documentation only. No SQL files or database resources are created,
-and no migrations or database tests are run. Implementation requires a separately requested
-milestone; the existing frontend remains unchanged.
+Milestone 3A finalized the accepted documentation. Milestone 3B applied only the initial
+schema migration to the verified project after explicit user approval. Catalog inspection,
+23 invalid-data checks, 48 client privilege denials, and 48 independent RLS checks passed.
+All test fixtures and temporary grants were rolled back. Full Auth-backed relationship,
+restrictive-delete, and snapshot acceptance tests remain pending. The frontend remains
+unchanged; authentication and later protected operations are not implemented.
