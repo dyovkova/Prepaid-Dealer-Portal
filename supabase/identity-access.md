@@ -145,8 +145,8 @@ and [function security guidance](https://supabase.com/docs/guides/database/funct
 
 ## Trusted first demo administrator
 
-After approved deployment, create and confirm a **synthetic** user through
-Supabase Auth (dashboard or trusted Admin API). The trigger initially assigns
+After approved deployment, register a separate controlled **synthetic** user
+through the existing public Register UI using Supabase Auth. The trigger initially assigns
 `dealer`. Verify the exact project, Auth UUID, email and matching profile before
 promotion. Keep privileged credentials outside source, frontend code and Git.
 
@@ -190,7 +190,14 @@ COMMIT;
 
 Verify the role/profile afterward as the trusted operator. The first admin still
 has no catalog/order/admin-management access until the relevant later migrations.
-No administrator was provisioned during this preparation.
+No administrator was provisioned during the original 4A preparation.
+
+Milestone 4C subsequently completed this procedure with explicit approval for
+one independently verified UI-registered candidate. Exactly one permanent demo
+administrator now exists. See the [setup and approval record](demo-admin-setup.md)
+for its UUID, executed operation hash, preservation checks and actual admin/dealer
+UI and API validation. Do not rerun provisioning or create additional admins.
+No Auth Admin API was used or authorized for this setup.
 
 ## Checks actually run before approval
 
