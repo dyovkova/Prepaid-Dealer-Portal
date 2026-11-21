@@ -30,6 +30,14 @@ items were retained by 6A; original identities/products/security are preserved.
 adding two synthetic orders/four items through the existing RPC. Five orders/eight
 items remain in total. History, admin operations and Storage remain deferred.
 
+**Milestone 7A is deployed and verified after approval.** See [dealer order-read
+access and actual hosted checks](order-read-access.md). Five migrations match;
+active dealers read only their organization's orders/items. Inactive/cross-
+organization/anonymous/admin access and client writes remain denied. Snapshots
+remain readable after product archival. Six orders/eleven items are preserved,
+including the additional existing order since the historical 6B count above.
+History UI, admin-wide access and Storage remain deferred.
+
 ## Applied migration and actual verification (2026-11-20)
 
 Reconfirmed project identity, healthy status, empty public schema, unchanged

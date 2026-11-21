@@ -117,7 +117,7 @@ Trigger/provisioning routines are not client-executable. See Supabase's
 | [`20261120000200_identity_and_access.sql`](../supabase/migrations/20261120000200_identity_and_access.sql) | Private actor helpers, fixed-dealer signup trigger, own profile/role and active-own-organization reads, limited display-name updates and grants; milestone 4A. Applied on 2026-11-20; real public signup/login, isolation and inactive-session checks passed with demo email confirmation disabled by the user. |
 | [`20261120000300_catalog_access.sql`](../supabase/migrations/20261120000300_catalog_access.sql) | Active-dealer catalog SELECT policy and grant; milestone 5A applied and verified on 2026-11-20 after explicit approval. Separate twelve-product synthetic seed imported (ten active/two inactive); hosted idempotency and real-session authorization tests passed. |
 | [`20261120000400_atomic_order_requests.sql`](../supabase/migrations/20261120000400_atomic_order_requests.sql) | Milestone 6A applied and verified after explicit approval: caller-bound atomic submission, current snapshots, creator/request-key idempotency, locking and narrow RPC execution. Direct table access stays default-deny. |
-| `005_order_read_access.sql` | Organization-scoped order/item SELECT policies and grants; dealer history milestone. |
+| [`20261121000500_order_read_access.sql`](../supabase/migrations/20261121000500_order_read_access.sql) | Milestone 7A applied and verified after explicit approval on 2026-11-21: active-dealer organization-scoped order/item SELECT policies/grants only. Admin-wide access and history frontend remain deferred. |
 | `006_admin_catalog_and_dealers.sql` | Admin-wide reads, admin-only product/dealer insert/update policies, column grants, profile activation operation; admin milestones. |
 | `007_admin_order_transitions.sql` | Database-enforced transitions and admin execution grants; order processing milestone. |
 
@@ -166,4 +166,7 @@ deploys the independently validated atomic server operation. Hosted RPC/security
 and native concurrency tests passed; three synthetic validation orders/four items
 are retained from 6A. [Milestone 6B](order-submission-ui.md) connects the frontend
 to that RPC with durable request IDs and confirmed cleanup, adding two retained
-synthetic orders/four items. Order-history access remains deferred.
+synthetic orders/four items. [Milestone 7A order-read access](../supabase/order-read-access.md)
+is deployed and verified: real organization reads, direct UUID isolation,
+inactive-account denial, archived-product snapshot access and prohibited writes
+passed. All existing data/RPCs remain preserved; the history frontend is deferred.

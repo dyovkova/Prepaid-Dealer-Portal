@@ -22,6 +22,10 @@ and their drafts survive logout; normal drafts clear on logout. Order history,
 documents and admin-management actions remain placeholders. See
 [5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
 
+Milestone 7A adds RLS-protected, read-only organization access to saved orders
+and items. The history screens remain placeholders; see
+[database access and hosted checks](supabase/order-read-access.md).
+
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
 constraint-rejection, and authorization checks passed; Auth-backed fixture acceptance

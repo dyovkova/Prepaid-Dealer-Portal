@@ -167,6 +167,18 @@ Scope: add organization-based order/item read policies, dealer organization orde
 
 Acceptance: two synthetic users in organization A can read each other's organization orders/items; a user in organization B cannot, including through direct API calls, joins, and changed URL IDs. Profiles remain individually private except to admins. Product changes do not alter historical snapshots/totals; empty/error states work; dealers cannot change submitted orders or status.
 
+### 7A. Secure dealer history access: deployed and verified for the current demo
+
+Scope: SELECT-only organization-scoped order/item RLS and grants. Reuse the active-dealer helper; preserve snapshots, existing RPC/idempotency/data and all write denials. No admin-wide reads, frontend or Storage.
+
+Preparation (2026-11-21): verified healthy PrepaidDealerPortal (`niabpabsvdgxackjjcsb`), four applied migrations and the sole pending `20261121000500_order_read_access.sql`. Native PostgreSQL 17.12 tests passed shared-organization/cross-organization reads, direct UUIDs, joins, snapshots after catalog edits, inactive/role/membership restrictions, denied writes and unchanged RPC retries/rollback/concurrency. Real public Auth sessions for three isolated dealers and the admin confirmed hosted baseline denials, including every existing order/item UUID. Anonymous denial and read-only preservation checks passed. Four draft tests, seven submission tests and the eight-entry build passed. Remote dry-run listed only the new migration, with no seeds/roles. Six current orders/eleven items and all existing accounts, products, migrations and unrelated configuration are preserved. Nothing applied or committed. New hosted positive-access tests remain pending approval; shared-organization/inactive hosted fixtures would need separate authorization. See [review, actual results and pending checks](../supabase/order-read-access.md).
+
+Approved deployment/verification (2026-11-21): reconfirmed exact target/hash/sole pending migration and unchanged baseline, then applied only the approved SQL. Five migration versions and deployed SQL match source; RLS and authenticated SELECT-only privileges are verified. Real sessions for all three dealers passed organization lists, own/cross UUIDs, saved snapshots, product filters and nested reads. Admin-wide and anonymous reads and all tested direct client writes remain denied. Guarded temporary profile/organization deactivation denied reads and replay with the same JWT; restoration recovered access. Archiving the referenced synthetic product hid its catalog row while snapshots and the original idempotent RPC result stayed accessible. All flags were restored and six orders/eleven items, identities, products, RPCs, other grants/policies and schema remain unchanged. Native SQL/concurrency, eleven JavaScript tests, build and eight-page/20-link preview checks passed. Final dry-run is up to date. Shared-organization membership remains a local-only test; existing hosted memberships were preserved. No 7B/frontend/admin/Storage work. User authorized a focused commit/push of verified 7A files. See [actual hosted results and limits](../supabase/order-read-access.md#actual-hosted-deployment-and-verification-2026-11-21).
+
+### 7B. Dealer history and details UI: deferred
+
+Depends on deployed and verified 7A and a separate request. Implement history/details pages and UI states only when requested; no frontend work is part of 7A.
+
 ## 8. Admin product management
 
 Depends on: 7.
