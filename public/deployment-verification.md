@@ -2,14 +2,13 @@
 
 Site: https://prepaiddealersportal.netlify.app
 
-Source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
+Initial source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
 `c642f16f56b3a18aaac133a9e9e0bf172e448de1`. Date: 2026-11-21.
 
-Status: initial public-route verification complete; the previously invalid key
-was resolved before the session investigation below. Authenticated checks are
-being repeated for the focused frontend fix.
+Status: focused session fix deployed and live dealer/admin authentication checks
+passed. The previously invalid key was resolved before this investigation.
 
-## Confirmed results
+## Initial confirmed results
 
 - All eight live HTML routes return their own expected pages: `/`, `/login/`,
   `/register/`, `/catalog/`, `/new-order/`, `/my-orders/`, `/order-details/`, `/admin/`.
@@ -84,7 +83,31 @@ The frontend fix explicitly supplies the current session JWT for protected
 reads, rechecks identity before organization access, and fails locally with a
 login-again message if the session disappears or changes. The same Supabase
 client and role guards remain in use. No anonymous database grant, migration,
-RLS, Auth setting or environment-key change is included. Local real-account
-tests pass; deployment verification is pending publication of this fix.
+RLS, Auth setting or environment-key change is included.
+
+Fix commit `6100359` was automatically published from GitHub `main`, with the new
+bundle observed at `2026-11-21T10:42:08Z`. The public-key fingerprint is unchanged.
+All three focused real-account browser tests pass on Netlify: two dealer logins,
+own organization/catalog/history/details, refresh, account switching, logout,
+admin routing/refresh and exclusion from dealer pages. Every protected read
+observed by these tests carries the expected user's authenticated JWT. The
+controlled session-loss case now sends no anonymous organization request and
+recovers after login. No uncaught JavaScript or console errors were observed.
+
+After publication, all eight routes, sixteen assets, seventeen private/source
+path denials, HTTPS and unknown-route 404 pass again. Inspected assets contain
+no privileged credentials or known fixture passwords. Local checks pass nineteen
+unit tests, thirteen real-account browser tests, all eight preview pages and the
+production build. Existing-request submission replays ran on the production
+preview with the hosted RPC; no live submission replay was repeated for this fix.
+
+Read-only comparisons confirm existing records, twelve products, six orders and
+eleven items, security definitions and five migration records are unchanged.
+One concurrent public registration was observed and preserved; these tests did
+not create accounts or orders. Unrelated local configuration changes are excluded
+from commits. The original user's exact session-loss trigger and long-duration
+token expiry remain unobserved; the reported failure was reproduced with a
+controlled browser-only storage change. Email-confirmation delivery remains
+outside this verification.
 
 Session verification marker: `session-jwt-binding-20261121`.

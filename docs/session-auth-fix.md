@@ -44,7 +44,7 @@ records are changed.
   `authenticated` JWTs for the expected user. No anonymous organization request
   is sent after session loss; no uncaught or console errors occurred.
 - The existing 15 draft/submission/history unit tests and production build pass.
-
+- Production-preview checks pass all eight HTML pages and 22 linked routes/assets.
 - All ten existing catalog, submission and history browser regressions pass,
   including mobile layouts, inactive/role guards and safe existing-request
   replays. Six orders/eleven items remain unchanged; no new order was created.
@@ -52,6 +52,26 @@ records are changed.
   RLS and all five migration records are unchanged. One concurrent public
   registration appeared during testing and was preserved. Anonymous SELECT on
   `dealers` remains prohibited and its RLS remains enabled.
+- Fix commit `6100359` was pushed to GitHub `main`. Netlify automatically served
+  the new session code by `2026-11-21T10:42:08Z`; the deployed public-key fingerprint
+  is unchanged.
+- All three focused browser tests also pass against Netlify with real public
+  Auth logins. Both dealers load their own organization, ten active products,
+  history and UUID details after refresh and account switching. Admin login,
+  refresh, dealer-page exclusion and logout pass. Every observed protected read
+  uses an `authenticated` JWT for the expected user; no console/uncaught errors
+  occurred. The injected session loss produces the local login-again message,
+  sends no anonymous organization request, and recovers after login.
+- Live HTTP checks pass all eight routes, sixteen assets, HTTPS, unknown-route
+  404 and seventeen private/source-path denials. No privileged credential or
+  known fixture password was found in the inspected assets; tested source maps
+  are unavailable. The final read-only data/security comparison also passes.
 
-Deployed Netlify verification is pending publication of this locally verified fix.
+The original user's precise browser event remains unknown; the race is verified
+with controlled browser-only session loss. No new registration/order was made
+by these checks. Live submission replay was not repeated for this fix; existing
+request replays passed against the production preview with the same hosted RPC.
+Confirmation-enabled email delivery and natural long-duration token expiry were
+not tested. No broader production milestone is claimed.
+
 Browser test artifacts and credentials stay in ignored local verification files.
