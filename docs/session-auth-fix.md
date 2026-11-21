@@ -75,3 +75,49 @@ Confirmation-enabled email delivery and natural long-duration token expiry were
 not tested. No broader production milestone is claimed.
 
 Browser test artifacts and credentials stay in ignored local verification files.
+
+## Recurring failure: stale identity checks
+
+The initial checks above did not cover a rejected identity read still in flight
+across another tab's logout and new login. The deployed version was reconfirmed
+before editing. A controlled delayed HTTP 401 for Dealer A, released after a real
+Dealer B login, caused a logout request using **B's JWT**, removed B's session
+and returned B to Login. UI generation checks discarded old rendering results
+but did not prevent `loadAccount()`'s unconditional sign-out side effect. The
+installed SDK's `getUser()` also removes session storage for `session_not_found`.
+
+Account checks now verify the same JWT against the same Supabase Auth `/user`
+endpoint without mutating session state. Server verification, current-session
+owner checks, database-derived roles and RLS remain mandatory. Only explicit
+logout uses the SDK sign-out operation. The order service reuses this identity
+check while keeping its owner check, pinned JWT, payload and retry behavior.
+Deferred Auth callbacks reread current
+session state; a stale broadcast cannot clear a newer user's draft. Background
+checks no longer delete per-user drafts. Explicit logout keeps its existing
+cleanup and unresolved-request preservation. Rejected stored sessions keep the
+Login form usable for reauthentication, with protected content hidden.
+
+Read-only inspection before tests found eight existing Auth accounts, each with
+one profile, organization and role, including the recent registrations. No
+existing account was registered again. A separate opt-in test uses one unique
+controlled public-signup fixture per environment and checks for an existing
+account before any rerun. It verifies redirect, isolated dealer provisioning,
+refresh, role guard, logout and login. No Admin API or new order is used.
+
+All seven focused production-preview browser tests pass, including both delayed
+identity error variants, stale broadcast/draft preservation, rejected-session
+reauthentication, real public Register, multi-page Login/refresh/logout/account
+switching and admin guards. The registration fixture is reused on reruns.
+All ten existing catalog/history/submission browser regressions, nineteen unit
+tests and the production build pass. Order submission regressions replayed
+existing requests; no extra orders were created. Read-only comparison confirms
+the eight pre-existing accounts, six orders/eleven items, twelve products, five
+migrations, functions, grants and RLS are unchanged. The sole added account is
+the controlled preview signup fixture. The initial reauthentication test had a
+test navigation error; correcting it to submit the already-open Login form
+passed individually and in the complete seven-test run.
+
+Hosted validation is pending publication of this locally verified fix. No
+database, Auth-setting, Netlify key, migration or unrelated feature changes are
+included. The original user's exact tab/network sequence remains unobserved;
+the stale-response cause was reproduced with controlled timing on Netlify.

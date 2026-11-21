@@ -1,19 +1,12 @@
 import { getSupabase } from './supabase.js';
-import { sessionAuthorization } from './session.js';
+import { sessionAuthorization, verifySessionUser } from './session.js';
 
 export async function loadAccount() {
   const client = getSupabase();
   const { data: { session }, error: sessionError } = await client.auth.getSession();
   if (sessionError) throw sessionError;
   if (!session) return null;
-  const { data: { user }, error: userError } = await client.auth.getUser(session.access_token);
-  if (userError) {
-    if ([401, 403].includes(userError.status)) {
-      await client.auth.signOut({ scope: 'local' });
-      return null;
-    }
-    throw userError;
-  }
+  const user = await verifySessionUser(session);
   const authorization = await sessionAuthorization(user.id);
   const [profileResult, roleResult] = await Promise.all([
     client.from('profiles').select('id,dealer_id,display_name,is_active').eq('id', user.id).setHeader('Authorization', authorization).maybeSingle(),

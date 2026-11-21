@@ -54,7 +54,6 @@ export async function startPageAuth(page, onAccount = () => {}) {
     try {
       const account = await loadAccount();
       if (current !== generation) return;
-      if (lastDealerId && lastDealerId !== account?.userId) discardDraft(lastDealerId);
       lastDealerId = account?.role === 'dealer' ? account.userId : null;
       document.querySelector('#site-header').innerHTML = renderHeader(page, account);
       const name = document.querySelector('[data-account-name]');
@@ -86,6 +85,10 @@ export async function startPageAuth(page, onAccount = () => {}) {
     } catch (error) {
       if (current !== generation) return;
       message(authError(error), 'danger', true);
+      // A rejected stored session must not prevent a fresh explicit login.
+      if (form && error.code === 'portal_session') {
+        form.hidden = false; form.querySelector('fieldset').disabled = false;
+      }
     } finally {
       if (current === generation) checking = false;
     }
@@ -109,7 +112,8 @@ export async function startPageAuth(page, onAccount = () => {}) {
   try {
     getSupabase().auth.onAuthStateChange(event => {
       if (event !== 'INITIAL_SESSION') setTimeout(() => {
-        if (event === 'SIGNED_OUT') { discardDraft(lastDealerId); suspend(); }
+        // Broadcast events can be stale: reread the SDK session instead of
+        // deleting a draft or treating the event payload as current identity.
         // Local forms explicitly refresh after completion; cross-tab events still recheck.
         if (!loggingOut && !form?.matches('[aria-busy="true"]')) void refresh();
       }, 0);

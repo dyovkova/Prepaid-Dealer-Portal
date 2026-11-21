@@ -5,7 +5,7 @@ const production = process.env.PDP_SESSION_NETLIFY === '1';
 
 export default defineConfig({
   ...catalogConfig,
-  testMatch: 'session.spec.js',
+  testMatch: ['session.spec.js', 'auth-race.spec.js'],
   ...(production ? {
     webServer: undefined,
     use: { ...catalogConfig.use, baseURL: 'https://prepaiddealersportal.netlify.app' },

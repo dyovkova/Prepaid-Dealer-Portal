@@ -5,8 +5,9 @@ Site: https://prepaiddealersportal.netlify.app
 Initial source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
 `c642f16f56b3a18aaac133a9e9e0bf172e448de1`. Date: 2026-11-21.
 
-Status: focused session fix deployed and live dealer/admin authentication checks
-passed. The previously invalid key was resolved before this investigation.
+Status: the recurring failure's stale identity-check cause is confirmed. A
+focused follow-up fix passes production-preview validation; publication and live
+revalidation are pending. Earlier observations below retain their original scope.
 
 ## Initial confirmed results
 
@@ -111,3 +112,27 @@ controlled browser-only storage change. Email-confirmation delivery remains
 outside this verification.
 
 Session verification marker: `session-jwt-binding-20261121`.
+
+## Recurring failure follow-up
+
+The previous test did not hold an old identity rejection across a new login in
+another tab. That case was reproduced on Netlify: after Dealer B logged in,
+Dealer A's delayed 401 caused an unconditional sign-out using **B's JWT**.
+UI generation checks prevented stale rendering but could not undo the logout.
+Stale sign-out broadcasts could also clear the newer identity's local draft.
+
+The follow-up keeps server verification through the same Supabase Auth `/user`
+endpoint and current JWT/owner checks, while making identity reads non-mutating.
+Deferred Auth events reread current session state and do not delete drafts.
+Rejected stored sessions allow explicit reauthentication. One shared SDK client,
+RLS and role guards remain. No migrations, grants, Auth settings or keys change.
+
+All seven focused production-preview browser tests pass, including real Register,
+both stale-error races, stale broadcasts, draft/request preservation, Login,
+redirects, refresh, logout, switching and admin guards. Ten existing browser
+regressions, nineteen unit tests and the production build pass. All eight
+pre-existing accounts and business/security data remain unchanged; one unique
+controlled preview signup fixture was retained, with no duplicate signup or new
+order. The live follow-up checks are pending publication of the verified fix.
+
+Follow-up marker: `nonmutating-identity-check-20261121`.

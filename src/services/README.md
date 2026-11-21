@@ -9,6 +9,9 @@ protected database read. Identity/history reads also check the expected user.
 A missing or changed session fails locally instead of allowing the SDK to fall
 back to anonymous access. Tokens are never cached in shared headers. See
 [the session fix and verification](../../docs/session-auth-fix.md).
+Identity verification uses the same Supabase Auth `/user` endpoint and JWT as a
+stateless read: a delayed rejection cannot sign out a newer SDK session. Auth
+events trigger a current-session check; their payloads never delete drafts.
 
 `auth.js` calls Auth and reads the caller's profile, database role and active
 organization through existing RLS. Admins require an active profile, not dealer
