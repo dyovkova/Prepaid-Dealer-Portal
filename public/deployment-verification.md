@@ -5,7 +5,9 @@ Site: https://prepaiddealersportal.netlify.app
 Source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
 `c642f16f56b3a18aaac133a9e9e0bf172e448de1`. Date: 2026-11-21.
 
-Status: **partially verified; authenticated checks blocked by production configuration**.
+Status: initial public-route verification complete; the previously invalid key
+was resolved before the session investigation below. Authenticated checks are
+being repeated for the focused frontend fix.
 
 ## Confirmed results
 
@@ -31,23 +33,21 @@ Status: **partially verified; authenticated checks blocked by production configu
 
 ## Confirmed deployment issues
 
-1. Supabase rejects the deployed publishable key with HTTP 401 `Invalid API key`.
-   The project URL is correct; the local ignored configuration's publishable key
-   is accepted. Update Netlify's **Production build** variable
-   `VITE_SUPABASE_PUBLISHABLE_KEY` from the correct project configuration and run
-   a fresh build. Keep `VITE_SUPABASE_URL=https://niabpabsvdgxackjjcsb.supabase.co`.
-   Do not use service-role/secret keys or change Auth settings.
+1. The initial deployment rejected its publishable key with HTTP 401 `Invalid API key`.
+   At the subsequent session investigation, the deployed key was already accepted
+   and real login succeeded. This task did not change any Netlify key or Auth
+   setting. The project URL remains correct; only public configuration is bundled.
 2. Home-page horizontal overflow measured 12 pixels at 320/390 pixels. Its hero
    used a Bootstrap gutter wider than the mobile container. The source now uses
    the normal mobile horizontal gutter and retains the larger gutter from the
    small breakpoint upward. Fix commit `c2f697d` is live, and the 320/390-pixel
    production browser check passes.
 
-## Pending live checks
+## Initial deferred checks
 
-Real dealer/admin login, catalog, saved-request submission replay, history,
-details and authenticated mobile/refresh checks must be rerun after the valid
-production key is published. Initial login attempts failed at the API-key gate;
+The initial review deferred real dealer/admin login, catalog, submission replay, history,
+details and authenticated mobile/refresh checks until the valid
+production key was published. Initial login attempts failed at the API-key gate;
 they do not establish a password or application-business-logic failure.
 The prepared replay uses an existing verified owner/request UUID and exact
 payload, blocking unrelated data writes so no extra order is needed.
@@ -70,5 +70,21 @@ Public verification marker: `deployment-review-20261121-c642f16`.
 
 This document intentionally contains no account addresses, passwords, tokens,
 secret environment values or local verification records. Authenticated checks
-remain pending a valid Production publishable key and fresh build. This is not
-completion of another milestone.
+are now covered by the focused session investigation. This is not completion of
+another milestone.
+
+## Session investigation
+
+Fresh live login and catalog reads now succeed with the authenticated user's
+JWT. Controlled loss of browser session storage between role and organization
+reads reproduced the reported HTTP 401 / `42501`: the SDK sent its publishable
+key as the Authorization fallback and the request ran as `anon`.
+
+The frontend fix explicitly supplies the current session JWT for protected
+reads, rechecks identity before organization access, and fails locally with a
+login-again message if the session disappears or changes. The same Supabase
+client and role guards remain in use. No anonymous database grant, migration,
+RLS, Auth setting or environment-key change is included. Local real-account
+tests pass; deployment verification is pending publication of this fix.
+
+Session verification marker: `session-jwt-binding-20261121`.

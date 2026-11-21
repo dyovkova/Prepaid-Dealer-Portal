@@ -1,11 +1,12 @@
 import { getSupabase } from './supabase.js';
+import { sessionAuthorization } from './session.js';
 
 export async function loadAccount() {
   const client = getSupabase();
   const { data: { session }, error: sessionError } = await client.auth.getSession();
   if (sessionError) throw sessionError;
   if (!session) return null;
-  const { data: { user }, error: userError } = await client.auth.getUser();
+  const { data: { user }, error: userError } = await client.auth.getUser(session.access_token);
   if (userError) {
     if ([401, 403].includes(userError.status)) {
       await client.auth.signOut({ scope: 'local' });
@@ -13,9 +14,10 @@ export async function loadAccount() {
     }
     throw userError;
   }
+  const authorization = await sessionAuthorization(user.id);
   const [profileResult, roleResult] = await Promise.all([
-    client.from('profiles').select('id,dealer_id,display_name,is_active').eq('id', user.id).maybeSingle(),
-    client.from('user_roles').select('user_id,role').eq('user_id', user.id).maybeSingle(),
+    client.from('profiles').select('id,dealer_id,display_name,is_active').eq('id', user.id).setHeader('Authorization', authorization).maybeSingle(),
+    client.from('user_roles').select('user_id,role').eq('user_id', user.id).setHeader('Authorization', authorization).maybeSingle(),
   ]);
   if (profileResult.error) throw profileResult.error;
   if (roleResult.error) throw roleResult.error;
@@ -27,7 +29,8 @@ export async function loadAccount() {
   if (role === 'admin') return { ...account, status: 'active' };
   if (!profile.dealer_id) return account;
   const { data: dealer, error } = await client.from('dealers')
-    .select('id,name,is_active').eq('id', profile.dealer_id).maybeSingle();
+    .select('id,name,is_active').eq('id', profile.dealer_id)
+    .setHeader('Authorization', await sessionAuthorization(user.id)).maybeSingle();
   if (error) throw error;
   // RLS intentionally hides inactive organizations, while own profile/role stay readable.
   return { ...account, dealer, status: dealer?.is_active ? 'active' : 'inactive-dealer' };

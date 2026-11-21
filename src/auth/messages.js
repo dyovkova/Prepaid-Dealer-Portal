@@ -6,6 +6,7 @@ export const accountMessages = {
 
 export function authError(error) {
   const messages = {
+    portal_session: 'Your session changed or ended. Please log in again.',
     portal_config: 'Authentication is not configured. Add the public Supabase URL and publishable key to .env.local, then restart Vite.',
     invalid_credentials: 'Email or password is incorrect. Please try again.',
     email_not_confirmed: 'Confirm your email before logging in.',

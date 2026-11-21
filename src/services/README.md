@@ -4,6 +4,12 @@
 public `.env.local` URL/publishable key. Supabase Auth owns session persistence,
 refresh, registration, login and logout; there is no separate credential system.
 
+`session.js` waits for the SDK's current session and supplies its JWT for each
+protected database read. Identity/history reads also check the expected user.
+A missing or changed session fails locally instead of allowing the SDK to fall
+back to anonymous access. Tokens are never cached in shared headers. See
+[the session fix and verification](../../docs/session-auth-fix.md).
+
 `auth.js` calls Auth and reads the caller's profile, database role and active
 organization through existing RLS. Admins require an active profile, not dealer
 organization access. Editable Auth metadata never grants permissions.
