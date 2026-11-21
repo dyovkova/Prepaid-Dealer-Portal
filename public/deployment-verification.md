@@ -5,7 +5,7 @@ Site: https://prepaiddealersportal.netlify.app
 Source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
 `c642f16f56b3a18aaac133a9e9e0bf172e448de1`. Date: 2026-11-21.
 
-Status: **in progress; production environment correction required**.
+Status: **partially verified; authenticated checks blocked by production configuration**.
 
 ## Confirmed results
 
@@ -21,8 +21,13 @@ Status: **in progress; production environment correction required**.
   known fixture password was found in those assets. Public keys are not secrets.
 - Local production build and all 15 draft/submission/history unit tests passed.
   A focused browser test passed public pages, refresh, anonymous guards and
-  mobile forms after the one-line responsive fix below.
-- No database migrations, Auth settings or existing orders were changed.
+  mobile forms locally and on the live site after the fix below. No uncaught
+  JavaScript or console errors occurred in that passing live test. Initial
+  authenticated attempts produced HTTP 401 resource errors from the invalid key.
+- Exact before/after database/security snapshots match: six orders/eleven items,
+  twelve products, existing accounts/roles, functions/grants/RLS and five migration
+  records. No orders were created; no submission replay was attempted because
+  login was blocked. No migrations, Auth settings or business logic changed.
 
 ## Confirmed deployment issues
 
@@ -35,8 +40,8 @@ Status: **in progress; production environment correction required**.
 2. Home-page horizontal overflow measured 12 pixels at 320/390 pixels. Its hero
    used a Bootstrap gutter wider than the mobile container. The source now uses
    the normal mobile horizontal gutter and retains the larger gutter from the
-   small breakpoint upward. The local 320/390-pixel browser check passes;
-   production confirmation is pending publication.
+   small breakpoint upward. Fix commit `c2f697d` is live, and the 320/390-pixel
+   production browser check passes.
 
 ## Pending live checks
 
@@ -47,14 +52,23 @@ they do not establish a password or application-business-logic failure.
 The prepared replay uses an existing verified owner/request UUID and exact
 payload, blocking unrelated data writes so no extra order is needed.
 
-GitHub's default branch is `main`, but its public commit statuses/checks and
-deployment list provide no Netlify proof. Dashboard automation could not start
-in this session. Continuous deployment will be checked by fetching this newly
-introduced public document after pushing to `main`; it returned 404 beforehand.
-No manual deployment will be triggered by the verification agent.
+## Observed automatic publication from main
+
+This document returned 404 before the verification commit. After only pushing
+`c2f697db14e2ac89d535f72ef9aee89cc2d2aa86` to GitHub `main`, it returned 200
+with the marker below, and the live home HTML contained the corrected mobile
+gutter. Observed at `2026-11-21T09:42:40.750Z`. No manual deployment/upload or
+Netlify API build trigger was used. Main-branch automatic publication is observed.
+
+GitHub reports `main` as the default branch; its public commit statuses/checks
+and deployments list contain no Netlify records. Dashboard settings could not
+be inspected because both browser-control runtimes failed to start, and no
+Netlify management authentication was available. The publication observation,
+rather than an assumption about dashboard settings, is the verification evidence.
 
 Public verification marker: `deployment-review-20261121-c642f16`.
 
 This document intentionally contains no account addresses, passwords, tokens,
-secret environment values or local verification records. A later verification result
-will replace the pending status; this is not completion of another milestone.
+secret environment values or local verification records. Authenticated checks
+remain pending a valid Production publishable key and fresh build. This is not
+completion of another milestone.
