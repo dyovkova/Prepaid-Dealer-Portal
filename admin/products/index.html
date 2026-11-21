@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage prepaid demo products, prices and catalog visibility.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Admin Products | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/admin-products.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
+      <div id="protected-content" hidden>
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/admin/">Admin dashboard</a></li><li class="breadcrumb-item active" aria-current="page">Products</li></ol></nav>
+        <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div><span class="section-label">Administration</span><h1>Product management</h1><p class="text-secondary">Manage demo products and their visibility in the dealer catalog.</p></div>
+          <button id="new-product" type="button" class="btn btn-primary" disabled>Create product</button>
+        </div>
+        <div class="notice mb-4">Prices are in EUR. Archive products to hide them from dealers; saved orders keep their original product details and prices.</div>
+        <div id="products-feedback" role="status" aria-live="polite" hidden></div>
+        <section id="product-editor" class="card mb-4" aria-labelledby="editor-title" hidden>
+          <div class="card-body"><h2 id="editor-title">Create product</h2>
+            <p class="form-note">SKU, name and price are required. New products start active. Use Archive or Reactivate to change catalog visibility.</p>
+            <div role="status" aria-live="polite" hidden></div>
+            <form id="product-form" novalidate>
+              <fieldset disabled><legend class="visually-hidden">Product details</legend>
+                <div class="row g-3">
+                  <div class="col-sm-6"><label class="form-label" for="product-sku">SKU</label><input id="product-sku" name="sku" class="form-control" type="text" required aria-describedby="sku-help"><div id="sku-help" class="form-note mt-1">Unique and case-sensitive.</div></div>
+                  <div class="col-sm-6"><label class="form-label" for="product-name">Product name</label><input id="product-name" name="name" class="form-control" type="text" required></div>
+                  <div class="col-sm-6"><label class="form-label" for="product-price">Unit price (EUR)</label><input id="product-price" name="unit_price" class="form-control" type="text" inputmode="decimal" required aria-describedby="price-help"><div id="price-help" class="form-note mt-1">Nonnegative, up to two decimals. Example: 4.75.</div></div>
+                  <div class="col-12"><label class="form-label" for="product-description">Description <span class="fw-normal">(optional)</span></label><textarea id="product-description" name="description" class="form-control" rows="3"></textarea></div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-4"><button type="submit" class="btn btn-primary">Save product</button><button type="button" class="btn btn-outline-secondary" data-cancel>Cancel editing</button></div>
+              </fieldset>
+            </form>
+          </div>
+        </section>
+        <section aria-labelledby="all-products-title">
+          <div class="section-heading"><div><h2 id="all-products-title">All products</h2><p id="admin-product-count" role="status" aria-live="polite"></p></div><button id="reload-products" type="button" class="btn btn-outline-primary" disabled>Reload products</button></div>
+          <div class="row g-3 mb-4"><div class="col-md-8"><label class="form-label" for="admin-product-search">Search products</label><input id="admin-product-search" class="form-control" type="search" placeholder="Name, SKU or description" disabled></div>
+            <div class="col-md-4"><label class="form-label" for="product-filter">Product status</label><select id="product-filter" class="form-select" disabled><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div></div>
+          <div id="products-state" class="alert alert-info" role="status" aria-live="polite">Loading all products…</div>
+          <div id="admin-product-grid" class="row g-4" aria-busy="true"></div>
+        </section>
+        <dialog id="product-confirm" class="product-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+          <form method="dialog"><h2 id="confirm-title" class="h4"></h2><p id="confirm-description" class="product-description"></p><div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-secondary" value="cancel" autofocus>Cancel</button><button class="btn btn-primary" value="confirm">Confirm</button></div></form>
+        </dialog>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

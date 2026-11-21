@@ -220,6 +220,23 @@ security are preserved. One new synthetic CRUD product remains archived
 Native SQL/concurrency regressions, nineteen unit tests and build pass. Final
 dry-run has no pending migration. No frontend or later milestone implementation.
 
+### 8B. Admin product UI: production-preview verified; awaiting Netlify validation
+
+The ninth HTML page `/admin/products/` is linked from the dashboard. Small model,
+service, editor and rendering modules support all-product cards, search/status
+filters, create/edit and confirmed archive/reactivation with EUR validation and
+duplicate/access/error feedback. Only the new route is added to the existing
+admin guard; Auth/session logic and all database migrations/policies are unchanged.
+
+Four new real-account browser cases, sixteen existing browser regressions,
+twenty-two unit tests, native 8A SQL/concurrency checks and nine-route/24-link
+checks pass. Desktop and 320/390 layouts are verified. Exact comparison preserves
+original rows, historical snapshots and security. Two new synthetic test products
+remain archived (one from an initial network-interceptor error); reruns reuse
+them, leaving ten active products. No Auth users or orders were created.
+See [actual checks and limitations](admin-products-ui.md). Netlify publication
+and live verification remain pending the validated commit/push.
+
 ## 9. Admin dealer management
 
 Depends on: 8.

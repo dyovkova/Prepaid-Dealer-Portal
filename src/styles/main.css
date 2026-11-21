@@ -93,6 +93,8 @@ p { line-height: 1.65; }
 .product-sku, .product-description, .draft-product { overflow-wrap: anywhere; }
 .draft-item-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .admin-card { border-top: 3px solid #a5b8e5; }
+.product-confirm { width: min(30rem, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto; border: 1px solid var(--portal-border); border-radius: .8rem; padding: 1.5rem; }
+.product-confirm::backdrop { background: #16283f80; }
 .checklist { padding-left: 1.2rem; color: var(--portal-muted); }
 .checklist li { margin-bottom: .8rem; padding-left: .25rem; }
 #site-footer { border-top: 1px solid var(--portal-border); background: white; color: var(--portal-muted); font-size: .875rem; }

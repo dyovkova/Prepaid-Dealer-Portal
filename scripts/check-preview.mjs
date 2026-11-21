@@ -15,6 +15,7 @@ const routes = [
   ['/my-orders/', 'My Orders'],
   ['/order-details/', 'Order Details'],
   ['/admin/', 'Admin Dashboard'],
+  ['/admin/products/', 'Admin Products'],
 ];
 const references = new Set();
 
@@ -63,7 +64,7 @@ try {
   const missing = await fetch(new URL('/not-a-portal-page/', baseUrl), { signal: AbortSignal.timeout(5000) });
   assert.equal(missing.status, 404, 'Unknown pages must not fall back to Home');
   console.log(`PASS ${references.size} linked routes/assets, order-details query URL, and unknown-route HTTP 404`);
-  console.log('Production preview checks passed for all eight pages.');
+  console.log(`Production preview checks passed for all ${routes.length} pages.`);
 } catch (error) {
   console.error(`Preview check failed: ${error.message}`);
   console.error('Build first, then run npm run preview in another terminal.');

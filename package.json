@@ -20,7 +20,9 @@
     "test:history": "node --test tests/history.test.js",
     "test:history-ui": "playwright test --config playwright.history.config.js",
     "test:session": "node --test tests/session.test.js",
-    "test:session-ui": "playwright test --config playwright.session.config.js"
+    "test:session-ui": "playwright test --config playwright.session.config.js",
+    "test:admin-products": "node --test tests/admin-products.test.js",
+    "test:admin-products-ui": "playwright test --config playwright.admin-products.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",
