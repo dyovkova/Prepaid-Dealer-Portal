@@ -3,6 +3,10 @@
 A SoftUni **Software Technologies with AI** capstone for prepaid dealer order requests.
 Built with HTML, CSS, vanilla JavaScript ES modules, Bootstrap, Node.js, npm, and Vite.
 
+Live demo: [prepaiddealersportal.netlify.app](https://prepaiddealersportal.netlify.app).
+See the [production deployment verification](public/deployment-verification.md)
+for actual checks, confirmed corrections and any outstanding production checks.
+
 ## Current scope
 
 Milestone 2 provides a genuine multi-page skeleton: eight independent HTML entries,
@@ -136,5 +140,5 @@ History checks use `npm run test:history` and the separate opt-in
 
 See [the project brief](docs/project-brief.md) for full MVP scope and
 [the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Admin management, documents and deployment
-remain later milestones.
+recorded acceptance checks. Admin management, documents and final release checks
+remain later milestones; the Netlify deployment review adds no business features.

@@ -231,6 +231,11 @@ Acceptance: a clean checkout can install/build and reproduce database setup from
 
 ## Verification across later milestones
 
+Focused Netlify verification requested after 7B (2026-11-21): the user deployed
+`https://prepaiddealersportal.netlify.app`. This review is limited to deployment
+checks and confirmed fixes, not the start/completion of another milestone.
+See [actual deployment results and pending checks](../public/deployment-verification.md).
+
 - Use focused manual checks and meaningful automated checks appropriate to each change. Record actual commands and outcomes; do not claim unrun checks passed.
 - Verify permissions through Supabase/API behavior, not just hidden controls. Use separate synthetic dealers and an admin for role/ownership scenarios.
 - Re-run relevant build checks after application/configuration changes, and review staged changes before any requested commit.
