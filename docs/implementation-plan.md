@@ -189,6 +189,37 @@ Scope: implement the admin overview/navigation shell and product create/edit/arc
 
 Acceptance: an admin manages a synthetic product; a dealer cannot perform the same writes through the API; archived products disappear from the dealer catalog while existing orders remain readable.
 
+### 8A. Admin product database access: deployed and verified
+
+Backend-only scope: [minimal product migration](../supabase/migrations/20261121000600_admin_product_access.sql)
+adds active-admin read/create/edit/archive policies and editable-column grants,
+reusing existing validation and identity helpers. Dealer catalog access stays
+read-only; hard deletion and all unrelated admin operations stay denied.
+
+Preparation before approval (2026-11-21): healthy production target `niabpabsvdgxackjjcsb` verified;
+five migrations were applied. Remote dry-run listed only version `20261121000600`,
+without seeds/roles/Vault updates. Native PostgreSQL 17.12 tests pass admin CRUD,
+constraints, denied actors/writes, archived-product visibility, historical
+snapshots, idempotency and concurrency; existing 7A SQL regressions, nineteen
+JavaScript unit tests and the build pass. All remote operations are read-only
+or dry-run; hosted CRUD/deployment were deferred until approval.
+See [actual results, hash and pending checks](../supabase/admin-products.md).
+Frontend product management (8B) is not started.
+
+Deployment/verification (2026-11-21): after explicit approval, reconfirmed project,
+approved hash and sole pending file, then applied only `20261121000600` without
+seeds/roles/Vault changes. All six migration versions and stored statements
+match local source. Existing admin public Auth/Data API create/read/edit/archive,
+validation and DELETE denial pass; three dealers, anonymous and inactive
+dealer/admin profiles/organizations cannot write. Same-JWT inactivity checks
+restore all fixture states. Real archive/rename/repricing preserves order
+snapshots; own/cross UUID history regressions remain isolated. Original eleven
+accounts, twelve products, eight orders/fourteen items, functions and unrelated
+security are preserved. One new synthetic CRUD product remains archived
+(thirteen total, ten active/three inactive); no users/orders were created.
+Native SQL/concurrency regressions, nineteen unit tests and build pass. Final
+dry-run has no pending migration. No frontend or later milestone implementation.
+
 ## 9. Admin dealer management
 
 Depends on: 8.
