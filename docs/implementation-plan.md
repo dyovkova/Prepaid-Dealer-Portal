@@ -220,7 +220,7 @@ security are preserved. One new synthetic CRUD product remains archived
 Native SQL/concurrency regressions, nineteen unit tests and build pass. Final
 dry-run has no pending migration. No frontend or later milestone implementation.
 
-### 8B. Admin product UI: production-preview verified; awaiting Netlify validation
+### 8B. Admin product UI: deployed and verified
 
 The ninth HTML page `/admin/products/` is linked from the dashboard. Small model,
 service, editor and rendering modules support all-product cards, search/status
@@ -234,8 +234,15 @@ checks pass. Desktop and 320/390 layouts are verified. Exact comparison preserve
 original rows, historical snapshots and security. Two new synthetic test products
 remain archived (one from an initial network-interceptor error); reruns reuse
 them, leaving ten active products. No Auth users or orders were created.
-See [actual checks and limitations](admin-products-ui.md). Netlify publication
-and live verification remain pending the validated commit/push.
+See [actual checks and limitations](admin-products-ui.md).
+
+Commit `e988ca6` was automatically published from `main`: the new route changed
+from 404 to its own HTML at `2026-11-21T12:22:50Z`, without a manual deploy.
+All four UI browser cases pass on Netlify too, reusing the recorded product.
+Final read-only comparisons preserve existing records, snapshots, six migrations
+and security. Fifteen products remain, ten active/five inactive, with two new
+archived synthetic fixtures documented. No users/orders or later features were
+added. The existing Supabase public configuration is unchanged.
 
 ## 9. Admin dealer management
 

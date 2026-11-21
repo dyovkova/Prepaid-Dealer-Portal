@@ -78,11 +78,31 @@ $env:PDP_ADMIN_PRODUCTS_NETLIFY = '1'
 npm.cmd run test:admin-products-ui
 ```
 
-## Deployment and limits
+## Actual Netlify deployment
 
-Netlify publication/live checks are pending the verified commit/push. The live
-run will reuse the recorded product; unique creation was tested through the
-production-preview UI against the same hosted backend.
+Commit `e988ca6` was pushed to GitHub `main`. Before the push the new route
+returned HTTP 404; at `2026-11-21T12:22:50Z` it returned its own Admin Products
+HTML with HTTP 200. No manual upload/build trigger was used: automatic
+publication from `main` is observed. The deployed Supabase configuration
+fingerprint is unchanged.
+
+All four browser cases also pass on Netlify: real admin edit/archive/reactivate,
+search/filter/duplicate feedback, confirmations, direct navigation/refresh,
+dealer and inactive UI guards, real denied dealer writes, historical snapshots
+and mobile layout. Expected HTTP errors occur in deliberate duplicate/network/
+permission tests; no uncaught JavaScript errors occurred. The live run reused
+the recorded product rather than creating another; unique creation was tested
+through the production-preview UI against the same hosted backend.
+
+The final read-only preservation check passes again after live tests: original
+records and all six migrations/security definitions are unchanged, with only
+the two recorded archived product fixtures added. No backend, Auth-setting,
+dealer-management, order-processing or Storage implementation was introduced.
+Live HTTP checks pass all nine routes, seventeen assets and seventeen private/
+source-path denials; inspected assets contain no privileged credential patterns
+or known fixture passwords. Unrelated MCP/configuration edits are preserved.
+
+## Limits
 
 Unsaved editor fields are not persisted across document refresh/navigation.
 Concurrent admin edits use the database's existing last-write behavior; reload
