@@ -35,7 +35,7 @@ Own identity diagnostics remain readable under the accepted 4A policy.
 | Home | Public; navigation reflects the current account |
 | Login, Register | Guests; active signed-in users go to their role's workspace |
 | Catalog, New Order, My Orders | Active dealer |
-| Order Details placeholder | Active dealer or admin; future order ownership still requires RLS |
+| Order Details | Active dealer as of 7B; organization ownership enforced by 7A RLS |
 | Admin Dashboard placeholder | Active admin |
 
 Protected HTML content starts hidden. Network/account-check failures keep it

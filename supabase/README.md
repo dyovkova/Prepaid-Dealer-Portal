@@ -36,7 +36,8 @@ active dealers read only their organization's orders/items. Inactive/cross-
 organization/anonymous/admin access and client writes remain denied. Snapshots
 remain readable after product archival. Six orders/eleven items are preserved,
 including the additional existing order since the historical 6B count above.
-History UI, admin-wide access and Storage remain deferred.
+The [7B dealer history/details UI](../docs/order-history-ui.md) is now verified
+without database changes. Admin-wide access and Storage remain deferred.
 
 ## Applied migration and actual verification (2026-11-20)
 

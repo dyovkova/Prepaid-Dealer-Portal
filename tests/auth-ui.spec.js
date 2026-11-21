@@ -154,7 +154,7 @@ test('real multi-page registration, sessions, role guards and inactive feedback'
     await page.getByRole('button', { name: 'Log out' }).click(); await expect(page).toHaveURL(/\/login\//);
     await login(page, account); await expect(page).toHaveURL(/\/admin\//);
     await page.reload(); await expect(page.getByRole('heading', { name: 'Admin dashboard', exact: true })).toBeVisible();
-    await page.goto('/order-details/?id=demo'); await expect(page.locator('#protected-content')).toBeVisible();
+    await page.goto('/order-details/?id=demo'); await expect(page).toHaveURL(/\/admin\//);
     await page.goto('/catalog/'); await expect(page).toHaveURL(/\/admin\//);
     change('role', 'dealer');
     await page.reload(); await expect(page).toHaveURL(/\/catalog\//);

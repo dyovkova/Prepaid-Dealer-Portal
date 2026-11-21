@@ -16,7 +16,9 @@
     "test:draft": "node --test tests/draft.test.js",
     "test:catalog-ui": "playwright test --config playwright.catalog.config.js",
     "test:submission": "node --test tests/submission.test.js",
-    "test:submission-ui": "playwright test --config playwright.submission.config.js"
+    "test:submission-ui": "playwright test --config playwright.submission.config.js",
+    "test:history": "node --test tests/history.test.js",
+    "test:history-ui": "playwright test --config playwright.history.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

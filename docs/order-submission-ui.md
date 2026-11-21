@@ -3,6 +3,10 @@
 Implemented and verified on 2026-11-20 against **PrepaidDealerPortal**
 (`niabpabsvdgxackjjcsb`). No migrations, policies, Auth settings or products changed.
 
+This records the original 6B behavior/checks. [Milestone 7B](order-history-ui.md)
+now adds View order after confirmation and dealer history/details, preserving
+the request/retry contract below.
+
 ## Behavior
 
 Active dealers can submit `/new-order/` with an optional note (2000 characters).

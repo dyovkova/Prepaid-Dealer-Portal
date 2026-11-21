@@ -18,13 +18,14 @@ Drafts are scoped to the verified user and persist across refresh. Prices are
 rechecked on draft load. Milestone 6B connects New Order to the verified atomic
 `submit_order` RPC, with an optional note, duplicate-click protection, confirmed
 order UUID and exact durable retries after uncertain outcomes. Pending requests
-and their drafts survive logout; normal drafts clear on logout. Order history,
-documents and admin-management actions remain placeholders. See
+and their drafts survive logout; normal drafts clear on logout. Documents and
+admin-management actions remain placeholders. See
 [5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
 
 Milestone 7A adds RLS-protected, read-only organization access to saved orders
-and items. The history screens remain placeholders; see
-[database access and hosted checks](supabase/order-read-access.md).
+and items. Milestone 7B provides organization history, UUID details with saved
+snapshots/totals and a View order link after confirmed submission. See
+[database checks](supabase/order-read-access.md) and [7B results/limits](docs/order-history-ui.md).
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -73,9 +74,10 @@ build variables. No privileged keys, test passwords or sessions are committed.
 | `/admin/` | `admin/index.html` | `src/pages/admin.js` |
 
 Home is public. Login/Register route active authenticated users to their workspace.
-Catalog, New Order and My Orders require an active dealer; Admin requires an active
-admin. The Order Details placeholder allows both roles. Protected content stays
-hidden while account access is checked. No order lookup or management is implemented.
+Catalog, New Order, My Orders and Order Details require an active dealer; Admin
+requires an active admin. Protected content stays hidden while account access
+is checked. Order Details accepts `?id=<order-UUID>`; admin-wide order access
+and management remain deferred.
 
 ## Production build and preview
 
@@ -114,14 +116,17 @@ describe the two retained synthetic orders and request manifest needed for rerun
 The historical 4B suite changes trusted fixture roles/status and is not required
 for frontend-only regressions.
 
+History checks use `npm run test:history` and the separate opt-in
+`npm run test:history-ui`; see [7B test fixtures and actual results](docs/order-history-ui.md).
+
 ## Source organization
 
 - `src/pages/`: one initialization module per HTML entry.
 - `src/components/`: shared header and footer.
 - `src/utils/`: shared page initialization and navigation helpers.
-- `src/services/`: the reusable Supabase client, Auth/identity, products and order RPC access.
+- `src/services/`: the reusable Supabase client, Auth/identity, products, order RPC and history reads.
 - `src/draft/`: per-user local selections, estimates and shared draft UI.
-- `src/orders/`: durable submission requests, retry coordination and feedback.
+- `src/orders/`: durable submission requests, retry coordination, saved-order validation and UI.
 - `src/auth/`: guards, feedback, form submission and validation.
 - `tests/`: opt-in real-browser authentication/security checks.
 - `src/styles/`: shared Bootstrap overrides and responsive application styles.
@@ -131,5 +136,5 @@ for frontend-only regressions.
 
 See [the project brief](docs/project-brief.md) for full MVP scope and
 [the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Order history, admin management, documents and deployment
+recorded acceptance checks. Admin management, documents and deployment
 remain later milestones.

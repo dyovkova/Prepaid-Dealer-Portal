@@ -149,5 +149,6 @@ the public URL/key and real user JWTs, never privileged browser credentials or
 the Auth Admin API. All hosted dealers remain isolated: the two-member
 shared-organization scenario passed locally, not against hosted membership
 fixtures. Production load and confirmation-enabled delivery remain untested;
-Confirm Email is still temporarily disabled. Frontend history/details,
-admin-wide access and Storage remain deferred. All applicable 7A checks passed.
+Confirm Email is still temporarily disabled. [Milestone 7B dealer history/details](../docs/order-history-ui.md)
+is now verified without database changes. Admin-wide access and Storage remain
+deferred. All applicable 7A checks passed.

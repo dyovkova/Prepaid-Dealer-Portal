@@ -6,7 +6,7 @@ import { updateDraftCounter } from '../draft/counter.js';
 import { discardDraft } from '../draft/storage.js';
 
 const allowedRoles = { catalog: ['dealer'], 'new-order': ['dealer'], 'my-orders': ['dealer'],
-  'order-details': ['dealer', 'admin'], admin: ['admin'] };
+  'order-details': ['dealer'], admin: ['admin'] };
 const destination = role => role === 'admin' ? '/admin/' : '/catalog/';
 
 export async function startPageAuth(page, onAccount = () => {}) {

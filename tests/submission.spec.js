@@ -26,7 +26,7 @@ let errors,forbidden;
 test.beforeEach(async({page})=>{
   errors=[];forbidden=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('request',r=>{
-    if(/\/rest\/v1\/(orders|order_items)(\?|$)|\/storage\/v1|\/auth\/v1\/admin/.test(r.url())) forbidden.push(r.method());
+    if(/\/storage\/v1|\/auth\/v1\/admin/.test(r.url())) forbidden.push(r.method());
     if(/\/rest\/v1\//.test(r.url())&&r.method()!=='GET'&&!r.url().endsWith('/rpc/submit_order')) forbidden.push(r.method());
   });
 });
@@ -109,6 +109,11 @@ test('real multi-product submission, storage/validation guards, duplicate clicks
   await expect(page.locator('#clear-draft')).toBeDisabled();
   await page.reload();await expect(page.locator('#order-feedback')).toContainText(saved.orderId);await expect(submit(page)).toBeDisabled();
   expect(calls).toBe(1);verifyOrder(a,saved.payload,saved.orderId);
+  const view=page.getByRole('link',{name:'View order',exact:true});
+  await expect(view).toHaveAttribute('href',`/order-details/?id=${saved.orderId}`);
+  await view.click();await expect(page.locator('#order-reference')).toHaveText(saved.orderId);
+  await expect(page.locator('#order-total')).toHaveText('€30.25');
+  await page.goto('/new-order/');await expect(page.getByRole('link',{name:'View order',exact:true})).toHaveAttribute('href',`/order-details/?id=${saved.orderId}`);
 });
 
 test('lost response after real commit, exact durable retry, inactive denial, logout/account isolation and mobile',async({page})=>{
@@ -124,6 +129,7 @@ test('lost response after real commit, exact durable retry, inactive denial, log
     if(phase==='lost')return route.abort();return route.fulfill({response});
   });
   await submit(page).click();await expect(page.locator('#order-feedback')).toContainText('outcome could not be confirmed');
+  await expect(page.locator('#view-order')).toBeHidden();
   const payload=manifest().uncertain.payload;expect((await savedRequest(page,b)).payload).toEqual(payload);
   expect((await savedDraft(page,b)).items).toEqual(draftItems());
   await expect(page.locator('#draft-items input').first()).toBeDisabled();await expect(page.locator('#clear-draft')).toBeDisabled();

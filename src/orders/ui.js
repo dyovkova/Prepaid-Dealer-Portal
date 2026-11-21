@@ -1,6 +1,7 @@
 import { readOrderRequest, blocksDraft, requestKey } from './request.js';
 import { processOrder, submissionError } from './submit.js';
 import { feedback } from '../draft/ui.js';
+import { orderPath } from './history-model.js';
 
 export function initOrderSubmission(context, reload) {
   const form = document.querySelector('#order-submit-form');
@@ -8,12 +9,14 @@ export function initOrderSubmission(context, reload) {
   const button = document.querySelector('#submit-order');
   const status = document.querySelector('#order-feedback');
   const reference = document.querySelector('#request-reference');
+  const view = document.querySelector('#view-order');
   const busy = new Set();
   let lastOwner, lastReceipt, outcome;
   function refresh() {
     const ctx = context(), owner = ctx.account?.userId;
     const eligible = Boolean(owner && ctx.account.role === 'dealer' && ctx.account.status === 'active');
     button.disabled = true; note.disabled = true; reference.textContent = '';
+    view.hidden = true; view.removeAttribute('href');
     if (!eligible) { feedback(status, ''); return; }
     if (owner !== lastOwner) { note.value = ''; lastOwner = owner; lastReceipt = null; }
     try {
@@ -34,6 +37,9 @@ export function initOrderSubmission(context, reload) {
       }
       document.querySelector('#clear-draft').disabled = locked || sending || !ctx.canClear;
       if (record) reference.textContent = `Request reference: ${record.payload.p_request_id}`;
+      if (record?.status === 'confirmed' && (locked || !ctx.items.length || (outcome?.owner === owner && outcome.type === 'warning'))) {
+        view.href = orderPath(record.orderId); view.hidden = false;
+      }
       const message = outcome?.owner === owner ? outcome : null;
       if (sending) feedback(status, 'Submitting your saved request. Keep this page open; repeated clicks are blocked.');
       else if (message) feedback(status, message.text, message.type);

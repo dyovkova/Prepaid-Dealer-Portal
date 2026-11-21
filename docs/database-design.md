@@ -169,4 +169,6 @@ to that RPC with durable request IDs and confirmed cleanup, adding two retained
 synthetic orders/four items. [Milestone 7A order-read access](../supabase/order-read-access.md)
 is deployed and verified: real organization reads, direct UUID isolation,
 inactive-account denial, archived-product snapshot access and prohibited writes
-passed. All existing data/RPCs remain preserved; the history frontend is deferred.
+passed. [Milestone 7B](order-history-ui.md) implements dealer history/details and
+confirmed-order links using these reads and saved snapshots, with no database
+changes. All existing data/RPCs remain preserved; admin-wide access is deferred.

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Order details and documents layout preview. No saved order is loaded.">
+    <meta name="description" content="Review saved order information, product snapshots, quantities and EUR totals.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <title>Order Details | Prepaid Dealer Portal</title>
     <script type="module" src="/src/pages/order-details.js"></script>
@@ -15,15 +15,20 @@
       <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
       <div id="protected-content" hidden>
       <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/my-orders/">My orders</a></li><li class="breadcrumb-item active" aria-current="page">Order details</li></ol></nav>
-      <div class="page-heading"><span class="section-label">Dealer workspace</span><h1>Order details</h1><p class="text-secondary">A place for your order summary, items, and associated documents.</p></div>
-      <div class="notice mb-4"><strong>Order details placeholder.</strong> No saved order is loaded. Order lookup and authorized access will be added in later milestones.</div>
-      <div class="row g-4">
+      <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3"><div><span class="section-label">Dealer workspace</span><h1>Order details</h1><p class="text-secondary">Saved information from your submitted request.</p></div><a class="btn btn-outline-primary" href="/my-orders/">Back to my orders</a></div>
+      <div id="details-state" role="status" aria-live="polite" hidden></div>
+      <button id="retry-order" class="btn btn-outline-primary mb-3" type="button" hidden>Retry order</button>
+      <div id="order-content" class="row g-4" aria-busy="true" hidden>
         <div class="col-lg-8">
-          <section class="card mb-4" aria-labelledby="items-title"><div class="card-header"><h2 id="items-title" class="mb-0">Order items</h2></div><div class="empty-state"><div class="empty-symbol" aria-hidden="true">≡</div><h3>No order selected in this preview</h3><p>Saved product names, quantities, and unit prices will appear here when order details are connected.</p><a class="btn btn-outline-primary" href="/my-orders/">Back to my orders</a></div></section>
-          <section class="card" aria-labelledby="documents-title"><div class="card-body"><div class="section-heading"><h2 id="documents-title" class="mb-0">Documents</h2><span class="placeholder-badge">Coming later</span></div><p class="text-secondary mb-0">Private order documents and authorized downloads will be added in the documents milestone. No files are available in this preview.</p></div></section>
+          <section aria-labelledby="items-title"><h2 id="items-title" class="mb-3">Order items</h2><div id="saved-items"></div></section>
+          <section class="card mb-4" aria-labelledby="note-title"><div class="card-body"><h2 id="note-title">Order note</h2><p id="saved-note" class="mb-0"></p></div></section>
+          <section class="card" aria-labelledby="documents-title"><div class="card-body"><div class="section-heading"><h2 id="documents-title" class="mb-0">Documents</h2><span class="placeholder-badge">Coming later</span></div><p class="text-secondary mb-0">Private order documents and downloads are not available yet.</p></div></section>
         </div>
         <div class="col-lg-4">
-          <section class="card" aria-labelledby="details-title"><div class="card-body"><h2 id="details-title">Order summary</h2><dl class="mb-0"><div class="summary-row"><dt>Reference</dt><dd>Not loaded</dd></div><div class="summary-row"><dt>Submitted</dt><dd>Not loaded</dd></div><div class="summary-row"><dt>Status</dt><dd>Not loaded</dd></div><div class="summary-row"><dt>Total</dt><dd>Not loaded</dd></div></dl></div></section>
+          <section class="card" aria-labelledby="details-title"><div class="card-body"><h2 id="details-title">Order summary</h2><p class="form-note mb-1">Order reference</p><p id="order-reference" class="order-reference"></p>
+            <dl class="mb-3"><div class="summary-row"><dt>Submitted</dt><dd id="saved-date"></dd></div><div class="summary-row"><dt>Status</dt><dd id="saved-status"></dd></div><div class="summary-row"><dt>Products</dt><dd id="saved-count"></dd></div><div class="summary-row"><dt>Units</dt><dd id="saved-units"></dd></div><div class="summary-row"><dt>Saved total</dt><dd id="order-total"></dd></div></dl>
+            <p class="form-note mb-0">Prices and product names were saved at submission. This request is not a payment, stock reservation or delivery promise. Dates use your browser's time zone.</p>
+          </div></section>
         </div>
       </div>
       </div>
