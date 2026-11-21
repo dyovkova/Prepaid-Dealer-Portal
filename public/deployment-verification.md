@@ -5,9 +5,9 @@ Site: https://prepaiddealersportal.netlify.app
 Initial source reviewed: GitHub `dyovkova/Prepaid-Dealer-Portal`, branch `main`, revision
 `c642f16f56b3a18aaac133a9e9e0bf172e448de1`. Date: 2026-11-21.
 
-Status: the recurring failure's stale identity-check cause is confirmed. A
-focused follow-up fix passes production-preview validation; publication and live
-revalidation are pending. Earlier observations below retain their original scope.
+Status: the recurring failure's stale identity-check cause is reproduced and
+fixed. All seven focused tests pass on Netlify and production preview. Earlier
+observations below retain their original scope.
 
 ## Initial confirmed results
 
@@ -131,8 +131,27 @@ All seven focused production-preview browser tests pass, including real Register
 both stale-error races, stale broadcasts, draft/request preservation, Login,
 redirects, refresh, logout, switching and admin guards. Ten existing browser
 regressions, nineteen unit tests and the production build pass. All eight
-pre-existing accounts and business/security data remain unchanged; one unique
-controlled preview signup fixture was retained, with no duplicate signup or new
-order. The live follow-up checks are pending publication of the verified fix.
+pre-existing accounts and business/security data remain unchanged.
+
+Commit `0538d19` was automatically published from `main`, observed live at
+`2026-11-21T11:07:39Z`, with unchanged public configuration. All seven focused
+Netlify tests pass too, including real public Register, both delayed identity
+errors, queued cross-tab sign-out, reauthentication, Login, redirects, refresh,
+logout, switching and admin guards. The newer session survives stale failures;
+drafts and the exact pending request are preserved. Normal auth flows produce
+no uncaught/console errors; controlled 401 rejection tests intentionally inject
+errors. Exactly two unique controlled signup fixtures were retained, one per
+environment. All eight earlier accounts and existing orders/security remain
+intact; no duplicate registrations or extra orders were created.
+
+Live checks again pass eight routes, sixteen assets and seventeen private/source
+path denials. Existing migrations, grants, RLS, Auth settings, keys and unrelated
+configuration edits are preserved. The original user's exact event sequence
+and natural long-duration expiry remain unobserved; the race uses controlled
+response timing. Confirmation-enabled delivery remains untested.
+
+Refresh or close all older portal tabs once to stop the previous JavaScript
+from running. Do not clear site data; saved drafts and pending requests remain
+in their existing per-user storage.
 
 Follow-up marker: `nonmutating-identity-check-20261121`.

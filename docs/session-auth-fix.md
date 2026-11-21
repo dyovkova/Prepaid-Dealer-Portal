@@ -117,7 +117,28 @@ the controlled preview signup fixture. The initial reauthentication test had a
 test navigation error; correcting it to submit the already-open Login form
 passed individually and in the complete seven-test run.
 
-Hosted validation is pending publication of this locally verified fix. No
-database, Auth-setting, Netlify key, migration or unrelated feature changes are
-included. The original user's exact tab/network sequence remains unobserved;
-the stale-response cause was reproduced with controlled timing on Netlify.
+Fix commit `0538d19` was automatically published from `main`; its non-mutating
+identity code was observed live at `2026-11-21T11:07:39Z`. The deployed public-key
+fingerprint is unchanged. All seven focused browser tests pass on Netlify,
+including a real public Register request and both stale-response variants. The
+newer login survives delayed old errors and a queued sign-out broadcast; both
+owner-scoped drafts and the exact pending request remain intact. Real dealer
+and admin routing, redirects, refresh, logout, switching and login recovery pass.
+Normal registration/login flows have no uncaught/console errors; injected 401s
+are expected only in the controlled rejection tests.
+
+The final read-only comparison preserves all eight pre-existing accounts and
+all business/security data. Exactly two unique controlled registration fixtures
+were added through public Register, one per environment, each with one active
+profile, isolated organization and dealer role. No duplicate registrations or
+new orders were created. Live HTTP checks again pass eight routes, sixteen
+assets and seventeen private/source-path denials, with no privileged credential
+patterns or known original fixture passwords found in inspected assets.
+
+Refresh or close every older portal tab once after deployment, so no tab keeps
+running the previous JavaScript. Do not clear site data: drafts and pending
+requests stay in their existing per-user storage. No database, Auth-setting,
+Netlify key, migration or unrelated feature changes are included. The original
+user's exact tab/network sequence remains unobserved; the stale-response cause
+was reproduced with controlled timing on Netlify. Natural long-duration token
+expiry and confirmation-enabled delivery remain untested.
