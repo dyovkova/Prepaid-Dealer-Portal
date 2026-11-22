@@ -40,5 +40,12 @@ UI guards and form validation live in `src/auth/`. Local draft validation,
 storage and UI helpers live in `src/draft/`. `src/orders/` owns durable requests,
 cross-tab submission coordination, exact retries and confirmed cleanup; browser
 state never authorizes orders. See [6B behavior and checks](../../docs/order-submission-ui.md).
-History model/rendering helpers also live in `src/orders/`. Storage, dealer
-management and order-processing services remain deferred.
+History model/rendering helpers also live in `src/orders/`.
+
+`documents.js` reuses current account/session checks and the shared client for private
+admin uploads, narrow published-metadata reads and the existing publication/download
+Edge Functions. Only upload derives a canonical Storage key; no path is selected into
+the UI or used as a download URL. Downloads use a temporary local Blob after the current
+session is rechecked. `src/documents/` separates validation, owner/order-scoped durable
+recovery, cross-tab upload coordination and the shared admin/dealer component. See
+[11B results and recovery limits](../../docs/order-documents-ui.md).

@@ -3,17 +3,20 @@ import { orderIdFromSearch, orderStatuses } from '../orders/history-model.js';
 import { renderAdminOrder, confirmTransition } from './view.js';
 import { nextStatuses, adminOrderError, isOrderConflict } from './model.js';
 import { feedback } from '../draft/ui.js';
+import { createDocuments } from '../documents/controller.js';
 
 export function createOrderDetails() {
   const id = orderIdFromSearch(location.search), content = document.querySelector('#order-content');
   const state = document.querySelector('#details-state'), notice = document.querySelector('#order-feedback');
   const reload = document.querySelector('#reload-order'), actions = document.querySelector('#status-actions'), dialog = document.querySelector('#order-confirm');
   let account, order, request, generation = 0, busy = false, loading = false;
+  const documents = createDocuments(document.querySelector('#order-documents'), true);
   function controls() {
     reload.disabled = !account || loading || busy || !id;
     actions.querySelectorAll('button').forEach(button => { button.disabled = !account || !order || loading || busy; });
   }
   async function load() {
+    documents.setContext(null);
     request?.abort(); order = null; content.hidden = true; actions.replaceChildren(); controls();
     if (!account) return false;
     if (!id) { feedback(state, 'Invalid order link. Open Order management and choose a valid order number.', 'warning'); return false; }
@@ -22,7 +25,7 @@ export function createOrderDetails() {
     try {
       const result = await loadAdminOrder(actor, id, current.signal); if (current.signal.aborted) return false;
       if (!result) { feedback(state, 'Order unavailable. It may not exist or your access may have changed.', 'warning'); return false; }
-      order = result; renderAdminOrder(order); content.hidden = false; feedback(state, ''); return true;
+      order = result; renderAdminOrder(order); content.hidden = false; feedback(state, ''); documents.setContext(actor, id); return true;
     } catch (error) { if (!current.signal.aborted) feedback(state, adminOrderError(error), 'danger'); return false; }
     finally { if (!current.signal.aborted) { loading = false; controls(); content.setAttribute('aria-busy', 'false'); } }
   }
@@ -53,6 +56,7 @@ export function createOrderDetails() {
     if (await load() && current === generation) feedback(notice, 'Order reloaded. Review its current status before making another change.');
   });
   return { setAccount(next) {
+    documents.setContext(null);
     generation += 1; request?.abort(); account = next; order = null; loading = false;
     if (dialog.open) dialog.close('cancel'); content.hidden = true; actions.replaceChildren();
     document.querySelector('#saved-items').replaceChildren(); feedback(notice, ''); feedback(state, ''); controls();

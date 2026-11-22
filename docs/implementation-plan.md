@@ -400,6 +400,22 @@ See [deployed backend results and fixture ledger](../supabase/document-storage.m
 [hashes, current authorization and cache limits](../supabase/document-download-revocation.md).
 No document UI or unrelated business feature; stop before 11B.
 
+### 11B. PDF UI: production preview verified, Netlify pending
+
+Admin order details now upload/publish PDFs and list/download published files; dealer
+details share the read/download component. Downloads use only the checked Edge endpoint,
+with temporary Blob URLs; Storage paths are omitted from metadata queries and UI.
+An immutable user/order-scoped local intent, file fingerprint, Web Lock and retained
+confirmed receipt protect exact retries through errors, refresh and session switching.
+No automatic overwrite/deletion, replacement of unresolved requests or page-load retries.
+Existing guards, RLS, server validation and backend sources remain unchanged.
+
+56 unit tests, four focused real-session preview browser cases, five existing session
+regressions, 320px/390px layouts, route checks and production build pass. One controlled
+preview PDF is retained on an existing test order; all original data/files/backend
+definitions are preserved. See [actual evidence and limitations](order-documents-ui.md).
+Do not mark 11B complete until Netlify deployment and its real PDF workflow pass.
+
 ## 12. Responsive and accessibility review
 
 Depends on: 11.
