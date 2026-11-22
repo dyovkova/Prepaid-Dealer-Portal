@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage dealer organizations and individual dealer access.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Admin Dealers | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/admin-dealers.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
+      <div id="protected-content" hidden>
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/admin/">Admin dashboard</a></li><li class="breadcrumb-item active" aria-current="page">Dealers</li></ol></nav>
+        <div class="page-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div><span class="section-label">Administration</span><h1>Dealer management</h1><p class="text-secondary">Manage organizations and individual dealer access without deleting accounts or history.</p></div>
+          <button id="new-organization" type="button" class="btn btn-primary" disabled>Create organization</button>
+        </div>
+        <div class="notice mb-4">Disabling an <strong>organization</strong> blocks business access for all its dealer users. Disabling a <strong>user</strong> affects only that profile. Both the organization and profile must be active for dealer business access. Creating an organization does not create a user account or assign membership.</div>
+        <div id="dealers-feedback" role="status" aria-live="polite" hidden></div>
+        <section id="organization-editor" class="card mb-4" aria-labelledby="editor-title" hidden>
+          <div class="card-body"><h2 id="editor-title">Create organization</h2>
+            <p class="form-note">New organizations start active and empty. No user account, invitation or membership is created. Roles and memberships cannot be edited here.</p>
+            <div role="status" aria-live="polite" hidden></div>
+            <form id="organization-form" novalidate><fieldset disabled><legend class="visually-hidden">Organization details</legend>
+              <label for="organization-name" class="form-label">Organization name</label><input id="organization-name" name="name" class="form-control" type="text" required>
+              <div class="d-flex flex-wrap gap-2 mt-4"><button type="submit" class="btn btn-primary">Save organization</button><button type="button" class="btn btn-outline-secondary" data-cancel>Cancel editing</button></div>
+            </fieldset></form>
+          </div>
+        </section>
+        <div class="d-flex justify-content-end mb-3"><button id="reload-dealers" type="button" class="btn btn-outline-primary" disabled>Reload dealer management</button></div>
+        <div id="dealers-state" class="alert alert-info" role="status" aria-live="polite">Loading organizations and profiles…</div>
+        <section aria-labelledby="organizations-title">
+          <div class="section-heading"><div><h2 id="organizations-title">Dealer organizations</h2><p id="organization-count" role="status" aria-live="polite"></p></div></div>
+          <div class="row g-3 mb-4"><div class="col-md-8"><label for="organization-search" class="form-label">Search organizations</label><input id="organization-search" class="form-control" type="search" placeholder="Organization name" disabled></div>
+            <div class="col-md-4"><label for="organization-filter" class="form-label">Organization status</label><select id="organization-filter" class="form-select" disabled><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div></div>
+          <div id="organizations-empty" role="status" aria-live="polite" hidden></div><div id="organization-grid" class="row g-4" aria-busy="true"></div>
+        </section>
+        <section class="mt-5" aria-labelledby="profiles-title">
+          <div class="section-heading"><div><h2 id="profiles-title">User profiles</h2><p class="text-secondary">Authorized profile data and database roles only. Auth emails are not available here. Administrator profiles are read-only.</p><p id="profile-count" role="status" aria-live="polite"></p></div></div>
+          <div class="row g-3 mb-4"><div class="col-md-8"><label for="profile-search" class="form-label">Search profiles</label><input id="profile-search" class="form-control" type="search" placeholder="Display name, organization or role" disabled></div>
+            <div class="col-md-4"><label for="profile-filter" class="form-label">Profile status</label><select id="profile-filter" class="form-select" disabled><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div></div>
+          <div id="profiles-empty" role="status" aria-live="polite" hidden></div><div id="profile-grid" class="row g-4" aria-busy="true"></div>
+        </section>
+        <dialog id="dealer-confirm" class="product-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+          <form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-description"></p><div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-secondary" value="cancel" autofocus>Cancel</button><button class="btn btn-primary" value="confirm">Confirm</button></div></form>
+        </dialog>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

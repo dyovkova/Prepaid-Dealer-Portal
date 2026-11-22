@@ -282,6 +282,23 @@ organizations remain unchanged. One empty synthetic organization is retained
 inactive (twelve total); no user/product/order creation. Native regressions, 22
 unit tests and production build pass. No frontend or later features implemented.
 
+### 9B. Admin dealer UI: implemented and production-preview verified
+
+On 2026-11-22, added the tenth HTML page at `/admin/dealers/`, linked from
+Admin Dashboard. Existing active-admin guards and current-session JWT reads
+protect organization/profile/role inspection, organization create/rename/status
+and the narrow dealer-profile activation RPC. Separate search/status filters,
+counts, confirmation, responsive cards and explicit error/reload feedback are
+included. No Auth emails, role/membership editing or direct profile activation.
+
+Four real-account production-build browser cases, 27 unit tests, six existing
+session browser regressions, the build and ten-page route checks pass. Same-JWT
+business denials after profile/organization deactivation and subsequent recovery
+are verified. Existing records and all seven migrations/security definitions are
+preserved. One new empty synthetic organization is retained inactive; no users,
+products or orders were created. Netlify validation awaits publication of the
+verified code. See [actual results and limitations](admin-dealers-ui.md).
+
 ## 10. Admin order processing
 
 Depends on: 9.

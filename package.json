@@ -22,7 +22,9 @@
     "test:session": "node --test tests/session.test.js",
     "test:session-ui": "playwright test --config playwright.session.config.js",
     "test:admin-products": "node --test tests/admin-products.test.js",
-    "test:admin-products-ui": "playwright test --config playwright.admin-products.config.js"
+    "test:admin-products-ui": "playwright test --config playwright.admin-products.config.js",
+    "test:admin-dealers": "node --test tests/admin-dealers.test.js",
+    "test:admin-dealers-ui": "playwright test --config playwright.admin-dealers.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

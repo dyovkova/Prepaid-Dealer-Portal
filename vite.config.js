@@ -15,6 +15,7 @@ export default defineConfig({
         orderDetails: resolve(import.meta.dirname, 'order-details/index.html'),
         admin: resolve(import.meta.dirname, 'admin/index.html'),
         adminProducts: resolve(import.meta.dirname, 'admin/products/index.html'),
+        adminDealers: resolve(import.meta.dirname, 'admin/dealers/index.html'),
       },
     },
   },

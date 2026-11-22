@@ -16,6 +16,7 @@ const routes = [
   ['/order-details/', 'Order Details'],
   ['/admin/', 'Admin Dashboard'],
   ['/admin/products/', 'Admin Products'],
+  ['/admin/dealers/', 'Admin Dealers'],
 ];
 const references = new Set();
 

@@ -23,7 +23,7 @@ rechecked on draft load. Milestone 6B connects New Order to the verified atomic
 `submit_order` RPC, with an optional note, duplicate-click protection, confirmed
 order UUID and exact durable retries after uncertain outcomes. Pending requests
 and their drafts survive logout; normal drafts clear on logout. Documents and
-dealer/order management actions remain placeholders. See
+order management actions remain placeholders. See
 [5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
 
 Milestone 7A adds RLS-protected, read-only organization access to saved orders
@@ -39,8 +39,10 @@ order snapshots and dealer restrictions remain intact. See
 
 Milestone 9A adds the admin dealer-management backend: organization operations,
 profile/role inspection and a narrow dealer-profile activation RPC. Existing
-sessions obey current activation flags through RLS. The dealer-management UI
-remains deferred to 9B; see [backend validation](supabase/admin-dealers.md).
+sessions obey current activation flags through RLS. Milestone 9B adds the admin-only
+`/admin/dealers/` page for organization CRUD/status, profile inspection and
+confirmed dealer-profile activation. See [backend validation](supabase/admin-dealers.md)
+and [UI checks and limitations](docs/admin-dealers-ui.md).
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -88,6 +90,7 @@ build variables. No privileged keys, test passwords or sessions are committed.
 | `/order-details/` | `order-details/index.html` | `src/pages/order-details.js` |
 | `/admin/` | `admin/index.html` | `src/pages/admin.js` |
 | `/admin/products/` | `admin/products/index.html` | `src/pages/admin-products.js` |
+| `/admin/dealers/` | `admin/dealers/index.html` | `src/pages/admin-dealers.js` |
 
 Home is public. Login/Register route active authenticated users to their workspace.
 Catalog, New Order, My Orders and Order Details require an active dealer; Admin
