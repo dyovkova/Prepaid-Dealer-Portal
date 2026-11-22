@@ -335,7 +335,7 @@ fixtures in 009. Native SQL/concurrency regressions, 27 unit tests and productio
 build pass. See [actual results, hashes and test limits](../supabase/admin-orders.md).
 Frontend 10B and Storage remain deferred.
 
-### 10B. Admin order UI: implemented and production-preview verified
+### 10B. Admin order UI: deployed and verified
 
 On 2026-11-22, added `/admin/orders/` and admin UUID details on the same HTML
 entry. It uses current-session RLS reads, server search/status/pagination and
@@ -348,8 +348,15 @@ stale expected-status conflict), 32 unit tests, six existing session browser
 regressions, eleven-page route checks and production build pass. All eleven
 pre-existing orders/eighteen items and nine migrations/security definitions
 remain unchanged. Two new synthetic preview orders/three items are retained
-terminal; no users/products/organizations changed. Netlify checks follow the
-verified push. See [actual evidence and limits](admin-orders-ui.md).
+terminal; no accounts/products/organizations changed. Commit `f9a036a` was
+automatically published from main; all four browser cases also pass on Netlify,
+including real successful transitions, genuine PT409 recovery and no mutation
+retry. Three additional controlled live orders/four items are retained terminal,
+giving five UI fixtures/seven items in total. All eleven pre-existing orders/
+eighteen items are unchanged. Eleven live entries and nineteen assets match the
+build; eighteen private/source/unknown paths are denied. Final comparisons
+preserve identities, profiles, roles, organizations, products and all nine
+migrations/security definitions. See [actual evidence and limits](admin-orders-ui.md).
 No Storage or unrelated features.
 
 ## 11. Private order documents

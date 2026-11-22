@@ -1,8 +1,8 @@
 # Milestone 10B: admin order management UI
 
-Status: **implemented and production-preview verified**, 2026-11-22.
+Status: **complete, deployed and verified locally and on Netlify**, 2026-11-22.
 Target: PrepaidDealerPortal - `niabpabsvdgxackjjcsb`.
-Netlify publication and browser checks are pending the verified code push.
+Live: [Admin Order Management](https://prepaiddealersportal.netlify.app/admin/orders/).
 
 ## Implemented behavior
 
@@ -71,18 +71,46 @@ Read-only preservation checks confirm every pre-existing record, including all
 eleven original-to-10B orders/eighteen snapshots, profiles, roles/memberships,
 organizations, products and all nine migrations/security definitions unchanged.
 Two preview fixtures are retained terminal (Completed/Rejected), adding three
-items: thirteen orders/twenty-one items at this stage. No users/products/organizations
-were created or changed. The fixture ledger preserves exact creation request UUIDs
+items: thirteen orders/twenty-one items at this stage. No user accounts were created
+or administratively changed; products and organizations were unchanged. The ledger preserves exact creation request UUIDs
 so rerunning tests reuses the same orders.
 
-## Netlify verification plan
+## Actual Netlify deployment and verification
 
-After the verified code push, confirm the new route changes from HTTP 404 to
-its own built entry, inspect all eleven live entries/assets and private-path
-denials, then run the same four browser cases on Netlify. Live status coverage
-uses at most three separately recorded synthetic orders for completion, genuine
-conflict/rejection and rejection directly from Submitted. Existing terminal
-orders are not reset to repeat successful transitions.
+Commit `f9a036a` was pushed to GitHub main. Without a manual deployment, the new
+route changed from HTTP 404 to its own current built entry at 10:14 Europe/Sofia
+on 2026-11-22. All eleven live HTML entries and nineteen assets match the local
+build; comparison accounts for Netlify's hosting comment/public HUD script.
+Eighteen private/source/unknown paths remain 403/404, including environment,
+Git/MCP, verification/credential files, SQL, raw source, tests and package paths.
+The inspected bundles contain no privileged credential patterns or fixture passwords.
+
+All **four browser cases also pass on Netlify**. Live status coverage uses three
+separately recorded synthetic orders: processing/completion, genuine PT409 reload
+followed by an explicit rejection, and rejection directly from Submitted. Cancel
+and duplicate-click tests pass; only the existing three-argument RPC is called.
+No automatic mutation retry occurs after the real conflict or simulated network
+errors. Manual read recovery after a failed conflict reload is also verified.
+All four permitted transition paths have real UI/API coverage across the two runs.
+Dealer/anonymous/inactive account access, direct links/refresh and 390px/320px
+layouts pass; there are no uncaught JavaScript errors. Expected HTTP failures
+belong to deliberate negative tests.
+
+Final read-only comparisons preserve all eleven pre-existing orders/statuses,
+eighteen pre-existing items, account identities, profiles, roles/memberships,
+fourteen organizations, fifteen products and all nine migration/security
+definitions. **Sixteen orders/twenty-five items total**: only five new synthetic
+UI orders/seven snapshots were added. No account, organization or product was
+created. Existing terminal orders were not reset or deleted. Unrelated local
+MCP/configuration changes remain untouched and outside the commits.
+
+| Retained UI fixture | Order UUID | Status |
+| --- | --- | --- |
+| Preview completion | dcd53092-68a0-4c85-9e57-d1f424218292 | completed |
+| Preview conflict/rejection | c8b09b89-f987-4bd9-b2a6-eaa65e034eab | rejected |
+| Netlify completion | 60627581-bad6-4df3-991a-d1f76f34e14d | completed |
+| Netlify conflict/rejection | 3ac7cbcb-7c4c-46be-a3f7-6526e102303d | rejected |
+| Netlify submitted rejection | 953d4c99-1848-4518-954e-b127e1fc2f14 | rejected |
 
 ## Reproducing and limits
 
