@@ -4,6 +4,7 @@ import { quantity, MAX_QUANTITY, MAX_DRAFT_ITEMS } from '../draft/model.js';
 import { readDraft, writeDraft, clearDraft, draftKey } from '../draft/storage.js';
 import { feedback, productCard, validateQuantity } from '../draft/ui.js';
 import { assertDraftEditable, requestKey } from '../orders/request.js';
+import { catalogFeedback, syncDraftIndicators } from '../draft/catalog-feedback.js';
 
 const grid = document.querySelector('#product-grid');
 const search = document.querySelector('#product-search');
@@ -11,18 +12,20 @@ const state = document.querySelector('#catalog-state');
 const notice = document.querySelector('#catalog-feedback');
 const retry = document.querySelector('#retry-products');
 const reset = document.querySelector('#reset-draft');
+const draftFeedback = catalogFeedback(document.querySelector('#catalog-draft-feedback'));
 let account, request, ownerId, storageNotice = false, products = [];
 
 function checkStorage() {
   let error = '';
   let resettable = false;
-  try {
-    assertDraftEditable(account.userId);
-    try { readDraft(account.userId); } catch (cause) { resettable = true; throw cause; }
-  } catch (cause) { error = cause.message; }
+  let items = [];
+  try { assertDraftEditable(account.userId); } catch (cause) { error = cause.message; }
+  try { items = readDraft(account.userId); }
+  catch (cause) { if (!error) { resettable = true; error = cause.message; } }
+  syncDraftIndicators(grid, items);
   reset.hidden = !resettable;
   grid.querySelectorAll('button').forEach(button => { button.disabled = Boolean(error); });
-  if (error) { feedback(notice, error, 'warning'); storageNotice = true; }
+  if (error) { draftFeedback.clear(); feedback(notice, error, 'warning'); storageNotice = true; }
   else if (storageNotice) { feedback(notice, ''); storageNotice = false; }
 }
 function filter() {
@@ -38,6 +41,7 @@ function filter() {
 }
 async function activate(next) {
   request?.abort();
+  draftFeedback.clear();
   if (next && ownerId !== next.userId) { search.value = ''; ownerId = next.userId; }
   account = next; products = []; grid.replaceChildren();
   search.disabled = true; retry.hidden = true; reset.hidden = true;
@@ -61,6 +65,7 @@ grid.addEventListener('input', event => { if (event.target.matches('input')) val
 grid.addEventListener('submit', event => {
   event.preventDefault();
   if (!account) return;
+  draftFeedback.clear();
   const card = event.target.closest('[data-product-id]');
   const input = card.querySelector('input');
   if (!validateQuantity(input)) { input.reportValidity(); return; }
@@ -68,13 +73,17 @@ grid.addEventListener('submit', event => {
     const items = readDraft(account.userId);
     const item = items.find(item => item.productId === card.dataset.productId);
     const amount = quantity(input.value);
+    const total = (item?.quantity ?? 0) + amount;
     if (item && item.quantity + amount > MAX_QUANTITY) throw new Error(`A product can have at most ${MAX_QUANTITY} units in the draft. Edit its quantity in New order.`);
     if (!item && items.length >= MAX_DRAFT_ITEMS) throw new Error(`A draft can contain at most ${MAX_DRAFT_ITEMS} different products.`);
     if (item) item.quantity += amount; else items.push({ productId: card.dataset.productId, quantity: amount });
     writeDraft(account.userId, items);
+    if (readDraft(account.userId).find(saved => saved.productId === card.dataset.productId)?.quantity !== total) {
+      throw new Error('The draft changed before confirmation. Open View draft to check your selection.');
+    }
     const product = products.find(p => p.id === card.dataset.productId);
-    feedback(notice, `Added ${amount} × ${product.name} to your local draft.`, 'success');
-  } catch (error) { feedback(notice, error.message, 'danger'); }
+    draftFeedback.success(product, amount, total, Boolean(item), card.querySelector('button'));
+  } catch (error) { draftFeedback.error(error.message, card.querySelector('button')); }
 });
 search.addEventListener('input', filter);
 retry.addEventListener('click', () => { void activate(account); });
@@ -84,7 +93,10 @@ reset.addEventListener('click', () => {
   catch (error) { feedback(notice, error.message, 'danger'); }
 });
 window.addEventListener('storage', event => {
-  if (account && (event.key === null || [draftKey(account.userId), requestKey(account.userId)].includes(event.key))) checkStorage();
+  if (account && (event.key === null || [draftKey(account.userId), requestKey(account.userId)].includes(event.key))) {
+    draftFeedback.clear(true); checkStorage();
+  }
 });
+window.addEventListener('pdp:draft-updated', () => { if (account) { draftFeedback.clear(true); checkStorage(); } });
 window.addEventListener('pdp:order-request-updated', () => { if (account) checkStorage(); });
 void initPage('catalog', next => { void activate(next); });

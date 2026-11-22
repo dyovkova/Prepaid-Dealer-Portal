@@ -2,19 +2,29 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { draftKey } from '../src/draft/storage.js';
 import { loadEnv } from 'vite';
+import { euros } from '../src/draft/model.js';
+import { login as publicLogin, request, ok } from '../supabase/verification/order_live_support.mjs';
 
 test.skip(process.env.PDP_CATALOG_UI_LIVE !== '1', 'Opt in to existing controlled demo account logins; no DB writes or account creation.');
 const state = path => JSON.parse(readFileSync(path, 'utf8').replace(/^\uFEFF/, ''));
 const accounts = () => state('.verification/identity-live-state.json');
-const baseline = () => state('.verification/catalog-ui-before.json').products;
+let currentProducts;
+const baseline = () => currentProducts;
 const product = sku => baseline().find(p => p.sku === sku);
-const credit = () => product('PDP-DEMO-CREDIT-005');
+const credit = () => product('PDP-DEMO-CREDIT-010');
 const data = () => product('PDP-DEMO-DATA-005');
+const total = (credits, bundles = 0) => euros(Math.round(Number(credit().unit_price) * 100) * credits + Math.round(Number(data().unit_price) * 100) * bundles);
 const card = (page, p) => page.locator(`[data-product-id="${p.id}"]`);
 const counter = page => page.locator('#site-header [data-draft-count]');
 const api = '**/rest/v1/products?**';
 const config = loadEnv('production', process.cwd(), 'VITE_');
 let pageErrors, forbidden;
+// Later admin milestones legitimately archived the original 5B fixture. Inspect
+// current synthetic products read-only; never restore catalog records for a UI test.
+test.beforeAll(async () => {
+  currentProducts = ok(await request('/rest/v1/products?select=*&order=sku', await publicLogin(state('.verification/demo-admin-candidate.json'))));
+  expect(credit().is_active).toBe(true); expect(data().is_active).toBe(true);
+});
 test.beforeEach(async ({ page }) => {
   pageErrors = []; forbidden = [];
   page.on('pageerror', error => pageErrors.push(error.message));
@@ -77,21 +87,21 @@ test('real dealer catalog, search, quantities, estimates, editing, persistence a
     await expect(card(page, credit()).getByLabel('Quantity', { exact: true })).toHaveAttribute('aria-invalid', 'true');
     expect((await saved(page, a.id)).items.find(i => i.productId === credit().id).quantity).toBe(3);
   }
-  await page.getByRole('link', { name: /View draft/ }).click();
-  await expect(page.locator('#draft-total')).toHaveText('€35.25');
+  await page.locator('.page-heading').getByRole('link', { name: /View draft/ }).click();
+  await expect(page.locator('#draft-total')).toHaveText(total(3, 3));
   await expect(page.locator('.draft-item')).toHaveCount(2);
-  await page.reload(); await expect(page.locator('#draft-total')).toHaveText('€35.25');
+  await page.reload(); await expect(page.locator('#draft-total')).toHaveText(total(3, 3));
   await expect(card(page, credit()).getByLabel('Quantity', { exact: true })).toHaveValue('3');
   const input = card(page, credit()).getByLabel('Quantity', { exact: true });
   for (const amount of ['0', '1.5', '1000']) {
     await input.fill(amount); await expect(page.locator('#draft-total')).toHaveText('Unavailable');
     expect((await saved(page, a.id)).items.find(i => i.productId === credit().id).quantity).toBe(3);
   }
-  await input.fill('4'); await expect(page.locator('#draft-total')).toHaveText('€40.25');
-  await expect(card(page, credit()).locator('.line-total')).toHaveText('€20.00');
+  await input.fill('4'); await expect(page.locator('#draft-total')).toHaveText(total(4, 3));
+  await expect(card(page, credit()).locator('.line-total')).toHaveText(total(4));
   expect((await saved(page, a.id)).items.every(i => Object.keys(i).sort().join(',') === 'productId,quantity')).toBe(true);
   await card(page, data()).getByRole('button', { name: /Remove/ }).click();
-  await expect(page.locator('#draft-total')).toHaveText('€20.00'); await expect(counter(page)).toHaveText('1');
+  await expect(page.locator('#draft-total')).toHaveText(total(4)); await expect(counter(page)).toHaveText('1');
   await page.getByRole('button', { name: 'Clear draft', exact: true }).click();
   await expect(page.locator('#empty-draft')).toBeVisible(); await expect(page.locator('#draft-total')).toHaveText('€0.00');
   await expect(page.getByRole('button', { name: 'Submit order', exact: true })).toBeDisabled();
@@ -113,7 +123,7 @@ test('API loading/failure/empty/retry, price revalidation, unavailable items and
     window.restoreStorage = () => { Storage.prototype.setItem = original; };
     Storage.prototype.setItem = function(key, value) { if (key.startsWith('pdp:order-draft:')) throw new Error('quota'); return original.call(this, key, value); };
   });
-  await add(page, credit(), 1); await expect(page.locator('#catalog-feedback')).toContainText('not saved');
+  await add(page, credit(), 1); await expect(page.locator('[data-draft-toast]')).toContainText('not saved');
   await expect(counter(page)).toHaveText('0'); await page.evaluate(() => window.restoreStorage());
   await seedDraft(page, a.id, [{ productId: credit().id, quantity: 2, unit_price: 0, name: 'FORGED' }]);
   await page.route(api, async route => {
@@ -129,12 +139,12 @@ test('API loading/failure/empty/retry, price revalidation, unavailable items and
   await expect(page.locator('#draft-state')).toContainText('Could not check');
   await expect(page.locator('#draft-total')).toHaveText('Unavailable');
   await page.unroute(api); await page.getByRole('button', { name: 'Retry product check' }).click();
-  await expect(page.locator('#draft-total')).toHaveText('€10.00');
+  await expect(page.locator('#draft-total')).toHaveText(total(2));
   await seedDraft(page, a.id, [{ productId: credit().id, quantity: 2 },
     { productId: baseline().find(p => !p.is_active).id, quantity: 3 },
     { productId: '00000000-0000-4000-8000-000000005bff', quantity: 1 }]);
   await page.reload(); await expect(page.locator('#draft-state')).toContainText('no longer available');
-  await expect(page.locator('.draft-item')).toHaveCount(3); await expect(page.locator('#draft-total')).toHaveText('€10.00');
+  await expect(page.locator('.draft-item')).toHaveCount(3); await expect(page.locator('#draft-total')).toHaveText(total(2));
   await expect(page.locator('.draft-item input:disabled')).toHaveCount(2);
   await page.evaluate(key => localStorage.setItem(key, '{broken'), draftKey(a.id)); await page.reload();
   await expect(page.locator('#draft-state')).toContainText('could not be read');
@@ -154,15 +164,15 @@ test('account isolation, logout cleanup, cross-tab sync, admin guards and mobile
   const { a, b } = accounts();
   await login(page, a); await add(page, credit(), 2);
   await seedDraft(page, b.id, [{ productId: data().id, quantity: 7 }]);
-  await page.goto('/new-order/'); await expect(page.locator('#draft-total')).toHaveText('€10.00');
+  await page.goto('/new-order/'); await expect(page.locator('#draft-total')).toHaveText(total(2));
   const second = await context.newPage(); await second.goto('/new-order/');
-  await expect(second.locator('#draft-total')).toHaveText('€10.00');
+  await expect(second.locator('#draft-total')).toHaveText(total(2));
   await card(second, credit()).getByLabel('Quantity', { exact: true }).fill('3');
-  await expect(page.locator('#draft-total')).toHaveText('€15.00');
+  await expect(page.locator('#draft-total')).toHaveText(total(3));
   await second.close();
   await page.getByRole('button', { name: 'Log out', exact: true }).click(); await expect(page).toHaveURL(/\/login\//);
   expect(await saved(page, a.id)).toBeNull();
-  await login(page, b); await page.goto('/new-order/'); await expect(page.locator('#draft-total')).toHaveText('€47.25');
+  await login(page, b); await page.goto('/new-order/'); await expect(page.locator('#draft-total')).toHaveText(total(0, 7));
   await expect(card(page, credit())).toHaveCount(0); await expect(card(page, data()).getByLabel('Quantity', { exact: true })).toHaveValue('7');
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

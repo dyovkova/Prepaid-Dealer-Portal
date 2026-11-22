@@ -31,7 +31,8 @@
     "test:documents-browser": "node --test tests/document-download-browser.test.js",
     "test:document-ui": "node --test tests/document-ui.test.js",
     "test:document-ui-browser": "playwright test --config playwright.documents.config.js",
-    "test:visual": "playwright test --config playwright.visual.config.js"
+    "test:visual": "playwright test --config playwright.visual.config.js",
+    "test:catalog-feedback-ui": "playwright test --config playwright.catalog-feedback.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

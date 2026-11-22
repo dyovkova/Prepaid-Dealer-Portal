@@ -30,6 +30,21 @@
           <button id="retry-products" class="btn btn-outline-primary mb-3" type="button" hidden>Retry products</button>
           <div id="product-grid" class="row g-4" aria-busy="true"></div>
         </section>
+        <div id="catalog-draft-feedback">
+          <div class="visually-hidden" data-draft-announcement role="status" aria-live="polite" aria-atomic="true"></div>
+          <div class="draft-toast-region">
+            <div class="toast show draft-toast" data-draft-toast hidden>
+              <div class="toast-body">
+                <div class="d-flex align-items-start justify-content-between gap-2">
+                  <p class="fw-semibold mb-1" data-toast-title></p>
+                  <button class="btn-close flex-shrink-0" type="button" data-dismiss-draft-toast aria-label="Dismiss draft notification"></button>
+                </div>
+                <p class="form-note mb-3" data-toast-detail></p>
+                <a class="btn btn-outline-primary btn-sm" href="/new-order/">View draft</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <footer id="site-footer"></footer>

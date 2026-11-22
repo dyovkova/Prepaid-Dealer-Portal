@@ -42,7 +42,19 @@
 #order-documents [data-saved] { padding: .75rem; background: white; border: 1px solid var(--portal-border); border-radius: .5rem; font-size: .875rem; }
 #status-actions { padding-top: .25rem; }
 #order-search-form { padding: 1.25rem; border: 1px solid var(--portal-border); border-radius: var(--portal-radius); background: white; }
+.catalog-product-heading { min-height: 2.25rem; }
+.catalog-product-heading > * { align-self: center; }
+.draft-indicator { margin: 0; padding: .35rem .65rem; border: 1px solid #cce8d9; border-radius: 2rem; background: #e9f6ef; color: #176346; font-size: .75rem; font-weight: 600; white-space: nowrap; }
+/* Clear the hosting badge and respect device safe areas. No timed dismissal. */
+.draft-toast-region { position: fixed; right: 1rem; bottom: calc(4.5rem + env(safe-area-inset-bottom)); width: min(26rem, calc(100% - 2rem)); z-index: 1080; pointer-events: none; }
+.draft-toast { width: 100%; max-width: none; border: 1px solid var(--portal-border); border-left: 3px solid #398461; border-radius: var(--portal-radius-sm); background: white; box-shadow: 0 8px 30px #18263e22; pointer-events: auto; color: var(--portal-ink); }
+.draft-toast[data-kind="error"] { border-left-color: #b54558; }
+.draft-toast .toast-body { padding: 1rem; }
+.draft-toast [data-toast-title] { padding-top: .35rem; font-size: .9375rem; }
+.draft-toast [data-toast-detail] { overflow-wrap: anywhere; }
+.draft-toast .btn-close { width: 2.75rem; height: 2.75rem; padding: .85rem; box-sizing: border-box; background-size: .8rem; }
 @media (max-width: 575.98px) {
+  .draft-toast-region { top: calc(1rem + env(safe-area-inset-top)); bottom: auto; }
   .draft-item-values { grid-template-columns: 1fr 1fr; }
   .draft-item-values > :first-child { grid-column: 1 / -1; }
   .empty-state { padding: 2.5rem 1rem; }

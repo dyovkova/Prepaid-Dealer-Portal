@@ -447,6 +447,17 @@ all business/backend/file data and unrelated configuration. Focused visual polis
 complete; this does not start final release review or claim a full WCAG audit. Physical
 devices/other browser engines and the existing hosting badge remain documented limits.
 
+### Focused catalog draft feedback
+
+The requested frontend-only improvement adds a polite fixed confirmation with View
+draft, accurate existing-line quantity feedback and saved-draft card indicators.
+Draft events synchronize both counters/indicators across removal, clear, refresh and
+account switching; storage failures and pending-order locks cannot announce success.
+Build, eleven-route checks, 56 unit tests, three focused preview browser cases, three
+existing catalog and five session/race regressions pass. See [evidence and remaining
+live check](catalog-feedback.md). No business/backend/Auth/dependency changes. Stop
+before Final Release Review; Netlify verification follows the reviewed main push.
+
 ## 13. Capstone documentation and release
 
 Depends on: 12.

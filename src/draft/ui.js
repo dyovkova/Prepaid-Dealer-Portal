@@ -20,8 +20,11 @@ export function productCard(product) {
   column.className = 'col-md-6 col-lg-4';
   column.dataset.productId = product.id;
   column.innerHTML = `<article class="card h-100"><div class="card-body d-flex flex-column">
-    <span class="product-type mb-3">Prepaid demo</span><h3></h3>
-    <p class="form-note product-sku"></p><p class="text-secondary flex-grow-1 product-description"></p>
+    <div class="catalog-product-heading d-flex justify-content-between align-items-center gap-2 mb-3">
+      <span class="product-type">Prepaid demo</span><p class="draft-indicator" data-draft-indicator hidden></p>
+    </div><h3></h3>
+    <p class="form-note product-sku"></p>
+    <p class="text-secondary flex-grow-1 product-description"></p>
     <div class="product-footer"><p class="fs-5 fw-semibold product-price"></p>
       <form novalidate><label class="form-label">Quantity</label>
         <div class="d-flex gap-2 align-items-start"><input class="form-control quantity-input" type="number" min="1" max="999" step="1" value="1" required inputmode="numeric">
