@@ -22,8 +22,7 @@ Drafts are scoped to the verified user and persist across refresh. Prices are
 rechecked on draft load. Milestone 6B connects New Order to the verified atomic
 `submit_order` RPC, with an optional note, duplicate-click protection, confirmed
 order UUID and exact durable retries after uncertain outcomes. Pending requests
-and their drafts survive logout; normal drafts clear on logout. Documents and
-order management actions remain placeholders. See
+and their drafts survive logout; normal drafts clear on logout. Documents remain planned for a later milestone. See
 [5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
 
 Milestone 7A adds RLS-protected, read-only organization access to saved orders
@@ -43,6 +42,12 @@ sessions obey current activation flags through RLS. Milestone 9B adds the admin-
 `/admin/dealers/` page for organization CRUD/status, profile inspection and
 confirmed dealer-profile activation. See [backend validation](supabase/admin-dealers.md)
 and [UI checks and limitations](docs/admin-dealers-ui.md).
+
+Milestones 10A/10B provide admin order reads and confirmed status transitions at
+`/admin/orders/`, with saved snapshot details, organization/UUID search, status
+filtering and server pagination. Conflicts reload current state without an
+automatic mutation retry. See [backend verification](supabase/admin-orders.md)
+and [UI checks and limits](docs/admin-orders-ui.md).
 
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
@@ -91,12 +96,13 @@ build variables. No privileged keys, test passwords or sessions are committed.
 | `/admin/` | `admin/index.html` | `src/pages/admin.js` |
 | `/admin/products/` | `admin/products/index.html` | `src/pages/admin-products.js` |
 | `/admin/dealers/` | `admin/dealers/index.html` | `src/pages/admin-dealers.js` |
+| `/admin/orders/` | `admin/orders/index.html` | `src/pages/admin-orders.js` |
 
 Home is public. Login/Register route active authenticated users to their workspace.
 Catalog, New Order, My Orders and Order Details require an active dealer; Admin
 requires an active admin. Protected content stays hidden while account access
-is checked. Order Details accepts `?id=<order-UUID>`; admin-wide order access
-and management remain deferred.
+is checked. Dealer Order Details accepts `?id=<order-UUID>`; admin details use
+`/admin/orders/?id=<order-UUID>` with the same active-admin restriction as the list.
 
 ## Production build and preview
 
@@ -105,7 +111,7 @@ npm run build
 npm run preview
 ```
 
-The build emits all nine HTML files and bundled local assets into `dist/`.
+The build emits all eleven HTML files and bundled local assets into `dist/`.
 The preview serves that output at `http://127.0.0.1:4173/` and fails if the port
 is already occupied. It does not run the development server or deploy anything.
 

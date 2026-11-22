@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review dealer orders, saved snapshots and permitted status changes.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Admin Orders | Prepaid Dealer Portal</title>
+    <script type="module" src="/src/pages/admin-orders.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header id="site-header"></header>
+    <main id="main-content" class="container portal-container" tabindex="-1">
+      <noscript><p>Enable JavaScript to verify your account and access this page.</p></noscript>
+      <div id="protected-content" hidden>
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/admin/">Admin dashboard</a></li><li class="breadcrumb-item active" aria-current="page">Orders</li></ol></nav>
+        <div class="page-heading"><span class="section-label">Administration</span><h1>Order management</h1><p class="text-secondary">Review orders across dealer organizations and update their status.</p></div>
+        <div class="notice mb-4">Order numbers are the saved UUID references. EUR totals use saved item prices. Status changes do not represent payment, stock reservation or delivery.</div>
+        <section id="order-list-section" aria-labelledby="all-orders-title">
+          <div class="section-heading"><h2 id="all-orders-title">All dealer orders</h2><button id="reload-orders" type="button" class="btn btn-outline-primary" disabled>Reload orders</button></div>
+          <form id="order-search-form" class="mb-4"><fieldset disabled><legend class="visually-hidden">Order filters</legend>
+            <div class="row g-3 align-items-end"><div class="col-md-6"><label for="order-search" class="form-label">Search orders</label><input id="order-search" name="q" type="search" maxlength="160" class="form-control" placeholder="Organization name or full order UUID"></div>
+              <div class="col-md-3"><label for="order-filter" class="form-label">Order status</label><select id="order-filter" name="status" class="form-select"><option value="all">All statuses</option><option value="submitted">Submitted</option><option value="processing">Processing</option><option value="completed">Completed</option><option value="rejected">Rejected</option></select></div>
+              <div class="col-md-3"><button type="submit" class="btn btn-primary w-100">Search orders</button></div></div>
+          </fieldset></form>
+          <div id="orders-state" role="status" aria-live="polite">Loading orders...</div>
+          <ul id="admin-order-list" class="row g-4 list-unstyled" aria-busy="true"></ul>
+          <nav class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4" aria-label="Order pages"><button id="orders-previous" type="button" class="btn btn-outline-primary" disabled>Previous page</button><span id="orders-page" role="status" aria-live="polite"></span><button id="orders-next" type="button" class="btn btn-outline-primary" disabled>Next page</button></nav>
+        </section>
+        <section id="order-detail-section" aria-label="Saved order details" hidden>
+          <a class="btn btn-outline-primary mb-3" href="/admin/orders/">Back to orders</a>
+          <button id="reload-order" type="button" class="btn btn-outline-primary mb-3" disabled>Reload order</button>
+          <div id="order-feedback" role="status" aria-live="polite" hidden></div>
+          <div id="details-state" role="status" aria-live="polite" hidden></div>
+          <div id="order-content" class="row g-4" aria-busy="true" hidden>
+            <div class="col-lg-8"><section aria-labelledby="items-title"><h2 id="items-title">Saved order items</h2><div id="saved-items"></div></section>
+              <section class="card" aria-labelledby="note-title"><div class="card-body"><h2 id="note-title">Order note</h2><p id="saved-note" class="product-description mb-0"></p></div></section>
+            </div>
+            <div class="col-lg-4"><section class="card" aria-labelledby="summary-title"><div class="card-body"><h2 id="summary-title">Order summary</h2>
+              <p class="form-note mb-1">Order number</p><p id="order-reference" class="order-reference"></p><p class="form-note mb-1">Organization</p><p id="order-organization" class="product-description"></p>
+              <dl><div class="summary-row"><dt>Submitted</dt><dd id="saved-date"></dd></div><div class="summary-row"><dt>Status</dt><dd id="saved-status"></dd></div><div class="summary-row"><dt>Products</dt><dd id="saved-count"></dd></div><div class="summary-row"><dt>Units</dt><dd id="saved-units"></dd></div><div class="summary-row"><dt>Saved total</dt><dd id="order-total"></dd></div></dl>
+              <p class="form-note">Product names, SKUs and prices are saved snapshots. Dates use your browser's time zone.</p>
+              <h3 class="h5">Order status</h3><p id="status-help" class="form-note"></p><div id="status-actions" class="d-flex flex-wrap gap-2"></div>
+            </div></section></div>
+          </div>
+        </section>
+        <dialog id="order-confirm" class="product-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-description"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-description" class="product-description"></p><div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-secondary" value="cancel" autofocus>Cancel</button><button class="btn btn-primary" value="confirm">Confirm update</button></div></form></dialog>
+      </div>
+    </main>
+    <footer id="site-footer"></footer>
+  </body>
+</html>

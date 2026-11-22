@@ -24,7 +24,9 @@
     "test:admin-products": "node --test tests/admin-products.test.js",
     "test:admin-products-ui": "playwright test --config playwright.admin-products.config.js",
     "test:admin-dealers": "node --test tests/admin-dealers.test.js",
-    "test:admin-dealers-ui": "playwright test --config playwright.admin-dealers.config.js"
+    "test:admin-dealers-ui": "playwright test --config playwright.admin-dealers.config.js",
+    "test:admin-orders": "node --test tests/admin-orders.test.js",
+    "test:admin-orders-ui": "playwright test --config playwright.admin-orders.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.2",

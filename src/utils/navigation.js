@@ -9,7 +9,7 @@ export const navigationItems = [
 export function navigationLink({ id, href, label }, currentPage) {
   const isCurrent = id === currentPage;
   const isParent = (id === 'my-orders' && currentPage === 'order-details')
-    || (id === 'admin' && ['admin-products', 'admin-dealers'].includes(currentPage));
+    || (id === 'admin' && ['admin-products', 'admin-dealers', 'admin-orders'].includes(currentPage));
 
   const badge = id === 'new-order' ? ' <span class="badge text-bg-light" data-draft-count aria-label="0 draft products">0</span>' : '';
   return `<a class="nav-link${isCurrent || isParent ? ' active' : ''}" href="${href}"${isCurrent ? ' aria-current="page"' : ''}>${label}${badge}</a>`;

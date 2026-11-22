@@ -17,6 +17,7 @@ const routes = [
   ['/admin/', 'Admin Dashboard'],
   ['/admin/products/', 'Admin Products'],
   ['/admin/dealers/', 'Admin Dealers'],
+  ['/admin/orders/', 'Admin Orders'],
 ];
 const references = new Set();
 
@@ -62,9 +63,11 @@ try {
 
   const detailQuery = await get('/order-details/?id=preview');
   assert.equal(await detailQuery.text(), await readFile(resolve(dist, 'order-details/index.html'), 'utf8'));
+  const adminQuery = await get('/admin/orders/?id=preview');
+  assert.equal(await adminQuery.text(), await readFile(resolve(dist, 'admin/orders/index.html'), 'utf8'));
   const missing = await fetch(new URL('/not-a-portal-page/', baseUrl), { signal: AbortSignal.timeout(5000) });
   assert.equal(missing.status, 404, 'Unknown pages must not fall back to Home');
-  console.log(`PASS ${references.size} linked routes/assets, order-details query URL, and unknown-route HTTP 404`);
+  console.log(`PASS ${references.size} linked routes/assets, dealer/admin details query URLs, and unknown-route HTTP 404`);
   console.log(`Production preview checks passed for all ${routes.length} pages.`);
 } catch (error) {
   console.error(`Preview check failed: ${error.message}`);
