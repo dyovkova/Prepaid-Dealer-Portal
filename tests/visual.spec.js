@@ -54,6 +54,11 @@ async function ready(page, path, selector) {
     await expect(page.locator('#order-documents [data-state]')).not.toContainText('Loading');
   }
 }
+async function logout(page) {
+  await page.getByRole('button', { name: 'Log out', exact: true }).click();
+  await expect(page).toHaveURL(/\/login\//);
+  await expect(page.getByRole('button', { name: 'Log in', exact: true })).toBeEnabled();
+}
 test('public routes, keyboard focus and mobile navigation', async ({ page }) => {
   for (const [name, path, selector] of [['home', '/', '.hero'], ['login', '/login/', '[data-auth-form]'], ['register', '/register/', '[data-auth-form]']]) {
     await ready(page, path, selector); await shot(page, name); await page.reload(); await expect(page.locator(selector)).toBeVisible();
@@ -123,7 +128,7 @@ test('feedback, unavailable orders and document recovery stay usable', async ({ 
   await page.route('**/rest/v1/products?**', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"message":"Synthetic visual test outage"}' }));
   await page.goto('/catalog/'); await expect(page.locator('#retry-products')).toBeVisible(); await shot(page, 'catalog-error');
   await page.unroute('**/rest/v1/products?**');
-  await page.getByRole('button', { name: 'Log out', exact: true }).click();
+  await logout(page);
   await login(page, admin(), 'admin');
   const key = `pdp:document-upload:v1:niabpabsvdgxackjjcsb:${admin().id}:${orderId}`;
   // An isolated browser-only unresolved intent. No file is uploaded or published.
@@ -132,7 +137,7 @@ test('feedback, unavailable orders and document recovery stay usable', async ({ 
   await ready(page, `/admin/orders/?id=${orderId}`, '#order-content'); await shot(page, 'pdf-recovery');
   await expect(page.locator('#order-documents [data-submit]')).toHaveText('Retry saved PDF');
   expect(await page.evaluate(key => localStorage.getItem(key), key)).toBe(record);
-  await page.getByRole('button', { name: 'Log out', exact: true }).click(); await login(page, dealer(), 'dealer');
+  await logout(page); await login(page, dealer(), 'dealer');
   expect(await page.evaluate(key => localStorage.getItem(key), key)).toBe(record);
   await page.goto(`/order-details/?id=${orderId}`); await expect(page.locator('#order-documents [data-upload]')).toHaveCount(0);
 });

@@ -439,8 +439,13 @@ actions and minimal stale-copy corrections preserve all business/security behavi
 Preview build, eleven-route checks, 56 unit tests, five session/race regressions and
 two document recovery regressions pass. Desktop/390px/320px screenshots and four
 read-only dealer/admin browser cases cover the existing pages and controls. See
-[design, actual evidence and limits](visual-polish.md). Netlify verification is pending
-the feature push. This does not start the final release review or claim a full WCAG audit.
+[design, actual evidence and limits](visual-polish.md). After main push `a3c7ebe`, Netlify
+published all eleven matching HTML entries/twenty byte-identical assets. All four real
+live cases pass with 69 captures and no overflow, unexpected console/page errors,
+forbidden mutations or direct Storage requests. Final read-only comparison preserves
+all business/backend/file data and unrelated configuration. Focused visual polish is
+complete; this does not start final release review or claim a full WCAG audit. Physical
+devices/other browser engines and the existing hosting badge remain documented limits.
 
 ## 13. Capstone documentation and release
 

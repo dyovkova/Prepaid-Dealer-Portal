@@ -62,12 +62,34 @@ because they share the production-preview port.
 
 ## Deployment and remaining review
 
-Netlify verification is pending the reviewed feature push. The live check must match
-the tested build and repeat the read-only visual/workflow cases before completion.
+Feature commit `a3c7ebe8ea03f7bb85605f23a954f78137b2aec6` was pushed to GitHub main.
+Without a manual deployment or hosting settings change, Netlify published all eleven
+HTML entries and twenty emitted assets matching the tested production build byte for
+byte at `https://prepaiddealersportal.netlify.app`. This observed publication verifies
+the existing main deployment workflow; no claim is made about inspecting private
+Netlify configuration or GitHub check-run settings.
+
+All four read-only cases pass against actual Netlify, with another 69 route/state
+captures at the same three widths. Real dealer/admin login, direct navigation/refresh,
+catalog/draft/history, admin editors/filters/cancel-only status actions and checked PDF
+download/recovery controls pass. Reports record zero horizontal overflows, uncaught
+page errors, unexpected console errors, forbidden mutations or direct Storage requests.
+The first live run exposed a test-harness race between logout's redirect and its own
+forced Login navigation. The helper now waits for the real Login form; that case passes
+again on preview and Netlify. No application/session change was needed.
+
+Live screenshots were inspected against preview/baselines. Final read-only comparison
+again preserves all existing business rows, roles/statuses, files/metadata and backend
+definitions. No new accounts, orders, products, organizations or files were created.
+Local drafts/recovery references existed only in isolated test browser contexts. See
+ignored `.verification/visual-netlify/`, `visual-deployment.json`, `visual-preservation.json`
+and `visual-*.log` for local evidence. The visual milestone is complete; stop here.
 
 Chrome desktop/mobile viewport emulation is the tested browser. Physical devices,
 Safari/Firefox and a full assistive-technology audit remain for the release review.
-Native file-picker text follows the browser/OS language. The existing 11A historical
+Netlify's existing injected branding badge can overlay content at some scroll positions;
+hosting branding/settings were not changed. Native file-picker text follows the
+browser/OS language. The existing 11A historical
 CDN-cache limitation is unchanged; the UI continues to use only checked Edge downloads.
 No new live order submission, upload, status change or user/organization mutation is
 needed for this styling milestone. Final release review has not started.
