@@ -311,6 +311,30 @@ Scope: implement admin order list/details and permitted status transitions from 
 
 Acceptance: an admin can process orders across dealers; permitted transitions succeed and invalid transitions fail through the API as well as the UI. Dealers cannot update status. Terminal orders cannot be reopened.
 
+### 10A. Admin order backend: deployed and verified
+
+On 2026-11-22, applied 20261122000800 after exact target/health/hash/pending checks.
+It adds active-admin order/item reads and a narrowly guarded status RPC; dealer
+organization access, snapshots and direct-write prohibitions remain intact.
+All sixteen status pairs passed on three controlled hosted fixtures. Native
+expected-status/authority/order lock races and existing regressions also passed.
+
+Initial hosted stale testing exposed PostgREST 14.18 retrying SQLSTATE 40001.
+After separate approval and preflight (including no active retrying RPC), applied
+only 20261122000900, changing the private conflict code to PT409. No other function,
+policy, grant or persistent row changed. Seven actual stale/duplicate/conflicting
+requests returned HTTP 409/PT409 in 48-554 ms; no timeouts or remaining active RPCs.
+Real admin/dealer/inactive/anonymous authorization and direct-write restrictions
+pass again. Terminal fixtures were reused; successful winning races and the full
+post-correction transition matrix are rechecked locally rather than resetting them.
+
+All nine local/remote versions and stored SQL bodies match, with nothing pending.
+All eight original orders/statuses/fourteen items and existing users/data remain
+unchanged. The same three synthetic terminal orders/four items remain; no new
+fixtures in 009. Native SQL/concurrency regressions, 27 unit tests and production
+build pass. See [actual results, hashes and test limits](../supabase/admin-orders.md).
+Frontend 10B and Storage remain deferred.
+
 ## 11. Private order documents
 
 Depends on: 10.
