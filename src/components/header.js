@@ -34,7 +34,7 @@ export function renderHeader(currentPage, account) {
     <div class="preview-banner">
       <div class="container portal-container d-flex flex-wrap align-items-center gap-2">
         <span class="preview-label">Capstone demo</span>
-        <span>Browse demo products, submit requests and review your order history and published PDFs.</span>
+        <span>Synthetic products, order requests and private PDFs.</span>
       </div>
     </div>`;
 }

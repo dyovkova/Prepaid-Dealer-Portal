@@ -1,0 +1,26 @@
+/* Shared light-theme palette and scale; no remote assets. */
+:root {
+  color-scheme: light;
+  --portal-ink: #18263e;
+  --portal-muted: #55647a;
+  --portal-blue: #354fce;
+  --portal-blue-hover: #283eac;
+  --portal-border: #dce3ef;
+  --portal-canvas: #f5f7fc;
+  --portal-surface: #fff;
+  --portal-tint: #eef2ff;
+  --portal-radius: 1rem;
+  --portal-radius-sm: .625rem;
+  --portal-shadow: 0 2px 4px #18263e03, 0 8px 24px #18263e05;
+  --portal-space: 1.75rem;
+  --bs-body-color: var(--portal-ink);
+  --bs-body-bg: var(--portal-canvas);
+  --bs-primary: var(--portal-blue);
+  --bs-primary-rgb: 53, 79, 206;
+  --bs-link-color: #3048bc;
+  --bs-link-hover-color: #23378f;
+  --bs-border-color: var(--portal-border);
+  --bs-border-radius: var(--portal-radius-sm);
+  --bs-body-font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --bs-secondary-color: var(--portal-muted);
+}

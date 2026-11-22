@@ -431,6 +431,17 @@ Scope: review all implemented screens on phone and desktop widths; refine keyboa
 
 Acceptance: primary dealer/admin workflows work at both viewport sizes without horizontal overflow; forms and navigation work by keyboard; no unresolved console errors occur in the walkthrough.
 
+### Focused visual polish after 11B
+
+The user authorized presentation-only polish before release review. Shared light-theme
+tokens, typography, controls, cards, navigation, status badges, responsive document
+actions and minimal stale-copy corrections preserve all business/security behavior.
+Preview build, eleven-route checks, 56 unit tests, five session/race regressions and
+two document recovery regressions pass. Desktop/390px/320px screenshots and four
+read-only dealer/admin browser cases cover the existing pages and controls. See
+[design, actual evidence and limits](visual-polish.md). Netlify verification is pending
+the feature push. This does not start the final release review or claim a full WCAG audit.
+
 ## 13. Capstone documentation and release
 
 Depends on: 12.

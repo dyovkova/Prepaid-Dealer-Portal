@@ -1,0 +1,52 @@
+/* Dealer/admin workspaces reuse cards, metrics and document rows. */
+.product-type { align-self: flex-start; color: #465cbc; font-size: .6875rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.product-sku { font-size: .75rem; letter-spacing: .015em; }
+.product-sku, .product-description, .draft-product, .order-reference { overflow-wrap: anywhere; }
+.product-footer { border-top: 1px solid var(--portal-border); padding-top: 1.15rem; margin-top: 1.25rem; }
+.product-price, [data-price], .order-total, .line-total, #draft-total, #order-total { font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
+.product-price { color: #273b91; }
+.catalog-search { width: min(100%, 22rem); }
+.quantity-input { width: 5rem; flex: 0 0 5rem; }
+#product-grid .card, #admin-product-grid .card { border-top: 3px solid #c7d2f4; }
+#product-grid .card:focus-within, #admin-product-grid .card:focus-within { border-color: #8e9fd5; }
+.draft-item-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-top: 1px solid #edf0f6; padding-top: 1rem; }
+.draft-item-values dt { font-weight: 500; }
+.draft-item-values dd { font-weight: 650; margin-bottom: 0; }
+.summary-row { display: flex; justify-content: space-between; gap: 1rem; padding-block: .9rem; border-bottom: 1px solid #e9edf5; }
+.summary-row:last-child { border-bottom: 0; }
+.summary-row dt { font-weight: 400; font-size: .875rem; color: var(--portal-muted); }
+.summary-row dd { min-width: 0; margin: 0; text-align: right; font-weight: 600; }
+.summary-row:has(#draft-total), .summary-row:has(#order-total), .summary-row:has(.order-total) { align-items: center; }
+#draft-total, #order-total { font-size: 1.4rem; color: #273b91; }
+#order-reference { padding: .75rem; background: #f5f7fc; border: 1px solid #e4e9f2; border-radius: .5rem; font-size: .8125rem; font-weight: 600; line-height: 1.6; }
+.order-reference a { display: inline-block; font-size: 1rem; line-height: 1.6; text-decoration-thickness: 1px; }
+.order-total, #order-content dd { min-width: 0; overflow-wrap: anywhere; }
+#saved-note { white-space: pre-wrap; overflow-wrap: anywhere; }
+#order-feedback { overflow-wrap: anywhere; margin-top: 1rem; }
+#account-status { scroll-margin-top: 1rem; }
+#account-status.alert-success { width: fit-content; max-width: 100%; padding: .5rem .8rem; margin-bottom: 1.5rem; font-size: .8125rem; }
+.admin-card { border-top: 3px solid #93a5e3; }
+.empty-state { padding: 3rem 1.5rem; text-align: center; border-style: dashed; }
+.empty-state p { max-width: 32rem; margin-inline: auto; color: var(--portal-muted); }
+.empty-symbol { width: 3rem; height: 3rem; display: grid; place-items: center; margin: 0 auto 1.2rem; border: 1px solid #cbdafa; border-radius: .8rem; background: var(--portal-tint); color: var(--portal-blue); font-size: 1.5rem; }
+.placeholder-badge { display: inline-block; padding: .3rem .6rem; border: 1px solid var(--portal-border); border-radius: .35rem; background: #f5f7fb; color: var(--portal-muted); font-size: .75rem; font-weight: 650; }
+.table { margin-bottom: 0; }
+.table th { background: #f7f9fc; color: var(--portal-muted); font-size: .8125rem; font-weight: 600; padding: 1rem 1.5rem; white-space: nowrap; }
+.table td { padding: 1rem 1.5rem; }
+#order-documents .section-heading { align-items: center; }
+#order-documents .section-heading h2 { margin-bottom: 0; }
+#order-documents [data-documents] li { padding-block: 1.1rem !important; }
+#order-documents [data-documents] [data-name] { font-weight: 600; font-size: .9375rem; }
+#order-documents [data-upload] { padding: 1.25rem; background: #f7f9fe; border: 1px solid #dde5f4; border-radius: var(--portal-radius-sm); }
+#order-documents [data-upload] legend { font-size: 1rem; font-weight: 650; }
+#order-documents [data-saved] { padding: .75rem; background: white; border: 1px solid var(--portal-border); border-radius: .5rem; font-size: .875rem; }
+#status-actions { padding-top: .25rem; }
+#order-search-form { padding: 1.25rem; border: 1px solid var(--portal-border); border-radius: var(--portal-radius); background: white; }
+@media (max-width: 575.98px) {
+  .draft-item-values { grid-template-columns: 1fr 1fr; }
+  .draft-item-values > :first-child { grid-column: 1 / -1; }
+  .empty-state { padding: 2.5rem 1rem; }
+  #order-documents [data-upload] { padding: 1rem; }
+  #order-documents [data-documents] button { width: 100%; }
+  .product-confirm { padding: 1.25rem; }
+}
