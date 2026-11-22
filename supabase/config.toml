@@ -1,0 +1,9 @@
+project_id = "prepaid-dealer-portal"
+
+[functions.publish-order-document]
+entrypoint = "./functions/publish-order-document/index.js"
+verify_jwt = true
+
+[functions.download-order-document]
+entrypoint = "./functions/download-order-document/index.js"
+verify_jwt = true

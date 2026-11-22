@@ -367,6 +367,39 @@ Scope: add `order_documents` in a versioned migration with order/uploading-admin
 
 Acceptance: an admin uploads a synthetic PDF; active users in the order's active organization can download it. Anonymous users, inactive profiles/organizations, and users from another organization cannot access the file/metadata or obtain a download link; dealers cannot upload. Invalid files are rejected; simulated failure cleanup works. Document short-lived link expiry behavior.
 
+### 11A. PDF backend: deployed and verified for the Free demo
+
+On 2026-11-22, deployed approved 010 (private PDF bucket, metadata RLS and parser-backed
+publication), then separately approved 011 (legacy authenticated operation compatibility).
+Hosted testing exposed cached direct downloads surviving profile deactivation.
+
+After review and exact target/health/migration/source-bundle hash checks, deployed only
+publisher v2 and downloader v1 with JWT verification, verified the original PDF, then
+applied only 012. All twelve migration versions and stored bodies match; none pending.
+012 closes direct user reads at the origin while preserving lists/admin upload probes,
+metadata RLS, existing security definitions and data. The new Edge endpoint checks current
+JWT/profile/role/dealer organization and order/published metadata access before and after
+server-only file fetching, and returns a no-store attachment without exposing keys/URLs.
+
+Real admin/dealer access, anonymous/cross-org/inactive denial, same-JWT profile/organization
+deactivation, inactive-admin checks, upload/write/sign/public restrictions, JWT/CORS,
+malformed/spoofed/encrypted/oversized files, original-UUID publication retries and conflicts
+pass. Real Chrome from Netlify verifies no-store bytes/hash and same-token revocation.
+Local SQL/security, 50 unit tests, local Chrome, business SQL/concurrency regressions and
+build pass. Original identities/roles/statuses, organizations/products, 16 orders/25 items,
+four existing objects and one metadata row are unchanged; all temporary flags restored.
+
+The user confirmed Free and prohibited purge/billing/Auth changes or token rotation;
+none occurred. Same pre-migration JWTs and exact old direct URLs still return HIT/200,
+while fresh direct requests are denied and warmed Edge requests correctly return 403
+after deactivation. Historical cached responses are an explicitly accepted limitation,
+not an origin RLS pass. Their natural expiry was not rechecked; saved/browser-held or
+in-flight bytes cannot be revoked. No absolute immediate global guarantee is claimed.
+
+See [deployed backend results and fixture ledger](../supabase/document-storage.md) and
+[hashes, current authorization and cache limits](../supabase/document-download-revocation.md).
+No document UI or unrelated business feature; stop before 11B.
+
 ## 12. Responsive and accessibility review
 
 Depends on: 11.
