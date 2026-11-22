@@ -454,9 +454,13 @@ draft, accurate existing-line quantity feedback and saved-draft card indicators.
 Draft events synchronize both counters/indicators across removal, clear, refresh and
 account switching; storage failures and pending-order locks cannot announce success.
 Build, eleven-route checks, 56 unit tests, three focused preview browser cases, three
-existing catalog and five session/race regressions pass. See [evidence and remaining
-live check](catalog-feedback.md). No business/backend/Auth/dependency changes. Stop
-before Final Release Review; Netlify verification follows the reviewed main push.
+existing catalog and five session/race regressions pass. After main push `1bcb5b8`,
+Netlify served eleven matching HTML entries/twenty byte-identical assets; all three
+focused real live cases pass, including desktop/320px/390px layouts and no Add-button
+shift when the indicator appears. Final read-only comparison preserves all existing
+data, documents/security and the corrected admin name. See [actual evidence and
+limits](catalog-feedback.md). No business/backend/Auth/dependency changes. This focused
+UX improvement is complete; stop before Final Release Review.
 
 ## 13. Capstone documentation and release
 

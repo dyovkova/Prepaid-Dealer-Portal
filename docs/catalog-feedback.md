@@ -46,7 +46,22 @@ Run `PDP_CATALOG_FEEDBACK=1` with `npm run test:catalog-feedback-ui` after the b
 are required; tests use isolated browser drafts. Set `PDP_CATALOG_FEEDBACK_NETLIFY=1`
 to target Netlify. Browser suites share the preview port and run sequentially.
 
-Netlify verification is pending the reviewed main push. Complete it with the same
-three read-only live cases and a final preservation comparison before marking done.
+After main push `1bcb5b8202c74e8faf11c943137345a9ae967bda`, Netlify published all
+eleven matching HTML entries and twenty byte-identical assets from the tested build,
+without a manual deployment or settings change. All three focused cases also pass
+on `https://prepaiddealersportal.netlify.app`. Live desktop/320px/390px screenshots
+were inspected. The toast is visible while scrolled down, its action/dismiss controls
+work by keyboard, and the first card indicator does not move the Add button.
+
+Live reports record zero unexpected page errors or forbidden database/file requests.
+A final read-only comparison preserves all existing identities/profiles/roles,
+organizations, products, orders/items/snapshots, six objects/three document rows,
+migrations, policies, grants and functions. The corrected **Demo Administrator** name
+is preserved. All drafts/pending fixtures created by the tests were confined to
+isolated browser contexts; no hosted fixture or business row was created or changed.
+Unrelated `.gitignore`/MCP configuration remains unchanged and uncommitted. See ignored
+`catalog-feedback-deployment.json`, `catalog-feedback-netlify-*.json` and the logs for
+local evidence. The focused UX change is complete; final release review is not started.
+
 Chrome/phone emulation is tested; real assistive technology and other browser engines
 remain for release review. Existing backend/cache limitations are unchanged.
