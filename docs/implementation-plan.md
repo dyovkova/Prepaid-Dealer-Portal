@@ -252,6 +252,36 @@ Scope: manage dealer organization names/activation and inspect profiles; activat
 
 Acceptance: an admin can create/edit a synthetic organization and deactivate/reactivate organizations and profiles; dealer users cannot change roles, membership, or activation. Profile deactivation blocks that user; organization deactivation blocks all its dealer users, including existing sessions. Reactivation restores otherwise permitted access. Existing orders remain intact.
 
+### 9A. Admin dealer backend: deployed and verified
+
+The [minimal migration](../supabase/migrations/20261121000700_admin_dealer_access.sql)
+adds admin organization/profile/role reads, organization name/activation column
+grants and a narrow dealer-profile activation RPC. Existing dealer self-access
+stays intact; role, membership, direct profile-status writes and hard deletion
+remain prohibited. No existing data or order/product/Auth implementation changes.
+
+Preparation (2026-11-21): verified healthy production target
+`niabpabsvdgxackjjcsb`, six matching applied versions and only `20261121000700`
+pending in the remote dry-run, excluding seeds/roles/Vault updates. PostgreSQL
+17.12 tests pass admin operations, denials, same-claims activation effects,
+colleague isolation, preserved snapshots and actual activation/order/authority
+lock races. Existing SQL regressions, 22 unit tests and build pass. Hosted JWT/API
+checks were deferred until explicit approval; preparation used no remote writes.
+See [actual results, hash and pending checks](../supabase/admin-dealers.md).
+Frontend 9B, order processing and Storage remain deferred.
+
+Deployment/verification (2026-11-22): reconfirmed healthy target, exact approved
+hash and sole pending version, then applied only `20261121000700`. Seven local/
+remote versions and stored bodies match; no migrations remain pending. Real
+admin organization CRUD/activation and profile/role reads, dealer-profile RPC,
+ordinary/anonymous/inactive denials, private-schema exposure checks and same-JWT
+business restrictions pass. Roles/membership/direct profile activation and DELETE
+remain protected. All temporary status changes are restored; eleven existing
+users, fifteen products, eight orders/fourteen items and eleven original
+organizations remain unchanged. One empty synthetic organization is retained
+inactive (twelve total); no user/product/order creation. Native regressions, 22
+unit tests and production build pass. No frontend or later features implemented.
+
 ## 10. Admin order processing
 
 Depends on: 9.

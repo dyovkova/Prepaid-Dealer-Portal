@@ -119,8 +119,8 @@ Trigger/provisioning routines are not client-executable. See Supabase's
 | [`20261120000400_atomic_order_requests.sql`](../supabase/migrations/20261120000400_atomic_order_requests.sql) | Milestone 6A applied and verified after explicit approval: caller-bound atomic submission, current snapshots, creator/request-key idempotency, locking and narrow RPC execution. Direct table access stays default-deny. |
 | [`20261121000500_order_read_access.sql`](../supabase/migrations/20261121000500_order_read_access.sql) | Milestone 7A applied and verified after explicit approval on 2026-11-21: active-dealer organization-scoped order/item SELECT policies/grants only. Admin-wide access and history frontend remain deferred. |
 | [`20261121000600_admin_product_access.sql`](../supabase/migrations/20261121000600_admin_product_access.sql) | Milestone 8A applied and verified after explicit approval on 2026-11-21: product-only admin read/create/edit/archive policies and column grants. Real admin/dealer/inactive checks pass; no hard deletion or dealer/order administration. |
-| Future admin dealer migration | Admin-only dealer access and narrow profile activation; deferred to milestone 9. |
-| `007_admin_order_transitions.sql` | Database-enforced transitions and admin execution grants; order processing milestone. |
+| [`20261121000700_admin_dealer_access.sql`](../supabase/migrations/20261121000700_admin_dealer_access.sql) | Milestone 9A applied and verified after approval on 2026-11-22: admin organization read/create/edit/activation, profile/role inspection and narrow dealer-profile activation RPC. Real same-JWT restrictions/denials and preservation pass; no hard deletion, role editing or membership reassignment. |
+| Future admin order transitions migration | Database-enforced transitions and admin execution grants; deferred to order processing. |
 
 Keep later operations default-deny until their migration is introduced. Synthetic product
 and organization data belongs in a separate repeatable seed, not production migrations.

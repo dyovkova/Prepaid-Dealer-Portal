@@ -37,6 +37,11 @@ archive/reactivation. The dashboard links to this ninth HTML page. Existing
 order snapshots and dealer restrictions remain intact. See
 [backend checks](supabase/admin-products.md) and [UI results/limits](docs/admin-products-ui.md).
 
+Milestone 9A adds the admin dealer-management backend: organization operations,
+profile/role inspection and a narrow dealer-profile activation RPC. Existing
+sessions obey current activation flags through RLS. The dealer-management UI
+remains deferred to 9B; see [backend validation](supabase/admin-dealers.md).
+
 Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
 is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
 constraint-rejection, and authorization checks passed; Auth-backed fixture acceptance
@@ -148,5 +153,5 @@ History checks use `npm run test:history` and the separate opt-in
 
 See [the project brief](docs/project-brief.md) for full MVP scope and
 [the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Dealer/order management, documents and final release
+recorded acceptance checks. Dealer-management UI, order processing, documents and final release
 checks remain later milestones.
