@@ -1,8 +1,8 @@
 # Milestone 9B: admin dealer management UI
 
-Implemented and verified against the production build on 2026-11-22.
+Implemented, deployed and verified against production preview and Netlify on 2026-11-22.
 Target: **PrepaidDealerPortal — `niabpabsvdgxackjjcsb`**.
-Netlify publication and browser verification are pending the verified code push.
+Live page: [Admin Dealer Management](https://prepaiddealersportal.netlify.app/admin/dealers/).
 
 ## Behavior and boundaries
 
@@ -77,9 +77,36 @@ Further checks passed:
 
 One new empty organization, **Synthetic 9B UI organization**, was created through
 the real UI and retained inactive, giving thirteen organizations in total.
-The Netlify run will reuse this recorded fixture. Temporary fixture profile and
+The Netlify run reused this recorded fixture. Temporary fixture profile and
 organization statuses/names were restored through the approved public APIs.
 No users, products or orders were created or deleted.
+
+## Actual Netlify verification
+
+Commit `0595c8b` was pushed to GitHub `main`; no manual deployment was triggered.
+The new route changed from HTTP 404 before the push to its own Admin Dealers
+HTML afterward. Publication was verified at **08:12 Europe/Sofia on 2026-11-22**.
+All ten entries match the built page content and all seventeen linked assets
+match local build bytes. Netlify injects a hosting comment and its public HUD
+script; the HTML comparison accounts only for these platform additions.
+
+All **four focused browser cases also pass on Netlify**, including actual admin
+rename/activation, profile RPC, same-JWT business restrictions, guard/API denials,
+filters, confirmations, refresh, mobile layout and simulated failure handling.
+The same recorded organization is reused; real creation was tested through the
+production-preview UI against this hosted backend. No duplicate fixture was
+created by the live run. There were no uncaught application JavaScript errors.
+
+Eighteen private/source/unknown paths return 403/404, including environment,
+Git/MCP, credential/verification manifests, SQL, source, test and package paths.
+Inspected deployed assets contain no known fixture passwords or privileged
+credential patterns. Existing Supabase public configuration is unchanged.
+
+The final read-only comparison passes again after live validation: original
+records and all seven migrations, policies, grants and functions are unchanged.
+Eleven users, thirteen organizations (the new empty 9B fixture inactive), fifteen
+products, eight orders and fourteen items remain. All tested fixture statuses
+were restored. Unrelated MCP/configuration edits remain outside the commits.
 
 ## Reproducing focused checks
 
