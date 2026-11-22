@@ -1,7 +1,7 @@
 # Milestone 11B: order PDF UI
 
 2026-11-22. Target: PrepaidDealerPortal (`niabpabsvdgxackjjcsb`).
-Production-build preview is verified; Netlify verification is pending the feature push.
+Production-build preview and the actual Netlify PDF workflow are verified.
 Only the existing admin/dealer order-details entries are extended; no new HTML page,
 dependency, database migration, Edge Function or Auth setting is introduced.
 
@@ -88,8 +88,34 @@ its ID before sending, reuses it on reruns and never deletes an existing documen
 Use the project's existing `npm run build`, `npm run check:preview` and unit/session
 regression commands. No credentials or synthetic PDF binaries are committed.
 
-Pending: verify automatic Netlify publication from main, run the actual live admin/dealer
-PDF flow and repeat preservation comparison. No 11B completion claim until those pass.
+## Actual Netlify results
+
+After pushing feature commit `0db547060ac0d29ef71c230361918fb5156c45a0` to main,
+Netlify served all eleven matching HTML entries and all twenty emitted assets with
+identical bytes to the tested build. No manual Netlify deployment or settings change
+was used. GitHub's public check/deployment lists were empty, so the deployment evidence
+is the observed main-push publication, matching artifacts and real live workflow.
+
+All four focused cases passed again on `https://prepaiddealersportal.netlify.app`,
+including a distinct real admin upload with deliberately lost successful publication
+response, refresh/exact retry without a second upload, verified admin/dealer download
+bytes/filename, inactive and cross-organization denial, API/empty/rejection states,
+320px/390px layouts and account switching while a download response is delayed.
+No direct Storage download requests, unexpected database writes or uncaught page errors
+were recorded. Live screenshots were inspected. Existing pending malformed-PDF reference
+was retained; it was not replaced, deleted or published.
+
+One additional live test PDF is retained on the same existing synthetic order:
+UUID `54c85d2c-ace3-436c-a441-19db7a8f96f8`, filename `Synthetic 11B netlify UI.pdf`,
+1,321 bytes, SHA-256 `707b6e25a7e380e6535c24112468c625b11b2ad26d3c55147641bff79434e1f3`.
+Final read-only comparisons preserve all pre-existing account identities/profiles/roles,
+organizations/statuses, products, sixteen orders/twenty-five snapshots/items, all four
+prior complete file rows and prior metadata. Only the two approved synthetic UI test
+documents were added: **six objects, three published metadata rows total**. All temporary
+activation flags restored; twelve migrations, deployed publisher v2/downloader v1,
+RLS/grants, Auth source/settings, dependencies and unrelated MCP/configuration unchanged.
+
+Milestone 11B is complete for the tested Chrome/Free demo configuration. No later milestone.
 The backend's historical Free-plan direct-CDN cache limitation remains documented in
 [11A](../supabase/document-download-revocation.md); the UI never creates direct-download
 requests. No purge, token rotation, Auth/billing or backend changes. Non-Chrome engines,

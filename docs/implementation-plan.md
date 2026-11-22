@@ -400,7 +400,7 @@ See [deployed backend results and fixture ledger](../supabase/document-storage.m
 [hashes, current authorization and cache limits](../supabase/document-download-revocation.md).
 No document UI or unrelated business feature; stop before 11B.
 
-### 11B. PDF UI: production preview verified, Netlify pending
+### 11B. PDF UI: deployed and verified
 
 Admin order details now upload/publish PDFs and list/download published files; dealer
 details share the read/download component. Downloads use only the checked Edge endpoint,
@@ -411,10 +411,17 @@ No automatic overwrite/deletion, replacement of unresolved requests or page-load
 Existing guards, RLS, server validation and backend sources remain unchanged.
 
 56 unit tests, four focused real-session preview browser cases, five existing session
-regressions, 320px/390px layouts, route checks and production build pass. One controlled
-preview PDF is retained on an existing test order; all original data/files/backend
-definitions are preserved. See [actual evidence and limitations](order-documents-ui.md).
-Do not mark 11B complete until Netlify deployment and its real PDF workflow pass.
+regressions, 320px/390px layouts, eleven-route checks and production build pass.
+After main push `0db5470`, all eleven Netlify entries/twenty assets match the tested
+build, and all four real live PDF cases pass again: admin upload, lost response and exact
+retry, admin/dealer download, role/status isolation, refresh, errors and account switching.
+Network audit records no direct Storage downloads or unexpected database mutations.
+Two distinct controlled PDFs are retained on the same existing test order (one preview,
+one live). All original accounts/statuses, organizations/products, sixteen orders/
+twenty-five items, prior files/metadata, twelve migrations and Edge definitions remain
+unchanged. No backend/Auth/dependency changes. See [actual evidence, fixture IDs and
+limits](order-documents-ui.md). 11B is complete for the tested configuration; the known
+11A historical CDN limitation and cross-device/browser limits remain explicit. Stop here.
 
 ## 12. Responsive and accessibility review
 
