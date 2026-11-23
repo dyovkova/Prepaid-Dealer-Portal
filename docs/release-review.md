@@ -2,7 +2,7 @@
 
 Review dates: **2026-11-22–23 (Europe/Sofia)**. Deadline: November 23, 2026.
 Target: **PrepaidDealerPortal — `niabpabsvdgxackjjcsb`**.
-Status: **VERIFIED RELEASE CANDIDATE — final Netlify publication check pending**.
+Status: **READY for the synthetic SoftUni capstone demo**. No release blocker remains.
 
 ## Scope and preservation
 
@@ -14,7 +14,8 @@ Three registration range-label typos are corrected without changing validation r
 
 The current read-only baseline contains **11 accounts, 14 organizations, 15 products,
 18 orders, 28 items, 6 private objects and 3 published document rows**. The latest two
-orders are existing data, not new release fixtures. All must remain unchanged, including
+orders are existing data, not new release fixtures. Final hosted comparison confirms
+all these rows and files remain unchanged, including
 roles, memberships, activation, saved prices/quantities/names and full file metadata.
 The admin profile already says **Demo Administrator**; both UI messages use
 `public.profiles.display_name`. No further profile/Auth change is needed.
@@ -117,13 +118,34 @@ attempted. The project remains suitable only for synthetic/non-confidential demo
 See [actual historical cache evidence](../supabase/document-download-revocation.md)
 and the current [README limitations](../README.md#known-limits-and-security-boundaries).
 
-## Release handoff (publication verification pending)
+## Verified publication and release handoff
 
 Application: https://prepaiddealersportal.netlify.app
 
 Repository: https://github.com/dyovkova/Prepaid-Dealer-Portal
 
-The final commit/artifact evidence will be recorded after verification and main push.
+GitHub's public `main` and the deployed runtime were verified against release source
+commit **`a2dcf9c24353b2fdcf903434e54114da2a2d019a`** on November 23, 2026.
+All eleven Netlify route entries reference the expected build; all twenty generated
+assets are byte-identical to the local production build. GitHub's published README
+and DEMO.md match the reviewed files. The existing main-push deployment completed
+without a manual deploy or configuration change. Eleven private/config/source and
+old-report URL probes return 404; no local verification artifact is served.
+
+**Ten final live Netlify browser cases pass:** the three guarded release workflows,
+four all-route visual/state cases and three catalog-feedback cases. They cover real
+dealer/admin sessions, direct navigation/refresh, desktop and 320px/390px layouts,
+exact order retry recovery, unchanged-value administration, genuine status conflict
+handling, existing PDF publication recovery/downloads and draft isolation/feedback.
+The final read-only hosted comparison confirms all baseline business/security/file
+rows, twelve migrations and both Edge sources are preserved. No business source,
+dependency, backend or unrelated configuration change is included in this release.
+
+The final documentation handoff commit records this completed live acceptance; its
+hash is supplied with the release response. The runtime remains the verified build
+above. This is readiness for the synthetic demo, with the documented security and
+browser-test boundaries, not certification for confidential production documents.
+
 Use [DEMO.md](../DEMO.md), supply evaluator credentials privately if required, and submit
 the URLs through SoftUni's actual assessment form before the deadline. No external
 submission, recording, credential distribution or course-form action is performed by

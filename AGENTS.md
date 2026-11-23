@@ -40,7 +40,7 @@ Prepaid Dealer Portal is a SoftUni "Software Technologies with AI" capstone. Use
 
 ## Current boundary
 
-The application is functionally complete through 11B, visual polish and catalog draft feedback. The current task is the final SoftUni release review; see README.md, DEMO.md and docs/release-review.md for current status/evidence. Do not start another milestone, redesign, translation or business feature after this review.
+The application is functionally complete through 11B, visual polish and catalog draft feedback. The final SoftUni release review is complete and READY for the synthetic demo; see README.md, DEMO.md and docs/release-review.md for actual evidence, limitations and manual submission steps. Stop after this handoff. Do not start another milestone, redesign, translation or business feature without a new request.
 
 Preserve the existing PrepaidDealerPortal project (niabpabsvdgxackjjcsb), all accounts/roles/memberships/statuses, products, orders/items/snapshots, private objects/metadata, twelve applied migrations and the two approved Edge sources/configuration. The administrator's display name is Demo Administrator, read from public.profiles.display_name; Auth metadata is not the UI source of truth. Never rerun first-admin provisioning. Confirm Email is temporarily disabled for this synthetic demo; confirmation-enabled delivery remains untested.
 

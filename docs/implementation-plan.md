@@ -477,8 +477,12 @@ Storage or accepted visual-design changes. Clean lockfile installation, 56 units
 nine isolated SQL/security groups, local cache-browser test, 21 preview browser cases,
 all eleven routes and credential/private-file scans pass. Real hosted checks reuse
 existing requests/files and unchanged-value admin edits; no new hosted data or files.
-The admin name is already correct at its profile source. Final main/Netlify publication
-verification is the remaining gate. See [actual evidence and limits](release-review.md).
+The admin name is already correct at its profile source. GitHub main and Netlify's
+eleven entries/twenty generated assets match the verified release build. Ten final live
+browser cases pass and the final hosted snapshot preserves all existing rows/files.
+The release is READY for the synthetic SoftUni demo, subject to the documented limits
+and manual course submission. Stop after this handoff; no subsequent milestone is
+authorized. See [actual evidence and limits](release-review.md).
 
 ## Verification across later milestones
 
