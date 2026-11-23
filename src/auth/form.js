@@ -21,27 +21,32 @@ export async function initAuthForm(mode) {
     if (form.getAttribute('aria-busy') === 'true') return;
     if (!validateAuthForm(form)) { show('Please check the highlighted fields.', 'danger'); return; }
     form.setAttribute('aria-busy', 'true'); fieldset.disabled = true;
+    page.beginAuth();
     button.textContent = mode === 'register' ? 'Creating account…' : 'Logging in…';
     show(mode === 'register' ? 'Creating your dealer account…' : 'Checking your credentials…', 'info');
     const value = name => form.elements.namedItem(name).value;
+    let navigating = false;
     try {
       const data = mode === 'register'
         ? await register({ email: value('email').trim(), password: value('password'),
           displayName: value('contact-name').trim(), businessName: value('business-name').trim() })
         : await signIn(value('email').trim(), value('password'));
+      form.classList.remove('was-validated');
       form.elements.namedItem('password').value = '';
       if (form.elements.namedItem('password-confirm')) form.elements.namedItem('password-confirm').value = '';
       if (!data.session) {
         show('Registration received. Confirm your email before logging in.', 'success');
       } else {
-        show(mode === 'register' ? 'Account created. Opening your workspace…' : 'Login successful. Opening your workspace…', 'success');
-        await page.refresh();
+        show(mode === 'register' ? 'Account created. Opening your workspace…' : 'Login successful. Opening your workspace…', 'info');
+        navigating = await page.refresh() === true;
       }
     } catch (error) {
       show(authError(error), 'danger');
       form.elements.namedItem('password').value = '';
     } finally {
-      form.removeAttribute('aria-busy'); fieldset.disabled = false; button.textContent = label;
+      if (!navigating) {
+        form.removeAttribute('aria-busy'); fieldset.disabled = false; button.textContent = label;
+      }
     }
   });
 }

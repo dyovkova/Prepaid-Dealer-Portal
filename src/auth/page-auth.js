@@ -59,7 +59,7 @@ export async function startPageAuth(page, onAccount = () => {}) {
       const name = document.querySelector('[data-account-name]');
       if (name) name.textContent = account.profile?.display_name ?? 'Account';
       if (allowedRoles[page] && !account) {
-        location.replace('/login/?notice=sign-in-required'); return;
+        location.replace('/login/?notice=sign-in-required'); return true;
       }
       if (account && account.status !== 'active') {
         message(accountMessages[account.status], 'warning', true);
@@ -69,7 +69,7 @@ export async function startPageAuth(page, onAccount = () => {}) {
       if (account && ((page === 'login' || page === 'register') ||
         (allowedRoles[page] && !allowedRoles[page].includes(account.role)))) {
         const reason = allowedRoles[page] ? '?notice=role-restricted' : '';
-        location.replace(destination(account.role) + reason); return;
+        location.replace(destination(account.role) + reason); return true;
       }
       if (content) content.hidden = false;
       updateDraftCounter(account);
@@ -120,9 +120,15 @@ export async function startPageAuth(page, onAccount = () => {}) {
     });
   } catch { /* refresh displays a configuration error. */ }
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && !checking && !loggingOut) void refresh();
+    if (document.visibilityState === 'visible' && !checking && !loggingOut && !form?.matches('[aria-busy="true"]')) void refresh();
   });
-  window.addEventListener('pageshow', event => { if (event.persisted) void refresh(); });
+  window.addEventListener('pageshow', event => {
+    if (event.persisted && !form?.matches('[aria-busy="true"]')) void refresh();
+  });
   await refresh();
-  return { refresh };
+  return { refresh, beginAuth() {
+    generation += 1; // Pending account checks must not overwrite this explicit attempt.
+    checking = false;
+    status.hidden = true;
+  } };
 }
