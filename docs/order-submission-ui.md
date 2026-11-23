@@ -1,5 +1,7 @@
 # Milestone 6B: frontend order submission
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](release-review.md) for the final state and limitations.
+
 Implemented and verified on 2026-11-20 against **PrepaidDealerPortal**
 (`niabpabsvdgxackjjcsb`). No migrations, policies, Auth settings or products changed.
 

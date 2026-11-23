@@ -1,12 +1,10 @@
 # Milestone 3A: accepted database schema and access model
 
-Status: **MVP baseline accepted on 2026-11-20; core schema and 4A identity backend complete for the approved demo configuration**.
-
-The application remains an eight-page Vite/Bootstrap app, now with the 4B Supabase
-authentication UI; product/order/Storage screens remain placeholders.
-The approved initial migration is applied; see [Supabase verification notes](../supabase/README.md)
-for the verified target, actual checks, and outstanding tests. Milestone 2's pending browser
-visual acceptance remains tracked in the [implementation plan](implementation-plan.md).
+Status: **MVP baseline accepted on 2026-11-20; all twelve reviewed migrations and
+the eleven-route MVP are deployed**. The original core model below is retained as
+the design record; document/admin extensions are implemented through later immutable
+migrations. See [current backend setup](../supabase/README.md) and
+[final release evidence](release-review.md) for actual checks and limitations.
 
 ## Accepted scope
 
@@ -84,7 +82,7 @@ can perform the necessary trusted lookup. For permitted writes use both `USING` 
 `WITH CHECK` where applicable, plus column grants: row ownership alone must not allow
 editing `dealer_id`, `is_active`, `role`, or immutable IDs/timestamps.
 
-## Trusted operations to implement in later milestones
+## Trusted operations (implemented through reviewed migrations)
 
 - **Signup:** one Auth trigger transaction creates a fresh organization, profile bound to
   `NEW.id`, and hard-coded `dealer` role. Metadata may supply bounded display/business
@@ -112,71 +110,8 @@ from `PUBLIC`/`anon`, and grant only required helpers/operations to `authenticat
 Trigger/provisioning routines are not client-executable. See Supabase's
 [function security guidance](https://supabase.com/docs/guides/database/functions).
 
-## SQL migration sequence (core and identity applied; business migrations planned)
+## Implemented migration sequence
 
-| Planned file | Contents and intended stage |
-| --- | --- |
-| [`20261120000100_core_schema.sql`](../supabase/migrations/20261120000100_core_schema.sql) | Initial six tables, FKs, checks, unique constraints, indexes; enable RLS and revoke client access in the same migration. Applied for milestone 3B on 2026-11-20 after explicit user approval. |
-| [`20261120000200_identity_and_access.sql`](../supabase/migrations/20261120000200_identity_and_access.sql) | Private actor helpers, fixed-dealer signup trigger, own profile/role and active-own-organization reads, limited display-name updates and grants; milestone 4A. Applied on 2026-11-20; real public signup/login, isolation and inactive-session checks passed with demo email confirmation disabled by the user. |
-| [`20261120000300_catalog_access.sql`](../supabase/migrations/20261120000300_catalog_access.sql) | Active-dealer catalog SELECT policy and grant; milestone 5A applied and verified on 2026-11-20 after explicit approval. Separate twelve-product synthetic seed imported (ten active/two inactive); hosted idempotency and real-session authorization tests passed. |
-| [`20261120000400_atomic_order_requests.sql`](../supabase/migrations/20261120000400_atomic_order_requests.sql) | Milestone 6A applied and verified after explicit approval: caller-bound atomic submission, current snapshots, creator/request-key idempotency, locking and narrow RPC execution. Direct table access stays default-deny. |
-| [`20261121000500_order_read_access.sql`](../supabase/migrations/20261121000500_order_read_access.sql) | Milestone 7A applied and verified after explicit approval on 2026-11-21: active-dealer organization-scoped order/item SELECT policies/grants only. Admin-wide access and history frontend remain deferred. |
-| [`20261121000600_admin_product_access.sql`](../supabase/migrations/20261121000600_admin_product_access.sql) | Milestone 8A applied and verified after explicit approval on 2026-11-21: product-only admin read/create/edit/archive policies and column grants. Real admin/dealer/inactive checks pass; no hard deletion or dealer/order administration. |
-| [`20261121000700_admin_dealer_access.sql`](../supabase/migrations/20261121000700_admin_dealer_access.sql) | Milestone 9A applied and verified after approval on 2026-11-22: admin organization read/create/edit/activation, profile/role inspection and narrow dealer-profile activation RPC. Real same-JWT restrictions/denials and preservation pass; no hard deletion, role editing or membership reassignment. |
-| [`20261122000800_admin_order_access.sql`](../supabase/migrations/20261122000800_admin_order_access.sql) | Milestone 10A deployed after approval on 2026-11-22: admin order/item reads and guarded status RPC. Initial stale 40001 retry defect was corrected by separately approved 009; milestone 10A is verified. See [actual results](../supabase/admin-orders.md). |
-| [`20261122000900_admin_order_conflict_response.sql`](../supabase/migrations/20261122000900_admin_order_conflict_response.sql) | Applied after explicit approval on 2026-11-22: only the private stale-conflict code changes to PT409; locks, validation, ownership/ACLs and public wrapper unchanged. Actual HTTP 409/parallel conflict checks, native regressions and preservation pass. Nine migrations synchronized; none pending. |
-| [`20261122001000_order_document_storage.sql`](../supabase/migrations/20261122001000_order_document_storage.sql) | Applied at the approved hash on 2026-11-22. Private PDF bucket, metadata RLS and narrow registration RPC verified. Initial legacy GET mismatch corrected by separately approved 011. Original SQL/data preserved. See [actual results](../supabase/document-storage.md). |
-| [`20261122001100_order_document_legacy_read.sql`](../supabase/migrations/20261122001100_order_document_legacy_read.sql) | Applied at the approved hash after exact preflight on 2026-11-22: only the Storage SELECT allowlist gains the legacy operation. All eleven versions/bodies synchronized; other security definitions unchanged. Original PDF published once, admin/dealer reads and negative tests pass. Cached same-JWT download still survives profile deactivation; 11A remains incomplete pending a separately reviewed revocation design. |
-| [`20261122001200_order_document_download_boundary.sql`](../supabase/migrations/20261122001200_order_document_download_boundary.sql) | Applied at the approved hash on 2026-11-22 after exact target/health/source-hash checks. Only direct authenticated/legacy GET entries are removed; lists/admin upload probes and other policies/grants/data unchanged. Publisher v2/downloader v1 verified with current JWT/RLS checks, server-only bytes and no-store. All twelve versions/bodies match. New Edge workflow and real browser/security tests pass; historical direct CDN HIT responses remain a Free-plan limitation, with no purge/billing/Auth changes or absolute immediate global guarantee. See [actual results](../supabase/document-download-revocation.md). |
+The core design above was accepted in 3A and then extended by the approved identity, catalog, order/admin and document migrations. All twelve applied files and their responsibilities are listed in [the current backend index](../supabase/README.md). Order documents add the seventh metadata table; private Storage and the publish/download Edge Functions follow [the verified document design](../supabase/document-storage.md) and [download boundary](../supabase/document-download-revocation.md).
 
-Keep later operations default-deny until their migration is introduced. Synthetic product
-and organization data belongs in a separate repeatable seed, not production migrations.
-Test Auth identities must be provisioned through supported local Auth tooling; no hard-coded
-real accounts, privileged keys, or direct password inserts into `auth.users`.
-
-## Security risks and required acceptance tests before implementation is accepted
-
-- **Self-promotion / organization takeover:** attempt signup with `role=admin` and another
-  dealer ID; then attempt direct profile membership/activation and role writes. All fail
-  to grant access; signup creates only an isolated dealer organization.
-- **Cross-organization leaks:** use two users in organization A and one in B; A users may
-  read each other's organization orders/items, while B cannot read or modify them via
-  direct API calls, joins, guessed IDs, or RPCs. Profiles remain individually private.
-- **Inactive/stale sessions:** deactivate a profile or organization and repeat business
-  reads/submission with its existing token; deny access. Revoke admin role and repeat admin writes.
-- **Forged requests:** reject supplied ownership/status/prices, invalid products/quantities,
-  empty orders, duplicate products, and partial writes; verify price snapshots survive
-  catalog edits, concurrent changes are handled, and retries do not create duplicate orders.
-- **Privilege bypass / broken policies:** verify anonymous denial, safe function grants,
-  no recursive-policy errors, approved admin actions, denied dealer admin actions, and
-  invalid/terminal status transitions through direct database/API tests. Service/secret
-  keys bypass RLS and must never appear in browser code or committed configuration.
-
-Milestone 3A finalized the accepted documentation. Milestone 3B applied only the initial
-schema migration to the verified project after explicit user approval. Catalog inspection,
-23 invalid-data checks, 48 client privilege denials, and 48 independent RLS checks passed.
-All test fixtures and temporary grants were rolled back. Full Auth-backed relationship,
-restrictive-delete, and snapshot acceptance tests remain pending. The frontend was
-unchanged during 3B. The user accepted 3B as complete; those historical test limits are not
-represented as new passes. Milestone 4A's [identity backend](../supabase/identity-access.md)
-is applied, with deployed-object/history and private API exclusion checks passed.
-Supabase Auth registration/login, isolated dealer records, cross-account/field
-protection and inactive restrictions passed with actual JWTs. Confirm Email is
-temporarily disabled for the demo; confirmation-enabled delivery was not tested. Frontend
-authentication is implemented and verified in [milestone 4B](authentication-ui.md).
-Milestone 5A's [catalog access and demo seed](../supabase/catalog-access.md) are
-deployed and verified after explicit approval: active dealers read only active
-products; anonymous/inactive/admin catalog reads and client product writes remain
-blocked. Admin catalog operations, orders and Storage remain default-deny.
-[Milestone 5B](catalog-and-draft.md) implements the catalog frontend and local
-drafts without database changes. [Milestone 6A](../supabase/order-submission.md)
-deploys the independently validated atomic server operation. Hosted RPC/security
-and native concurrency tests passed; three synthetic validation orders/four items
-are retained from 6A. [Milestone 6B](order-submission-ui.md) connects the frontend
-to that RPC with durable request IDs and confirmed cleanup, adding two retained
-synthetic orders/four items. [Milestone 7A order-read access](../supabase/order-read-access.md)
-is deployed and verified: real organization reads, direct UUID isolation,
-inactive-account denial, archived-product snapshot access and prohibited writes
-passed. [Milestone 7B](order-history-ui.md) implements dealer history/details and
-confirmed-order links using these reads and saved snapshots, with no database
-changes. All existing data/RPCs remain preserved; admin-wide access is deferred.
+The initial core default-deny baseline is historical, not the final permission model. Current grants/RLS authorize only the implemented role/organization workflows, while unsupported operations stay denied. Do not reapply historical migrations or restore the synthetic seed to overwrite legitimate current data. See [final release verification](release-review.md) for actual checks, preservation and limits.

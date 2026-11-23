@@ -1,5 +1,7 @@
 # Milestone 7A: dealer order history access
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Status (2026-11-21): **deployed and verified after explicit approval**.
 Target: **PrepaidDealerPortal — `niabpabsvdgxackjjcsb`**, production,
 `ACTIVE_HEALTHY`. All five local/remote migration versions match. Active dealers

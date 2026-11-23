@@ -1,5 +1,7 @@
 # Milestone 11A: private PDF backend - verified Edge workflow
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Verified on **2026-11-22** against **PrepaidDealerPortal - niabpabsvdgxackjjcsb**.
 The approved Free-plan backend workflow is deployed and verified. Historical cached
 direct Storage responses remain a known limitation, documented below and in the

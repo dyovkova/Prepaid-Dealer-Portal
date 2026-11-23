@@ -1,5 +1,7 @@
 # Milestone 6A: atomic order submission backend review
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Status (2026-11-20): **deployed after explicit approval; applicable hosted and
 native regression checks passed**. Target: **PrepaidDealerPortal — `niabpabsvdgxackjjcsb`**,
 healthy production project in `eu-central-1`, PostgreSQL `17.12`.

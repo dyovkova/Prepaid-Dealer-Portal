@@ -1,5 +1,7 @@
 # Milestone 9A: admin dealer management backend
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Status: **deployed and verified after explicit approval** (2026-11-22).
 Target: **PrepaidDealerPortal - `niabpabsvdgxackjjcsb`**, healthy production
 project, PostgreSQL `17.12`, verified with official Supabase CLI `3.2.0`.

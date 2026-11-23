@@ -1,5 +1,7 @@
 # Milestone 10A: admin order management backend
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Status: **complete - both approved migrations deployed and hosted correction verified**.
 Date: 2026-11-22. Backend only; frontend 10B and Storage remain unimplemented.
 

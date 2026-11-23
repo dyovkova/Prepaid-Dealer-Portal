@@ -15,7 +15,7 @@ The Register request sent only the two supported name metadata fields.
 | Field | Verified value |
 | --- | --- |
 | Auth user / profile UUID | `6c99cda5-d354-496b-ba85-0218fd9ee1af` |
-| Display name | `SoftUni Demo Administrator` |
+| Display name | `Demo Administrator` (initial registration: `SoftUni Demo Administrator`) |
 | Organization UUID | `862bcb52-78e7-4aed-972a-fcb3290d8ed9` |
 | Organization name | `Synthetic Demo Administration` |
 | Current role | `admin` (initial public-signup role was `dealer`) |

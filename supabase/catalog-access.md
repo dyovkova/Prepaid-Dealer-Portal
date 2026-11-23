@@ -1,5 +1,7 @@
 # Milestone 5A: product catalog database access and demo data
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 Status (2026-11-20): **deployed after explicit approval; applicable hosted and
 local checks passed**. Target: **PrepaidDealerPortal**,
 `niabpabsvdgxackjjcsb`, CLI environment `production`, region `eu-central-1`.

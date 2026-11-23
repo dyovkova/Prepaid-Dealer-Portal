@@ -1,5 +1,7 @@
 # Milestone 4B: working authentication UI
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](release-review.md) for the final state and limitations.
+
 Implemented and verified against **PrepaidDealerPortal** (`niabpabsvdgxackjjcsb`).
 The eight-page Vite application uses vanilla JavaScript, HTML and Bootstrap.
 No database migration, Auth setting, product/order operation or Storage feature

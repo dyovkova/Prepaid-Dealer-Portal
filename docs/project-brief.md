@@ -34,12 +34,12 @@ Each registration creates a new isolated dealer organization, a profile linked t
 - Show the dealer organization's order history and individual order details, including items, total, and status. Members of the same organization share order visibility; profiles remain individually private except to admins.
 - Allow admins to create/edit/archive products, create/edit/deactivate dealer organizations, inspect dealer profiles and activate/deactivate accounts, and inspect and process all orders. Role changes and membership reassignment remain outside the UI.
 - Use statuses `submitted`, `processing`, `completed`, and `rejected`. New orders start as `submitted`; admins may move them to `processing` or `rejected`, then from `processing` to `completed` or `rejected`. Completed and rejected orders are terminal.
-- In milestone 11, add `order_documents` and private Supabase Storage: admins upload synthetic PDFs, and active dealers download documents associated with their organization's orders. Define and enforce file size and type limits in that milestone.
+- Private `order_documents` metadata and Supabase Storage support validated PDF uploads up to 10 MiB and checked Edge-only downloads for authorized orders. Dealers cannot upload or modify documents.
 - Provide responsive, accessible screens with basic validation and loading, empty, error, and success feedback.
 
 Submitted orders are read-only for dealers. Product archival and dealer deactivation preserve historical records. Orders record requests only: completing a request does not represent payment, shipment, or prepaid credit activation.
 
-## Planned screens
+## Application screens
 
 Each screen uses its own HTML entry page and URL; shared JavaScript modules support common layout and data access. This is a genuine multi-page application, not a single page with simulated routes.
 
@@ -67,11 +67,11 @@ Milestone 3A accepts six core tables. See [the database design](database-design.
 | `orders` | References the owning organization and creating profile; stores status, note, request ID, and timestamps. |
 | `order_items` | References `orders` and `products`; stores quantity and price/SKU/name snapshots. |
 
-`order_documents` is a later addition in milestone 11, referencing an order and its uploading admin and storing private Storage path/file metadata. It is not part of the six core tables or milestone 3B.
+`order_documents` was added in milestone 11, referencing an order and its uploading admin and storing private Storage path/file metadata. It is separate from the original six-table milestone 3B schema.
 
 Foreign keys, uniqueness, quantity/price checks, and delete restrictions protect consistency. Historical products and orders are retained. Totals are derived from saved line quantities and prices. The exact SQL and column definitions belong to the database milestone.
 
-All six core tables require RLS. Dealers may read only their own profile/role and their active organization's business data; product reads are limited to active products. They cannot read another organization's orders/items, reassign membership, self-promote, or change account/organization activation. Admin permissions must be explicit. Order submission derives ownership, status, and prices in a trusted database transaction; direct client order/item writes are denied. Inactive accounts or organizations lose dealer business-data access. In milestone 11, `order_documents` RLS and private Storage policies enforce equivalent organization/role restrictions; use short-lived authorized download links and document that issued links may remain usable until expiry.
+All six core tables require RLS. Dealers may read only their own profile/role and their active organization's business data; product reads are limited to active products. They cannot read another organization's orders/items, reassign membership, self-promote, or change account/organization activation. Admin permissions must be explicit. Order submission derives ownership, status, and prices in a trusted database transaction; direct client order/item writes are denied. Inactive accounts or organizations lose dealer business-data access. Document metadata RLS and private Storage policies enforce equivalent organization/role restrictions. Downloads use the authenticated download-order-document Edge Function with current database checks and no-store bytes; no signed/public/direct Storage download URLs are exposed by the UI. Historical pre-cutover CDN copies remain a documented limitation.
 
 ## Explicitly out of scope
 
@@ -93,4 +93,4 @@ All six core tables require RLS. Dealers may read only their own profile/role an
 - Admin file upload and authorized dealer file download.
 - Public GitHub repository, working Netlify URL, and documented local setup, Supabase configuration, migration/seed steps, trusted admin setup, deployment, and demo walkthrough.
 
-Milestones 1 and 2 supply the project guidance and eight-page UI; broader milestone 2 visual acceptance remains pending. Milestone 3A finalized the design and 3B deployed the core schema. Milestone 4A deployed/verified identity provisioning and RLS; 4B supplies working Supabase registration/login/logout, persistent sessions, database-derived role/status guards and inactive feedback, validated in a real browser. Confirm Email is temporarily disabled by the user for the demo; confirmation-enabled delivery was not tested. Product/order business workflows and Storage remain unimplemented and default-deny; later work follows the implementation plan.
+The MVP is complete through Milestone 11B, visual polish and catalog feedback. All eleven routes are deployed on Netlify; the six core tables plus order-document metadata are secured by the twelve applied migrations. Current setup/workflows are in [README](../README.md), the five-minute walkthrough is in [DEMO](../DEMO.md), and actual release checks/limits are in [the release review](release-review.md). Confirm Email remains temporarily disabled for the synthetic demo. Confirmation delivery, other browser engines and historical CDN-cache expiry are not claimed as newly verified.

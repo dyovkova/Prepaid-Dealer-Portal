@@ -1,5 +1,7 @@
 # Netlify session authorization fix
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](release-review.md) for the final state and limitations.
+
 Target: https://prepaiddealersportal.netlify.app and Supabase
 `niabpabsvdgxackjjcsb`. Verification date: 2026-11-21.
 

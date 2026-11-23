@@ -8,6 +8,7 @@
     "node": "^22.12.0 || >=24.0.0"
   },
   "scripts": {
+    "test": "node --test tests/draft.test.js tests/submission.test.js tests/history.test.js tests/session.test.js tests/admin-products.test.js tests/admin-dealers.test.js tests/admin-orders.test.js tests/document-publish.test.js tests/document-download.test.js tests/document-ui.test.js",
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",

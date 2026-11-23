@@ -1,166 +1,197 @@
 # Prepaid Dealer Portal
 
-A SoftUni **Software Technologies with AI** capstone for prepaid dealer order requests.
-Built with HTML, CSS, vanilla JavaScript ES modules, Bootstrap, Node.js, npm, and Vite.
+A working B2B portal for synthetic prepaid telecom dealer order requests, built for
+SoftUni **Software Technologies with AI**. Dealers select products, submit requests
+and follow their organization's orders. Administrators manage products, dealer access,
+order statuses and private PDF documents. No real transactions or company data are used.
 
-Live demo: [prepaiddealersportal.netlify.app](https://prepaiddealersportal.netlify.app).
-See the [production deployment verification](public/deployment-verification.md)
-for actual checks, confirmed corrections and any outstanding production checks.
+- **Application:** [prepaiddealersportal.netlify.app](https://prepaiddealersportal.netlify.app)
+- **Repository:** [dyovkova/Prepaid-Dealer-Portal](https://github.com/dyovkova/Prepaid-Dealer-Portal)
+- **Demonstration:** [five-minute walkthrough](DEMO.md)
+- **Release evidence and limits:** [final release review](docs/release-review.md)
 
-## Current scope
+## Stack and architecture
 
-Milestone 2 provides a genuine multi-page skeleton: eight independent HTML entries,
-shared responsive navigation and footer, and clearly labelled placeholder screens.
-Links perform normal document navigation; there is no SPA router or history fallback.
+HTML, CSS, vanilla JavaScript ES modules, Bootstrap 5, Node.js/npm and Vite. This is
+a multi-page application with eleven independent HTML entries and normal document
+navigation, not an SPA. Supabase supplies PostgreSQL, Auth, RLS, private Storage and
+two authenticated Edge Functions. GitHub `main` feeds the existing Netlify deployment.
 
-Milestone 4B provides working registration, login, logout, persistent Supabase
-sessions, role-based navigation guards and inactive-account feedback. Account
-roles/status come from database rows protected by the deployed 4A RLS policies.
-Milestone 5B provides a live dealer catalog and editable local order draft.
-Search active products, choose quantities and review current EUR estimates.
-Drafts are scoped to the verified user and persist across refresh. Prices are
-rechecked on draft load. Milestone 6B connects New Order to the verified atomic
-`submit_order` RPC, with an optional note, duplicate-click protection, confirmed
-order UUID and exact durable retries after uncertain outcomes. Pending requests
-and their drafts survive logout; normal drafts clear on logout. Documents remain planned for a later milestone. See
-[5B results](docs/catalog-and-draft.md) and [6B results/limits](docs/order-submission-ui.md).
+Page controllers live in `src/pages/`; shared layout is in `src/components/`;
+`src/services/` contains one reusable Supabase client and data services. Focused modules
+handle Auth, drafts, submissions, saved order views, admin forms and document recovery.
+Shared design tokens and Bootstrap overrides live in `src/styles/`. SQL migrations,
+backend verification and Edge sources live in `supabase/`.
 
-Milestone 7A adds RLS-protected, read-only organization access to saved orders
-and items. Milestone 7B provides organization history, UUID details with saved
-snapshots/totals and a View order link after confirmed submission. See
-[database checks](supabase/order-read-access.md) and [7B results/limits](docs/order-history-ui.md).
+## Completed workflows
 
-Milestones 8A/8B provide RLS-protected admin product management at
-`/admin/products/`: search/filter all products, create/edit, and confirm
-archive/reactivation. The dashboard links to this ninth HTML page. Existing
-order snapshots and dealer restrictions remain intact. See
-[backend checks](supabase/admin-products.md) and [UI results/limits](docs/admin-products-ui.md).
+**Dealer:** public registration creates one isolated organization, profile and fixed
+dealer role. Login/logout, refresh persistence and account-status guards use database
+identity. Active dealers can search active products, select positive whole quantities,
+and review a per-user local draft with EUR estimates. Confirmed additions show an
+accessible toast and persistent card indicators; repeated additions update one line.
+Draft items/prices are revalidated on load. Atomic submission derives ownership, status
+and prices on the server and saves immutable SKU/name/price snapshots. Exact request
+IDs/payloads survive uncertain responses for safe retries. Dealers read only their
+organization's history, UUID details and published PDFs.
 
-Milestone 9A adds the admin dealer-management backend: organization operations,
-profile/role inspection and a narrow dealer-profile activation RPC. Existing
-sessions obey current activation flags through RLS. Milestone 9B adds the admin-only
-`/admin/dealers/` page for organization CRUD/status, profile inspection and
-confirmed dealer-profile activation. See [backend validation](supabase/admin-dealers.md)
-and [UI checks and limitations](docs/admin-dealers-ui.md).
+**Administrator:** the existing **Demo Administrator** can create/edit/archive or
+reactivate products, create/rename/activate organizations, inspect authorized profiles
+and activate/deactivate dealer profiles through the dedicated RPC. Organization creation
+does not create a user account. Admins search/filter/page all orders, inspect saved
+items and confirm status transitions: submitted → processing/rejected, then processing
+→ completed/rejected. Terminal orders are read-only; HTTP 409 conflicts reload current
+state without automatic mutation retries. Roles, membership, ownership and snapshots
+are not editable through administration.
 
-Milestones 10A/10B provide admin order reads and confirmed status transitions at
-`/admin/orders/`, with saved snapshot details, organization/UUID search, status
-filtering and server pagination. Conflicts reload current state without an
-automatic mutation retry. See [backend verification](supabase/admin-orders.md)
-and [UI checks and limits](docs/admin-orders-ui.md).
+### Private PDFs
 
-Milestone 3A's database design is accepted. Milestone 3B's approved six-table schema
-is applied to `niabpabsvdgxackjjcsb`, establishing the initial default-deny baseline. Catalog,
-constraint-rejection, and authorization checks passed; Auth-backed fixture acceptance
-tests remain outstanding. See [Supabase setup and verification](supabase/README.md).
-The user accepted milestone 3B as complete. Milestone 4A's database-only identity
-migration is [applied and validated for the demo](supabase/identity-access.md).
-Public signup/login, isolated dealer provisioning, registered-user RLS, protected
-fields and inactive-session restrictions passed. Confirm Email is temporarily
-disabled by the user for this SoftUni demo; email confirmation delivery was not
-tested. See [working authentication UI and verification](docs/authentication-ui.md)
-for the completed 4B scope and its actual browser/database checks.
+Admins upload PDFs up to **10 MiB** to a private bucket, then publish through
+`publish-order-document`, which verifies identity/access and validates the bytes.
+Immutable UUID/path/filename/fingerprint recovery prevents overwrite or duplicate
+publication after uncertainty. Dealers cannot upload, edit or delete documents.
+
+Downloads use **only `download-order-document`**, which checks current user/role,
+activation and order access on each request and returns attachment bytes with no-store
+headers. The browser receives no signed/public Storage URL or server secret. Never
+clear unresolved document/order requests or replace their IDs to work around an error.
+
+## All eleven routes
+
+| Route | Access and purpose |
+| --- | --- |
+| `/` | Public introduction and workspace links |
+| `/login/` | Public login; active sessions redirect to their role's workspace |
+| `/register/` | Public dealer registration; no public admin signup |
+| `/catalog/` | Active dealer: products, search, quantities, draft feedback |
+| `/new-order/` | Active dealer: draft, estimates, note and safe submission/retry |
+| `/my-orders/` | Active dealer: organization history |
+| `/order-details/?id=<order-UUID>` | Active dealer: authorized snapshots and PDFs |
+| `/admin/` | Active administrator: dashboard |
+| `/admin/products/` | Active administrator: all products and archive/reactivation |
+| `/admin/dealers/` | Active administrator: organizations and dealer-profile activation |
+| `/admin/orders/` | Active administrator: order search/filter/pagination; `?id=<order-UUID>` opens details/PDFs |
+
+Direct navigation and refresh use the same guards. Missing/malformed/unauthorized
+order IDs show safe unavailable states. RLS and trusted operations enforce authorization
+independently of navigation; the browser's public key is not a security boundary.
 
 ## Local setup
 
-Use Node.js **22.12+ (22.x) or 24+** and the bundled npm. Create an ignored
-`.env.local` using `.env.example`, then fill in the Supabase URL and public
-publishable key for the deployed identity backend. Never use secret/service-role
-keys in browser configuration. Restart Vite after editing the file.
+Use Node.js **22.12+ within 22.x, or 24+**, with npm. From a clean checkout:
 
 ```sh
-npm install
+git clone https://github.com/dyovkova/Prepaid-Dealer-Portal.git
+cd Prepaid-Dealer-Portal
+npm ci
+```
+
+Copy `.env.example` to ignored `.env.local`, then supply these public build variables:
+
+```dotenv
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your-public-publishable-key
+```
+
+The demo backend is **PrepaidDealerPortal**, reference `niabpabsvdgxackjjcsb`.
+Obtain its public publishable key from the project owner/Supabase configuration.
+Never put secret/service-role keys, passwords or session tokens in `VITE_` variables.
+Restart Vite after changing the file. No browser environment variable provisions an
+administrator or changes RLS. See [backend setup](supabase/README.md) for the deployed
+migrations/functions and server-only configuration.
+
+```sh
 npm run dev
 ```
 
-Open the Local URL printed by Vite (normally `http://127.0.0.1:5173/`).
-On Windows PowerShell, if execution policy blocks `npm.ps1`, use `npm.cmd` in
-place of `npm`, for example `npm.cmd install` and `npm.cmd run dev`.
+Open the Local URL printed by Vite, normally `http://127.0.0.1:5173/`.
+On Windows PowerShell, use `npm.cmd` if execution policy blocks `npm.ps1`.
 
-The tracked `.env.example` contains placeholders only. Local `.env` variants,
-dependencies and build output are ignored by Git. Vite includes the public URL/key
-in its browser bundle; RLS enforces access. Hosted builds need the same public
-build variables. No privileged keys, test passwords or sessions are committed.
+## Commands and verification
 
-## Routes
+| Command | Purpose |
+| --- | --- |
+| `npm ci` | Install exactly the committed lockfile |
+| `npm run dev` | Local Vite development server |
+| `npm run build` | Production build of all eleven entries into `dist/` |
+| `npm run preview` | Serve `dist/` on `127.0.0.1:4173`, failing if occupied |
+| `npm run check:preview` | Check all routes, linked assets, detail URLs and unknown-route 404; run with preview in another terminal |
+| `npm test` | Full application/Edge unit suite, no hosted writes |
+| `npm run test:documents-browser` | Local Chrome no-store/revocation test with mocked provider |
+| `npm run test:catalog-feedback-ui` | Opt-in real-session draft feedback checks with isolated browser storage |
+| `npm run test:visual` | Opt-in read-only route/layout and UI-state checks |
 
-| URL | HTML entry | Page module |
-| --- | --- | --- |
-| `/` | `index.html` | `src/pages/home.js` |
-| `/login/` | `login/index.html` | `src/pages/login.js` |
-| `/register/` | `register/index.html` | `src/pages/register.js` |
-| `/catalog/` | `catalog/index.html` | `src/pages/catalog.js` |
-| `/new-order/` | `new-order/index.html` | `src/pages/new-order.js` |
-| `/my-orders/` | `my-orders/index.html` | `src/pages/my-orders.js` |
-| `/order-details/` | `order-details/index.html` | `src/pages/order-details.js` |
-| `/admin/` | `admin/index.html` | `src/pages/admin.js` |
-| `/admin/products/` | `admin/products/index.html` | `src/pages/admin-products.js` |
-| `/admin/dealers/` | `admin/dealers/index.html` | `src/pages/admin-dealers.js` |
-| `/admin/orders/` | `admin/orders/index.html` | `src/pages/admin-orders.js` |
+Individual unit commands include `test:draft`, `test:submission`, `test:history`,
+`test:session`, `test:admin-products`, `test:admin-dealers`, `test:admin-orders`,
+`test:documents` and `test:document-ui`. See `package.json` for browser suite commands.
+Real-account browser suites require approved local synthetic credentials/fixture ledgers
+outside Git. They run sequentially because they share a preview port. Legacy mutation
+suites are not a safe blanket release command: some create fixtures or change statuses.
+The [release report](docs/release-review.md) distinguishes actual hosted checks,
+existing-fixture replays, mocks and disposable local SQL tests.
 
-Home is public. Login/Register route active authenticated users to their workspace.
-Catalog, New Order, My Orders and Order Details require an active dealer; Admin
-requires an active admin. Protected content stays hidden while account access
-is checked. Dealer Order Details accepts `?id=<order-UUID>`; admin details use
-`/admin/orders/?id=<order-UUID>` with the same active-admin restriction as the list.
+Native SQL/security runners use optional ignored PostgreSQL/PGlite tooling; they are
+not application dependencies. See [verification setup](supabase/README.md#verification).
+Never run historical migration-era SQL against the current demo merely to reproduce
+a test count. No credentials, private fixtures, PDFs or browser traces belong in Git.
 
-## Production build and preview
+## Netlify deployment
 
-```sh
-npm run build
-npm run preview
-```
+The existing site publishes from this GitHub repository's **`main`** branch. Build
+command: **`npm run build`**; publish directory: **`dist`**; repository root is the base.
+Set the same two public `VITE_` variables in Netlify's build environment and use a
+supported Node version (24 is the verified release environment). Supabase stays a
+separate backend; do not place server-only Edge keys in Netlify frontend variables.
 
-The build emits all eleven HTML files and bundled local assets into `dist/`.
-The preview serves that output at `http://127.0.0.1:4173/` and fails if the port
-is already occupied. It does not run the development server or deploy anything.
+Vite explicitly builds all eleven HTML entries. No SPA catch-all redirect is needed
+or desired: nested routes must serve their own entry and unknown routes return 404.
+After pushing, verify the build/route assets and real login on the live origin. A
+public GitHub status list alone is not deployment proof; the release review checks
+the actual served artifacts. Backend changes are separate reviewed operations, not
+part of a frontend auto-deploy. Do not reapply migrations or seed the populated demo.
 
-With the preview running, use a second terminal:
+## Known limits and security boundaries
 
-```sh
-npm run check:preview
-```
+- Synthetic SoftUni demo only. No payments, tax/invoices, inventory reservations,
+  delivery promises, real telecom integration or real confidential documents.
+- **Confirm Email is temporarily disabled** in the approved demo environment.
+  Confirmation-enabled delivery, password recovery UI and invitations are not covered.
+- Drafts and retry references belong to the browser/project/user. Clearing browser
+  storage or moving devices can lose recovery information. Keep unresolved references;
+  server-rejected PDFs require operator review, not automatic deletion/replacement.
+- The new Edge download path checks current database access and avoids client/CDN
+  caching. It cannot recall a PDF already downloaded or erase old browser/CDN copies.
+  **Historically warmed direct authenticated Storage URLs/JWTs returned CDN HIT/200
+  after deactivation.** Direct reads are now denied at origin, but historical cache
+  exposure was not proven globally eliminated or rechecked after natural expiry.
+  No absolute immediate global revocation is claimed. The Free project cannot use
+  the Pro-only purge API; no purge, billing/Auth change, rotation or deletion workaround
+  was performed. See [actual cache evidence](supabase/document-download-revocation.md),
+  [Supabase caching behavior](https://supabase.com/docs/guides/storage/cdn/smart-cdn)
+  and [purge availability](https://supabase.com/docs/guides/storage/cdn/purge-cdn-cache).
+- Current browser submission/upload coordination requires HTTPS/localhost and Web
+  Locks. Chrome desktop and 320px/390px viewport emulation are the verified browser
+  baseline; physical-device, other-engine and full assistive-technology audits are
+  limited as recorded in the release report. Netlify's existing branding badge can
+  overlay content while scrolling; its hosting settings were not changed.
 
-This check verifies the exact emitted HTML file set, directly requests every route,
-compares responses to their own built entries, checks linked routes/assets and asset
-types, tests an order-details query URL, and confirms unknown routes return 404.
-An alternate preview origin can be passed as `npm run check:preview -- http://127.0.0.1:4174`.
+## Detailed design and evidence
 
-For a repeatable lockfile-based dependency installation, use `npm ci`.
-Browser authentication verification is documented in [the 4B checks](docs/authentication-ui.md).
-The opt-in `npm run test:auth-ui` suite uses real Supabase signup/login and isolated
-Chrome contexts; it requires approved controlled fixture addresses/local state and
-restores any temporary fixture role/status changes. Trace/video capture is disabled
-to protect credentials.
+These reports preserve the results at their recorded milestone dates; historical
+counts/default-deny/deferred-feature statements do not describe the completed release.
 
-For frontend-only catalog/draft validation, use `npm run test:draft` and the
-separate opt-in `npm run test:catalog-ui` suite documented in the 5B results.
-For submission, use `npm run test:submission` and the separate opt-in
-`npm run test:submission-ui`; [6B instructions](docs/order-submission-ui.md)
-describe the two retained synthetic orders and request manifest needed for reruns.
-The historical 4B suite changes trusted fixture roles/status and is not required
-for frontend-only regressions.
-
-History checks use `npm run test:history` and the separate opt-in
-`npm run test:history-ui`; see [7B test fixtures and actual results](docs/order-history-ui.md).
-
-## Source organization
-
-- `src/pages/`: one initialization module per HTML entry.
-- `src/components/`: shared header and footer.
-- `src/utils/`: shared page initialization and navigation helpers.
-- `src/services/`: the reusable Supabase client, Auth/identity, products, order RPC and history reads.
-- `src/draft/`: per-user local selections, estimates and shared draft UI.
-- `src/orders/`: durable submission requests, retry coordination, saved-order validation and UI.
-- `src/auth/`: guards, feedback, form submission and validation.
-- `src/admin-products/`: product editor, validation, filtering and card/dialog rendering.
-- `tests/`: opt-in real-browser authentication/security checks.
-- `src/styles/`: shared Bootstrap overrides and responsive application styles.
-- `public/`: static favicon, copied into the build.
-- `scripts/`: production preview verification.
-- `vite.config.js`: explicit multi-page build inputs and MPA serving mode.
-
-See [the project brief](docs/project-brief.md) for full MVP scope and
-[the implementation plan](docs/implementation-plan.md) for milestone order and
-recorded acceptance checks. Dealer-management UI, order processing, documents and final release
-checks remain later milestones.
+- [Project brief](docs/project-brief.md), [database design](docs/database-design.md),
+  [implementation plan](docs/implementation-plan.md), [backend index](supabase/README.md).
+- [Identity/RLS](supabase/identity-access.md), [trusted demo-admin setup](supabase/demo-admin-setup.md),
+  [Auth UI](docs/authentication-ui.md), [session-race correction](docs/session-auth-fix.md).
+- [Catalog security](supabase/catalog-access.md), [catalog/drafts](docs/catalog-and-draft.md),
+  [current draft feedback](docs/catalog-feedback.md).
+- [Atomic orders](supabase/order-submission.md), [submission UI](docs/order-submission-ui.md),
+  [dealer order RLS](supabase/order-read-access.md), [history/details UI](docs/order-history-ui.md).
+- Admin [products backend](supabase/admin-products.md)/[UI](docs/admin-products-ui.md),
+  [dealers backend](supabase/admin-dealers.md)/[UI](docs/admin-dealers-ui.md),
+  [orders backend](supabase/admin-orders.md)/[UI](docs/admin-orders-ui.md).
+- [PDF backend](supabase/document-storage.md), [download/revocation boundary](supabase/document-download-revocation.md),
+  [PDF UI](docs/order-documents-ui.md), [visual polish](docs/visual-polish.md).
+- [Historical deployment checks](docs/deployment-verification.md),
+  [final release review](docs/release-review.md), [demo walkthrough](DEMO.md).

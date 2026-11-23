@@ -1,5 +1,7 @@
 # Milestone 4A: identity backend review
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](../docs/release-review.md) for the final state and limitations.
+
 **Applied and validated on 2026-11-20 for the approved SoftUni demo configuration.** Target: **PrepaidDealerPortal**,
 `niabpabsvdgxackjjcsb` (CLI environment **production**, `eu-central-1`, PostgreSQL `17.12`).
 Only [20261120000200_identity_and_access.sql](migrations/20261120000200_identity_and_access.sql)

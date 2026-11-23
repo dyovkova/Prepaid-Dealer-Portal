@@ -1,3 +1,5 @@
+> Historical deployment record. Counts and deferred-feature notes below describe their recorded milestone. See [the final release review](release-review.md) for the completed eleven-route release. This report is documentation, not a public runtime asset.
+
 # Production deployment verification
 
 Site: https://prepaiddealersportal.netlify.app

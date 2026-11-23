@@ -1,5 +1,7 @@
 # Milestone 7B: dealer order history and details
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](release-review.md) for the final state and limitations.
+
 Implemented and verified on 2026-11-21 against **PrepaidDealerPortal**
 (`niabpabsvdgxackjjcsb`). No database migration, fixture status change or saved
 order modification was made. The existing 7A RLS is the authorization boundary.

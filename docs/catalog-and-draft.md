@@ -1,5 +1,7 @@
 # Milestone 5B: catalog and local order draft
 
+> Milestone-scoped verification record. Counts and deferred-feature notes describe that stage, not the completed application. See [current release evidence](release-review.md) for the final state and limitations.
+
 Status (2026-11-20): **implemented and verified** against PrepaidDealerPortal
 (`niabpabsvdgxackjjcsb`). No schema, RLS, product, role, membership, activation
 or Auth configuration change was made in 5B. The record below describes that
